@@ -9,14 +9,14 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>ydbspace_image</artifactId>
+    <artifactId>User</artifactId>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
     </properties>
     <dependencies>
-<!--        要有这2个依赖-->
+        <!--        要有这2个依赖-->
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
@@ -26,12 +26,11 @@
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
 
-        <!--   duobbo-->
+<!--   duobbo-->
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-openfeign</artifactId>
         </dependency>
-
 
         <dependency>
             <groupId>mysql</groupId>
@@ -42,14 +41,6 @@
             <groupId>org.mybatis.spring.boot</groupId>
             <artifactId>mybatis-spring-boot-starter</artifactId>
         </dependency>
-<!--        //上传-->
-        <dependency>
-            <groupId>yun520.xyz</groupId>
-            <artifactId>utils-common</artifactId>
-            <version>1.0-SNAPSHOT</version>
-        </dependency>
-
-
     </dependencies>
     <build>
         <plugins>
