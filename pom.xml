@@ -20,7 +20,7 @@
         <module>yujn</module>
         <module>User</module>
         <module>utils-common</module>
-        <module>filetore</module>
+        <module>fileServer</module>
         <module>fileStore</module>
     </modules>
 
@@ -65,6 +65,18 @@
         </dependencies>
     </dependencyManagement>
     <dependencies>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
