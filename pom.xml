@@ -20,6 +20,8 @@
         <module>yujn</module>
         <module>User</module>
         <module>utils-common</module>
+        <module>filetore</module>
+        <module>fileStore</module>
     </modules>
 
     <properties>

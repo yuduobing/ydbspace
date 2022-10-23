@@ -10,10 +10,13 @@
         <module name="utils-common" />
         <module name="ydbspace_image" />
         <module name="User" />
+        <module name="filetore" />
         <module name="eurekaservice" />
+        <module name="fileStore" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="filetore" target="8" />
       <module name="order-service" target="1.8" />
       <module name="yujn" target="8" />
     </bytecodeTargetLevel>
@@ -22,6 +25,8 @@
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="User" options="-parameters" />
       <module name="eurekaservice" options="-parameters" />
+      <module name="fileStore" options="-parameters" />
+      <module name="filetore" options="-parameters" />
       <module name="order-service" options="-parameters" />
       <module name="utils-common" options="-parameters" />
       <module name="ydbspace_image" options="-parameters" />
