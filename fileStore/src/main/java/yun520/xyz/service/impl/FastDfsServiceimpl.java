@@ -12,7 +12,7 @@ public class FastDfsServiceimpl  implements StoreService{
     @Autowired
     private FastFileStorageClient storageClient;
      //fastdfs非集群默认有group
-    final static  String group="0000";
+    final static  String group="group1";
 
 
     //上传有group
@@ -24,9 +24,10 @@ public class FastDfsServiceimpl  implements StoreService{
     //上传无group
     @Override
     public String upload(byte[] bytes, String fileName) {
-        StorePath sp=storageClient.uploadFile(group, bytes, fileName);
+        StorePath sp=storageClient.uploadFile(bytes, fileName);
         return sp.getFullPath();
     }
+
     @Override
     public byte[] download(String group, String path) {
         return new byte[0];
