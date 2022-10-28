@@ -2,7 +2,10 @@ package yun520.xyz.server;
 
 import java.util.Map;
 
+import org.springframework.web.multipart.MultipartFile;
+import yun520.xyz.ResultUtils;
 import yun520.xyz.entity.WpFile;
+import yun520.xyz.entity.WpFileSlice;
 
 /**
  * @author qjf
@@ -10,29 +13,7 @@ import yun520.xyz.entity.WpFile;
  */
 public interface WpFileService {
 
-    /**
-     * 新增
-     */
-    public Object insert(WpFile wpFile);
+    WpFile upload(MultipartFile multipartFile, WpFileSlice file);
 
-    /**
-     * 删除
-     */
-    public Object delete(int id);
-
-    /**
-     * 更新
-     */
-    public Object update(WpFile wpFile);
-
-    /**
-     * 根据主键 id 查询
-     */
-    public WpFile load(int id);
-
-    /**
-     * 分页查询
-     */
-    public Map<String,Object> pageList(int offset, int pagesize);
-
+    String down(String md5, Long id);
 }
