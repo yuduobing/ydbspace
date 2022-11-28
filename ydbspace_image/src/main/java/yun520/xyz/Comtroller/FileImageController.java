@@ -24,11 +24,9 @@ public class FileImageController {
     @ApiOperation(value = "上传图片")
     public Result uploadImage(){
         HashMap<String, Object> objectObjectHashMap = new HashMap<>();
-
         objectObjectHashMap.put("10","你好");
 
         return ResultUtils.success(objectObjectHashMap);
-
 
 
     }
@@ -40,6 +38,7 @@ public class FileImageController {
         String fileimage=file.getOriginalFilename();
 
         try {
+            //文件名不可有中文
             String path=fastdfs.upload(file.getBytes(),"22");
         } catch (IOException e) {
             e.printStackTrace();

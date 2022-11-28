@@ -24,6 +24,7 @@ public class FastDfsServiceimpl  implements StoreService{
     //上传无group
     @Override
     public String upload(byte[] bytes, String fileName) {
+        //  //文件名不可有中文
         StorePath sp=storageClient.uploadFile(bytes, fileName);
         return sp.getFullPath();
     }
