@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import yun520.xyz.Result;
 import yun520.xyz.ResultUtils;
+import yun520.xyz.entity.File;
 import yun520.xyz.service.impl.FastDfsServiceimpl;
 
 import java.io.IOException;
@@ -34,7 +35,7 @@ public class FileImageController {
 
     @PostMapping("/uploadChunk")
     @ApiOperation(value = "上传文件")
-    public  Result uplaodChunk(MultipartFile file){
+    public  Result uplaodChunk(MultipartFile file, File fileparams){
         String fileimage=file.getOriginalFilename();
 
         try {

@@ -14,7 +14,8 @@ import org.springframework.stereotype.Service;
  * @author yuduobin
  * @since 2022-11-27
  */
-@Service
+@Service(value="FileServiceImpl")
 public class FileServiceImpl extends ServiceImpl<FileMapper, File> implements IFileService {
+
 
 }

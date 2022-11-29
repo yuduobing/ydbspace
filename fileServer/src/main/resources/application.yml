@@ -1,8 +1,8 @@
 server:
-  port: 10087
+  port: 3000
 spring:
   application:
-    name: fileServerWeb
+    name: fileServer
   datasource:
     url: jdbc:mysql://rm-bp14j69a3p77u76fwbo.mysql.rds.aliyuncs.com:3306/cloud_order?useSSL=false
     username: codimd
