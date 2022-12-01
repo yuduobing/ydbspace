@@ -2,10 +2,11 @@ package yun520.xyz.entity;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 /**
  * <p>
@@ -15,8 +16,10 @@ import lombok.Setter;
  * @author yuduobin
  * @since 2022-11-27
  */
-@Getter
-@Setter
+
+@Data
+@Builder
+@NoArgsConstructor
 @ApiModel(value = "File对象", description = "")
 public class File implements Serializable {
 
@@ -25,6 +28,7 @@ public class File implements Serializable {
       private Integer fid;
 
     @ApiModelProperty("文件名")
+    @JsonProperty("currentChunkSize")
     private String fileName;
 
     @ApiModelProperty("文件类型zip txt")
