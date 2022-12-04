@@ -8,10 +8,7 @@ spring:
     username: codimd
     password: Tan19970925!
     driver-class-name: com.mysql.jdbc.Driver
-mybatis:
-  type-aliases-package: com.xn2001.user.pojo
-  configuration:
-    map-underscore-to-camel-case: true
+
 logging:
   level:
     com.xn2001: debug
@@ -26,3 +23,8 @@ eureka:
 fdfs:
   connect-timeout: 3000
   tracker-list: 1.116.162.163:22122
+mybatis-plus:
+  mapper-locations: classpath*:xml/*.xml
+  configuration:
+#数据库驼峰命名转换
+   map-underscore-to-camel-case: false

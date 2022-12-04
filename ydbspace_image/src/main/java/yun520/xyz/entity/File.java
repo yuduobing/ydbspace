@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.sun.jersey.core.header.ContentDisposition;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
@@ -19,7 +20,7 @@ import lombok.*;
 
 @Data
 @Builder
-@NoArgsConstructor
+@AllArgsConstructor
 @ApiModel(value = "File对象", description = "")
 public class File implements Serializable {
 
@@ -28,7 +29,7 @@ public class File implements Serializable {
       private Integer fid;
 
     @ApiModelProperty("文件名")
-    @JsonProperty("currentChunkSize")
+
     private String fileName;
 
     @ApiModelProperty("文件类型zip txt")

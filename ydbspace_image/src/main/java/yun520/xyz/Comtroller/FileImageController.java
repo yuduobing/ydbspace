@@ -45,16 +45,16 @@ public class FileImageController {
         String fileimage=file.getOriginalFilename();
 
         try {
-            //文件名不可有中文
-            String path=fastdfs.upload(file.getBytes(),fileparams.getFilename());
+//            文件名不可有中文
+            String path=fastdfs.upload(file.getBytes(),"222314");
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        File file1 = new File().builder().fileName(fileparams.getFilename()).fileType(fileparams.getFilename().substring(fileparams.getFilename().indexOf("."))).build();
-
-
-        int result = filemapper.insert(user); // 帮我们自动生成id
+          //上传文件表
+        File file1 =  File.builder().fileName(fileparams.getFilename()).fileType(fileparams.getFilename().substring(fileparams.getFilename().indexOf(".")+1)).fileSize(fileparams.getTotalSize()).fileSaveType("0").filemd5().build();
+        int result = filemapper.insert(file1); // 帮我们自动生成id
+        //上传切片表
         System.out.println(result); // 受影响的行数
         System.out.println(fileimage);
 
