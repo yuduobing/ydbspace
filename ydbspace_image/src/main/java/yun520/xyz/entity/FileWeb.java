@@ -7,7 +7,8 @@ public class FileWeb {
     public  String  filename;
     public  String  totalSize;
     public  String  chunkSize;
-    public  String  chunkNumber;
-    public  String  totalChunks;
+  //当前第几块
+    public  int  chunkNumber;
+    public  int  totalChunks;
     public  String  identifier;
 }
