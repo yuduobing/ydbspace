@@ -1,6 +1,7 @@
 package yun520.xyz.Comtroller;
 //上传文件
 
+import cn.hutool.core.date.DateTime;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,8 @@ import yun520.xyz.service.impl.FastDfsServiceimpl;
 import yun520.xyz.service.impl.FileServiceImpl;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.HashMap;
 
 @RestController
@@ -52,7 +55,8 @@ public class FileImageController {
         }
 
           //上传文件表
-        File file1 =  File.builder().fileName(fileparams.getFilename()).fileType(fileparams.getFilename().substring(fileparams.getFilename().indexOf(".")+1)).fileSize(fileparams.getTotalSize()).fileSaveType("0").filemd5().build();
+        File file1 =  File.builder().fileName(fileparams.getFilename()).fileType(fileparams.getFilename().substring(fileparams.getFilename().indexOf(".")+1)).fileSize(fileparams.getTotalSize()).fileSaveType("0").filemd5(fileparams.getIdentifier()
+        ).createTime(LocalDateTime.now()).build();
         int result = filemapper.insert(file1); // 帮我们自动生成id
         //上传切片表
         System.out.println(result); // 受影响的行数

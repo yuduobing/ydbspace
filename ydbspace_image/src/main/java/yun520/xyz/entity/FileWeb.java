@@ -9,4 +9,5 @@ public class FileWeb {
     public  String  chunkSize;
     public  String  chunkNumber;
     public  String  totalChunks;
+    public  String  identifier;
 }
