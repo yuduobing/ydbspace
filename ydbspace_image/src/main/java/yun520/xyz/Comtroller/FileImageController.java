@@ -22,7 +22,8 @@ import yun520.xyz.mapper.FilechunkMapper;
 import yun520.xyz.service.impl.FastDfsServiceimpl;
 import yun520.xyz.service.impl.FileServiceImpl;
 
-import java.io.IOException;
+import javax.servlet.http.HttpServletResponse;
+import java.io.*;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.HashMap;
@@ -55,7 +56,7 @@ public class FileImageController {
         String fileimage=file.getOriginalFilename();
 
 
-//            文件名不可有中文
+//          文件名不可有中文
             String chunkpath=fastdfs.upload(file.getBytes(),"222314");
             //上传文件表
             File file1 =  File.builder().fileName(fileparams.getFilename()).fileType(fileparams.getFilename().substring(fileparams.getFilename().indexOf(".")+1)).fileSize(fileparams.getTotalSize()).fileSaveType("0").filemd5(fileparams.getIdentifier()
@@ -81,9 +82,93 @@ public class FileImageController {
 
 
     }
+    @GetMapping("/upload")
+    @ApiOperation(value = "第一次上传整个文件的信息")
+    @Transactional
+    public  Result uplaodChunkGET( FileWeb fileparams)throws Exception{
+
+
+//            文件名不可有中文
+
+        //上传文件表
+        File file1 =  File.builder().fileName(fileparams.getFilename()).fileType(fileparams.getFilename().substring(fileparams.getFilename().indexOf(".")+1)).fileSize(fileparams.getTotalSize()).fileSaveType("0").filemd5(fileparams.getIdentifier()
+        ).createTime(LocalDateTime.now()).build();
+        //填充文件表
+           int result = filemapper.insert(file1); // 帮我们自动生成id
+
+
+        //上传切片表
+        System.out.println("插入成功"+result);
 
 
 
+
+        HashMap<String, Object> objectObjectHashMap = new HashMap<>();
+
+        objectObjectHashMap.put("result",result);
+
+        return ResultUtils.success(objectObjectHashMap);
+
+
+
+    }
+
+
+    @GetMapping("/download")
+    @ApiOperation(value = "根据文件md5下载文件")
+    @Transactional
+    public  Result downfile(FileWeb fileparams, HttpServletResponse response)throws Exception{
+
+
+      //根据文件下md5载文件
+
+     //参考文章  https://www.jianshu.com/p/f8ac039fef5b
+
+
+
+
+        String filepath="/Users/yu/Documents/asda.png";
+
+
+
+
+        response.setContentType("arraybuffer/blob");
+
+    //读取指定路径下面的文件
+        try {
+        InputStream in = new FileInputStream(filepath);
+        OutputStream outputStream = new BufferedOutputStream(response.getOutputStream());
+        //创建存放文件内容的数组
+        byte[] buff = new byte[1024];
+        //所读取的内容使用n来接收
+        int n;
+        //当没有读取完时,继续读取,循环
+        while ((n = in.read(buff)) != -1) {
+            //将字节数组的数据全部写入到输出流中
+            outputStream.write(buff, 0, n);
+        }
+        //强制将缓存区的数据进行输出
+        outputStream.flush();
+        //关流
+        outputStream.close();
+        in.close();
+    } catch (IOException e) {
+
+    }
+
+
+
+        HashMap<String, Object> objectObjectHashMap = new HashMap<>();
+
+
+
+        objectObjectHashMap.put("result","12");
+
+        return ResultUtils.success(objectObjectHashMap);
+
+
+
+    }
 
 
 }
