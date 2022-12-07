@@ -4,10 +4,12 @@ package yun520.xyz.service.impl;
 import com.luhuiguo.fastdfs.domain.StorePath;
 import com.luhuiguo.fastdfs.service.FastFileStorageClient;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import yun520.xyz.service.StoreService;
 //fastdfs 实现类
 @Component("FastDfsService")
+@Scope(value = "prototype")
 public class FastDfsServiceimpl  implements StoreService{
     @Autowired
     private FastFileStorageClient storageClient;
