@@ -3,6 +3,8 @@ package yun520.xyz.Comtroller;
 
 import cn.hutool.core.date.DateTime;
 import cn.hutool.log.Log;
+import cn.hutool.system.UserInfo;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +29,7 @@ import java.io.*;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 
 @RestController
 @Api(tags = "FileImageController", description = "图片文件上传")
@@ -117,9 +120,10 @@ public class FileImageController {
     @GetMapping("/download")
     @ApiOperation(value = "根据文件md5下载文件")
     @Transactional
+
     public  Result downfile(FileWeb fileparams, HttpServletResponse response)throws Exception{
 
-
+        OutputStream outputStream = new BufferedOutputStream(response.getOutputStream());
       //根据文件下md5载文件
 
      //参考文章  https://www.jianshu.com/p/f8ac039fef5b
@@ -128,30 +132,42 @@ public class FileImageController {
 
 
         String filepath="/Users/yu/Documents/asda.png";
+        try {
+        QueryWrapper<Filechunk> queryWrapper = new QueryWrapper<Filechunk>();
+        queryWrapper.ge("chunkmd5",22).orderByAsc("chunksnum");
+        List<Filechunk> userInfoList = filechunkMapper.selectList(queryWrapper);
+
+        userInfoList.forEach(val->{
+            byte[] download = fastdfs.download(val.getChunkpath());
+            try {
+                outputStream.write(download);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
 
 
-
-
-        response.setContentType("arraybuffer/blob");
+        //根据文件设置
+        response.setContentType("application/zip");
 
     //读取指定路径下面的文件
-        try {
-        InputStream in = new FileInputStream(filepath);
-        OutputStream outputStream = new BufferedOutputStream(response.getOutputStream());
-        //创建存放文件内容的数组
-        byte[] buff = new byte[1024];
-        //所读取的内容使用n来接收
-        int n;
-        //当没有读取完时,继续读取,循环
-        while ((n = in.read(buff)) != -1) {
-            //将字节数组的数据全部写入到输出流中
-            outputStream.write(buff, 0, n);
-        }
+
+//        InputStream in = new FileInputStream(filepath);
+//
+//        //创建存放文件内容的数组
+//        byte[] buff = new byte[1024];
+//        //所读取的内容使用n来接收
+//        int n;
+//        //当没有读取完时,继续读取,循环
+//        while ((n = in.read(buff)) != -1) {
+//            //将字节数组的数据全部写入到输出流中
+//            outputStream.write(buff, 0, n);
+//        }
         //强制将缓存区的数据进行输出
         outputStream.flush();
         //关流
         outputStream.close();
-        in.close();
+
     } catch (IOException e) {
 
     }
