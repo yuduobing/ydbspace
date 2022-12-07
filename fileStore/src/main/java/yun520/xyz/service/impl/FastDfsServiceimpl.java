@@ -36,7 +36,12 @@ public class FastDfsServiceimpl  implements StoreService{
 
     @Override
     public byte[] download(String path) {
-        return new byte[0];
+
+        String substring = path.split("/")[0];
+        String path2 = path.substring( path.indexOf("/")+1,path.length());
+        //todo 这里必须填上分组
+        byte[] bytes=storageClient.downloadFile("group1",path2);
+        return bytes;
     }
 
     @Override
