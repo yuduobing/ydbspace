@@ -26,8 +26,9 @@ eureka:
     service-url:
       defaultZone: http://127.0.0.1:10086/eureka
 fdfs:
-  connect-timeout: 3000
+  connect-timeout: 8000
   tracker-list: 1.116.162.163:22122
+
 mybatis-plus:
   mapper-locations: classpath*:xml/*.xml
   configuration:

@@ -55,30 +55,34 @@ public class FileImageController {
     @PostMapping("/upload")
     @ApiOperation(value = "上传文件")
     @Transactional
-    public  Result uplaodChunk(MultipartFile file,  FileWeb fileparams)throws Exception{
-        String fileimage=file.getOriginalFilename();
-
+    public synchronized  Result uplaodChunk(MultipartFile file,  FileWeb fileparams)throws Exception {
+        String fileimage = file.getOriginalFilename();
 
 //          文件名不可有中文
-            String chunkpath=fastdfs.upload(file.getBytes(),"222314");
-            //上传文件表
-            File file1 =  File.builder().fileName(fileparams.getFilename()).fileType(fileparams.getFilename().substring(fileparams.getFilename().indexOf(".")+1)).fileSize(fileparams.getTotalSize()).fileSaveType("0").filemd5(fileparams.getIdentifier()
-            ).createTime(LocalDateTime.now()).build();
+        String chunkpath ="";
+        int result2=0;
+        synchronized (FileImageController.class){
+            result2++;
+         chunkpath = fastdfs.upload(file.getBytes(), String.valueOf(result2));
             //填充切片表
             Filechunk filechunk =  Filechunk.builder().chunksize(fileparams.getChunkSize()).chunkpath(chunkpath).chunktotalnum(fileparams.getTotalChunks()).chunksnum(fileparams.getChunkNumber())
-            .createTime(LocalDateTime.now()).build();
-            int result = filemapper.insert(file1); // 帮我们自动生成id
-            int result2 = filechunkMapper.insert(filechunk);
+                    .createTime(LocalDateTime.now()).build();
+
+             result2 = filechunkMapper.insert(filechunk);
+    }
+
+
+
 
             //上传切片表
-        System.out.println("插入成功"+result+result2);
+        System.out.println("插入成功"+result2);
 
 
 
 
         HashMap<String, Object> objectObjectHashMap = new HashMap<>();
 
-        objectObjectHashMap.put("result",result+result2);
+        objectObjectHashMap.put("result",result2);
 
         return ResultUtils.success(objectObjectHashMap);
 
@@ -134,7 +138,7 @@ public class FileImageController {
         String filepath="/Users/yu/Documents/asda.png";
         try {
         QueryWrapper<Filechunk> queryWrapper = new QueryWrapper<Filechunk>();
-        queryWrapper.ge("chunkmd5",22).orderByAsc("chunksnum");
+        queryWrapper.ge("chunkmd5",222).orderByAsc("chunksnum");
         List<Filechunk> userInfoList = filechunkMapper.selectList(queryWrapper);
 
         userInfoList.forEach(val->{
