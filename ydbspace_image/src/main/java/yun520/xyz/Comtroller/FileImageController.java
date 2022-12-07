@@ -34,6 +34,7 @@ import java.util.List;
 @RestController
 @Api(tags = "FileImageController", description = "图片文件上传")
 public class FileImageController {
+
     @Autowired
     FastDfsServiceimpl fastdfs;
     @Autowired
@@ -61,9 +62,11 @@ public class FileImageController {
 //          文件名不可有中文
         String chunkpath ="";
         int result2=0;
+
         synchronized (FileImageController.class){
             result2++;
-         chunkpath = fastdfs.upload(file.getBytes(), String.valueOf(result2));
+         chunkpath = fastdfs.upload(file.getBytes(), String.valueOf(fileparams.getChunkNumber()));
+            System.out.println("此时插入"+result2);
             //填充切片表
             Filechunk filechunk =  Filechunk.builder().chunksize(fileparams.getChunkSize()).chunkpath(chunkpath).chunktotalnum(fileparams.getTotalChunks()).chunksnum(fileparams.getChunkNumber())
                     .createTime(LocalDateTime.now()).build();
