@@ -11,4 +11,7 @@ public class FileWeb {
     public  int  chunkNumber;
     public  int  totalChunks;
     public  String  identifier;
+
+    //文件id
+    public  String  fid;
 }

@@ -3,6 +3,8 @@ package yun520.xyz.entity;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.sun.jersey.core.header.ContentDisposition;
 import io.swagger.annotations.ApiModel;
@@ -25,7 +27,7 @@ import lombok.*;
 public class File implements Serializable {
 
     private static final long serialVersionUID = 1L;
-
+     @TableId(type= IdType.AUTO)
       private Integer fid;
 
     @ApiModelProperty("文件名")
