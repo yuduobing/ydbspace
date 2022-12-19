@@ -35,7 +35,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@Api(tags = "FileImageController", description = "图片文件上传")
+@Api(tags = "FileImageController", description = "文件上传")
 
 public class FileImageController {
 
@@ -71,7 +71,7 @@ public class FileImageController {
         synchronized (FileImageController.class) {
             result2++;
             chunkpath = fastdfs.upload(file.getBytes(), String.valueOf(fileparams.getChunkNumber()));
-            System.out.println("此时插入" + result2);
+
             //填充切片表
             Filechunk filechunk = Filechunk.builder().chunkmd5(fileparams.getIdentifier()).chunksize(fileparams.getChunkSize()).chunkpath(chunkpath).chunktotalnum(fileparams.getTotalChunks()).chunksnum(fileparams.getChunkNumber())
                     .createTime(LocalDateTime.now()).build();
@@ -95,7 +95,6 @@ public class FileImageController {
     @Transactional
     public Result uplaodChunkGET(FileWeb fileparams) throws Exception {
 
-//            文件名不可有中文
 
         //上传文件表
         File file1 = File.builder().fileName(fileparams.getFilename()).fileType(fileparams.getFilename().substring(fileparams.getFilename().length() - 3)).fileSize(fileparams.getTotalSize()).fileSaveType("0").filemd5(fileparams.getIdentifier()
@@ -121,11 +120,7 @@ public class FileImageController {
     public void downfile(FileWeb fileparams, HttpServletResponse response) throws Exception {
         //根据文件下md5载文件
         String filename = "";
-
         //往响应流中写入数据
-
-
-
 //查文件名  重名怎么办 下载加上文件id
         QueryWrapper<File> queryWrapperfile = new QueryWrapper<File>();
         queryWrapperfile.eq("filemd5", fileparams.getIdentifier()).or().eq("fid", fileparams.getFid());
@@ -193,10 +188,6 @@ public class FileImageController {
 
 
 
-
-
-
-
     @PostMapping ("/shareLinks")
     @ApiOperation(value = "生成文件分享连接")
     public Result sharelinks(@RequestBody Sharelinks sharelinks) throws Exception {
@@ -216,38 +207,48 @@ public class FileImageController {
 
             return ResultUtils.success(objectObjectHashMap);
         }
-        return ResultUtils.error("插入失败");
+        return ResultUtils.error("文件链接分享生成失败");
     }
 
 
 
 
-    @PostMapping ("/sharePages1")
-    @ApiOperation(value = "分享文件告诉加不加密")
+    @GetMapping ("/toencrypt")
+    @ApiOperation(value = "查看文件是否加密")
     /*
     加密和不加密
-    第一次告诉页面 需不需要验证码
     加密 弹窗输入验证码
     不加密 返回文件信息和下载码
      */
-    public Result sharePages1(@RequestBody Sharelinks sharelinks) throws Exception {
-
-        sharelinks.setSharetime(LocalDateTime.now());
-        sharelinks.setPassworld(sharelinks.getPassworld());
-        //todo 这里后续通过redis自增1
-        sharelinks.setDownweb( RandomUtil.randomString(3));
-        Sharelinks.builder().sharetime(LocalDateTime.now());
-
-        int insert =  sharelinksmapper.insert(sharelinks);
+    public Result toencrypt(@RequestParam String downweb) throws Exception {
         HashMap<String, Object> objectObjectHashMap = new HashMap<>();
-        if (insert>0){
+        //查文件名  重名怎么办 下载加上文件id
+        QueryWrapper<Sharelinks> queryWrapperfile = new QueryWrapper<Sharelinks>();
+        queryWrapperfile.eq("downweb",  downweb);
+       Sharelinks sharelinkone = sharelinksmapper.selectOne(queryWrapperfile);
+       if (sharelinkone.getToencrypt()){
+           FileWeb  fileweb=FileWeb.builder().toencrypt(true).build();
+           objectObjectHashMap.put("result", fileweb);
+           return ResultUtils.success(objectObjectHashMap);
+       }
 
 
-            objectObjectHashMap.put("result", sharelinks);
+//得到块
+        QueryWrapper<File> queryWrapper = new QueryWrapper<File>();
+        queryWrapper.eq("fid",sharelinkone.getFileid());
+        File file = filemapper.selectOne(queryWrapper);
 
-            return ResultUtils.success(objectObjectHashMap);
-        }
-        return ResultUtils.error("插入失败");
+//加密不返回文件id
+//    不加密返回文件id  都返回一些必要的文件信息
+      if (file!=null) {
+          FileWeb fileweb = FileWeb.builder().toencrypt(false).fid(file.getFid()).filename(file.getFileName()).filetype(file.getFileType()).build();
+          objectObjectHashMap.put("result", fileweb);
+          return ResultUtils.success(objectObjectHashMap);
+      }
+
+
+
+        return ResultUtils.error("查询错误");
     }
 
 
@@ -276,5 +277,7 @@ public class FileImageController {
         }
         return ResultUtils.error("插入失败");
     }
+
+
 
 }

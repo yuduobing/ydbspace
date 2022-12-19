@@ -1,8 +1,13 @@
 package yun520.xyz.entity;
 
+import io.swagger.models.auth.In;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 
 @Data
+@Builder
+@AllArgsConstructor
 public class FileWeb {
     public  String  filename;
     public  String  totalSize;
@@ -13,5 +18,13 @@ public class FileWeb {
     public  String  identifier;
 
     //文件id
-    public  String  fid;
+    public Integer fid;
+
+      //文件id
+     public  String  filetype;
+
+    //是否加密
+    public  Boolean  toencrypt;
+
+
 }
