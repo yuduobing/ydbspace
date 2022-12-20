@@ -95,3 +95,14 @@ defaultValue：参数的默认值
 
 # 如何上传一个图片流和信息
  
+
+
+## rabbitmq
+ rabbitmq 发送者 简单模式不加交换机；接收者则都是监听消息通道
+~~~java
+ @RabbitListener
+ public void receive（String in）
+ {
+ System.out.println(in)
+ }
+ ~~~

@@ -123,7 +123,8 @@ public class FileImageController {
         //往响应流中写入数据
 //查文件名  重名怎么办 下载加上文件id
         QueryWrapper<File> queryWrapperfile = new QueryWrapper<File>();
-        queryWrapperfile.eq("filemd5", fileparams.getIdentifier()).or().eq("fid", fileparams.getFid());
+        //true null拼接  false 不拼接
+        queryWrapperfile.eq(false,"filemd5", fileparams.getIdentifier()).or().eq("fid", fileparams.getFid());
         List<File> userInfoList2 = filemapper.selectList(queryWrapperfile);
 //得到块
         QueryWrapper<Filechunk> queryWrapper = new QueryWrapper<Filechunk>();

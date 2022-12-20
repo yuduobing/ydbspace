@@ -22,6 +22,7 @@
         <module>utils-common</module>
         <module>fileServer</module>
         <module>fileStore</module>
+        <module>filemq</module>
     </modules>
 
     <properties>

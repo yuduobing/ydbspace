@@ -1,0 +1,6 @@
+本项目集成到项目中配置必须信息
+
+开启订阅模式
+ydb.rabbitmq.fanout ：true
+ydb.rabbitmq.exchangname
+ydb.rabbitmq.emailQueue
