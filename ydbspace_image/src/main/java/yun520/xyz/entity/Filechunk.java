@@ -27,7 +27,7 @@ public class Filechunk implements Serializable {
 
     private Long id;
 
-    @ApiModelProperty("切片md5")
+    @ApiModelProperty("文件md5")
     private String chunkmd5;
 
     @ApiModelProperty("切片大小")

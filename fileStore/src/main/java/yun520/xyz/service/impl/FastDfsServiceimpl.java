@@ -48,6 +48,6 @@ public class FastDfsServiceimpl  implements StoreService{
 
     @Override
     public void delete(String path) {
-
+        storageClient.deleteFile(path);
     }
 }

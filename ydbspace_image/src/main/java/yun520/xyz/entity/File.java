@@ -39,7 +39,7 @@ public class File implements Serializable {
     @ApiModelProperty("文件大小")
     private String fileSize;
 
-    @ApiModelProperty("文件种类")
+    @ApiModelProperty("文件种类 0是临时")
     private String fileSaveType;
 
     @ApiModelProperty("文件md5")

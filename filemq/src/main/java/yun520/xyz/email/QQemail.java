@@ -17,14 +17,14 @@ public class QQemail {
 
     @RabbitListener(queues="deletequeue")
     public  void receive(String in){
-        System.out.println("接受rabbitmq信息"+in);
-        sendMessage();
+
+        sendMessage(in);
     }
 
-    public void sendMessage(){
+    public void sendMessage(String in){
         SimpleMailMessage message = new SimpleMailMessage();
-        message.setSubject("这是一个标题");
-        message.setText("这是邮箱正文的内容");
+        message.setSubject("删除文件");
+        message.setText(in);
         message.setFrom("1510557673@qq.com");//发送者的邮箱地址
         message.setTo("1510557673@qq.com"); //接收者的邮箱地址
         javaMailSender.send(message);
