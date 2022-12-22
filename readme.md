@@ -128,3 +128,7 @@ ps  routing key可以模糊匹配
                 LocalDateTime localDateTime = LocalDateTime.now();
                 ZonedDateTime zdt = val.getCreateTime().atZone(zoneId);
                 Date datefrom = Date.from(zdt.toInstant());
+## git拒绝
+git stash  
+git pull --rebase
+git pull 
