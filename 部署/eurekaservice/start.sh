@@ -10,7 +10,7 @@ tar zxvf ~/gitee_go/deploy/output.tar.gz -C /docker/部署
     jarname[1]=ydbspace_image.jar
 
     echo "循环停止jar包开始"
-    cd /docker/部署
+    cd /docker/部署/target
     for(( i=0;i<${#jarname[@]};i++)) do
     #${#jarname[@]}获取数组长度用于循环
     echo ${jarname[i]};
@@ -31,4 +31,4 @@ tar zxvf ~/gitee_go/deploy/output.tar.gz -C /docker/部署
     else
     echo "启动 jar包"
     nohup  java -jar   $APP_NAME >$APP_NAME.log &
-    done;
+    done
