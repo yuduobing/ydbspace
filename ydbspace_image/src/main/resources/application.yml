@@ -13,7 +13,12 @@ spring:
     username: codimd
     password: Tan19970925!
     driver-class-name: com.mysql.jdbc.Driver
-
+  rabbitmq:
+    host: 1.116.162.163
+    port: 5672
+    username: root
+    password: ydb
+    virtual-host: /
 logging:
   level:
     com.xn2001: debug
@@ -35,3 +40,9 @@ mybatis-plus:
   configuration:
 #数据库驼峰命名转换
    map-underscore-to-camel-case: false
+
+ydb:
+  rabbitmq:
+    exchangname: deletechange
+    emailQueue: deletequeue
+    fanout: true

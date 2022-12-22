@@ -1,0 +1,24 @@
+server:
+  port: 3001
+spring:
+  application:
+    name: filemq
+  mail:
+    host: smtp.qq.com
+    username: 1510557673@qq.com
+    password: efijvsenbgvvghig
+  rabbitmq:
+    host: 1.116.162.163
+    port: 5672
+    username: root
+    password: ydb
+    virtual-host: /
+eureka:
+  instance:
+    instance-id: filemq
+  client:
+    service-url:
+      defaultZone: http://127.0.0.1:10086/eureka
+ydb:
+  email: true
+

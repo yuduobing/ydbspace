@@ -4,3 +4,13 @@
 ydb.rabbitmq.fanout ：true
 ydb.rabbitmq.exchangname
 ydb.rabbitmq.emailQueue
+
+
+ydb:
+  rabbitmq:
+    exchangname: deletechange
+    emailQueue: deletequeue
+    fanout: true
+
+
+接收者代码自己写
