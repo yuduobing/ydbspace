@@ -17,7 +17,7 @@ stages:
         name: build_maven
         displayName: Maven 构建
         jdkVersion: 8
-        mavenVersion: 3.3.9
+        mavenVersion: 3.6.3
         commands:
           - mvn -B clean package -Dmaven.test.skip=true
         artifacts:
@@ -26,6 +26,7 @@ stages:
               - ./ydbspace_image/target
               - ./eurekaservice/target
               - ./filemq/target
+        caches: []
         strategy: {}
       - step: publish@general_artifacts
         name: publish_general_artifacts
