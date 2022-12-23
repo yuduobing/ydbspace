@@ -42,9 +42,9 @@
                     <execution></execution>
                 </executions>
                 <configuration>
-                    <skip>
-                        false
-                    </skip>
+                    <classifier>
+                        exec
+                    </classifier>
                 </configuration>
             </plugin>
         </plugins>
