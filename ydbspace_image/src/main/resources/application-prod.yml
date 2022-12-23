@@ -1,0 +1,48 @@
+server:
+  port: 5300
+spring:
+  #  设置文件上传大小
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
+  application:
+    name: ydbspaceimage
+  datasource:
+    url: jdbc:mysql://rm-bp14j69a3p77u76fwbo.mysql.rds.aliyuncs.com:3306/webcloud?useSSL=false
+    username: codimd
+    password: Tan19970925!
+    driver-class-name: com.mysql.jdbc.Driver
+  rabbitmq:
+    host: 127.0.0.1
+    port: 5672
+    username: root
+    password: ydb
+    virtual-host: /
+logging:
+  level:
+    com.xn2001: debug
+  pattern:
+    dateformat: MM-dd HH:mm:ss:SSS
+eureka:
+  instance:
+    instance-id: 自测
+  client:
+    service-url:
+      defaultZone: http://127.0.0.1:10086/eureka
+fdfs:
+  connect-timeout: 18000
+  so-timeout: 18000
+  tracker-list: 127.0.0.1:22122
+
+mybatis-plus:
+  mapper-locations: classpath*:xml/*.xml
+  configuration:
+    #数据库驼峰命名转换
+    map-underscore-to-camel-case: false
+
+ydb:
+  rabbitmq:
+    exchangname: deletechange
+    emailQueue: deletequeue
+    fanout: true
