@@ -40,7 +40,7 @@ public class DeleteShare {
 
 
         @Scheduled(cron = "0 35 1 * * ?")
-    @Scheduled(fixedRate = 2000)
+//    @Scheduled(fixedRate = 2000)
     public void deleteshare() {
         try {
 
