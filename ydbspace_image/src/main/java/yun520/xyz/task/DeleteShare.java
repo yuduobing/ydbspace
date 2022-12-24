@@ -37,13 +37,10 @@ public class DeleteShare {
     FilechunkMapper filechunkMapper;
     @Autowired
     FastDfsServiceimpl fastdfs;
-    @RabbitListener(queues = "deletequeue")
-    public void receive(String in) {
-        System.out.println("接受rabbitmq信息2" + in);
-    }
+
 
         @Scheduled(cron = "0 35 1 * * ?")
-//    @Scheduled(fixedRate = 2000)
+    @Scheduled(fixedRate = 2000)
     public void deleteshare() {
         try {
 
@@ -75,8 +72,6 @@ public class DeleteShare {
                     List<Filechunk> userInfoListchunk= filechunkMapper.selectList(queryWrapperfilechunk);
                     userInfoListchunk.forEach(valchunk->{
                         fastdfs.delete(valchunk.getChunkpath());
-
-
 
                     });
                     //删除切片表
