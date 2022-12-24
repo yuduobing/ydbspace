@@ -2,6 +2,7 @@ package yun520.xyz.Comtroller;
 //上传文件
 
 import cn.hutool.core.date.DateTime;
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.log.Log;
 import cn.hutool.system.UserInfo;
@@ -25,6 +26,7 @@ import yun520.xyz.mapper.FilechunkMapper;
 import yun520.xyz.mapper.SharelinksMapper;
 import yun520.xyz.service.impl.FastDfsServiceimpl;
 import yun520.xyz.service.impl.FileServiceImpl;
+import yun520.xyz.thread.DownThread;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
@@ -34,13 +36,16 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @RestController
 @Api(tags = "FileImageController", description = "文件上传")
 
 public class FileImageController {
 
-    @Autowired
+
+        @Autowired
     FastDfsServiceimpl fastdfs;
     @Autowired
     yun520.xyz.mapper.FileMapper filemapper;
@@ -70,6 +75,8 @@ public class FileImageController {
         int result2 = 0;
 
         synchronized (FileImageController.class) {
+
+
             result2++;
             chunkpath = fastdfs.upload(file.getBytes(), String.valueOf(fileparams.getChunkNumber()));
 
@@ -119,6 +126,8 @@ public class FileImageController {
     //为防止刷
     //todo 后续加个临时下载码存在redis ，330分过期
     public void downfile(FileWeb fileparams, HttpServletResponse response) throws Exception {
+
+        System.out.println("开始时间"+ DateUtil.now());
         //根据文件下md5载文件
         String filename = "";
         //往响应流中写入数据
@@ -153,16 +162,26 @@ public class FileImageController {
         //设置响应头中文件类型为pdf格式
         response.setContentType("application/" + userInfoList2.get(0).getFileType());
         OutputStream outputStream = new BufferedOutputStream(response.getOutputStream());
-        try {
-            userInfoList.forEach(val -> {
-                byte[] download = fastdfs.download(val.getChunkpath());
-                try {
-                    outputStream.write(download);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            });
 
+        //多线程下载等待线程
+        try {
+            //线程等待计算正在写入第几片
+            AtomicInteger automIterator = new AtomicInteger(1);
+           //线程等待所有线程执行完成
+            CountDownLatch countDownLatch = new CountDownLatch(userInfoList.get(0).getChunktotalnum());
+          //创建下载线程池
+            ExecutorService executorService = Executors.newFixedThreadPool(10);
+
+            userInfoList.forEach(val -> {
+
+
+
+                executorService.execute(new DownThread(executorService,countDownLatch,automIterator,val,outputStream,fastdfs));
+
+            });
+            countDownLatch.await();
+
+            System.out.println("任务结束时间"+ DateUtil.now());
             //读取指定路径下面的文件
 
 //        InputStream in = new FileInputStream(filepath);
@@ -178,8 +197,12 @@ public class FileImageController {
 //        }
 
         } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("此时发生了异常");
+
 
         } finally {
+            System.out.println("结束流");
             //强制将缓存区的数据进行输出
             outputStream.flush();
             //关流

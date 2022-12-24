@@ -33,7 +33,8 @@ eureka:
 fdfs:
   connect-timeout: 18000
   so-timeout: 18000
-  tracker-list: 1.116.162.163:22122
+#  tracker-list: 1.116.162.163:22122
+  tracker-list: 192.168.3.89:22122
 
 mybatis-plus:
   mapper-locations: classpath*:xml/*.xml
