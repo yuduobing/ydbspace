@@ -35,6 +35,11 @@ fdfs:
   so-timeout: 18000
 #  tracker-list: 1.116.162.163:22122
   tracker-list: 192.168.3.89:22122
+  pool:
+      max-total: 200   # 连接池最大数量
+      max-total-per-key: 50  # 单个tracker最大连接数
+      max-wait-millis: 5000 # 连接耗尽最大等待时间 毫秒
+
 
 mybatis-plus:
   mapper-locations: classpath*:xml/*.xml

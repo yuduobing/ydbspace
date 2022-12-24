@@ -41,11 +41,10 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 @RestController
 @Api(tags = "FileImageController", description = "文件上传")
-
+@Scope(value = "prototype")
 public class FileImageController {
 
-
-        @Autowired
+    @Autowired
     FastDfsServiceimpl fastdfs;
     @Autowired
     yun520.xyz.mapper.FileMapper filemapper;
@@ -76,7 +75,6 @@ public class FileImageController {
 
         synchronized (FileImageController.class) {
 
-
             result2++;
             chunkpath = fastdfs.upload(file.getBytes(), String.valueOf(fileparams.getChunkNumber()));
 
@@ -103,7 +101,6 @@ public class FileImageController {
     @Transactional
     public Result uplaodChunkGET(FileWeb fileparams) throws Exception {
 
-
         //上传文件表
         File file1 = File.builder().fileName(fileparams.getFilename()).fileType(fileparams.getFilename().substring(fileparams.getFilename().length() - 3)).fileSize(fileparams.getTotalSize()).fileSaveType("0").filemd5(fileparams.getIdentifier()
         ).createTime(LocalDateTime.now()).build();
@@ -126,19 +123,20 @@ public class FileImageController {
     //为防止刷
     //todo 后续加个临时下载码存在redis ，330分过期
     public void downfile(FileWeb fileparams, HttpServletResponse response) throws Exception {
-
-        System.out.println("开始时间"+ DateUtil.now());
+        System.out.println("fastdfs地址" + fastdfs.hashCode());
+        System.out.println("filemapper地址" + filemapper.hashCode());
+        System.out.println("开始时间" + DateUtil.now());
         //根据文件下md5载文件
         String filename = "";
         //往响应流中写入数据
 //查文件名  重名怎么办 下载加上文件id
         QueryWrapper<File> queryWrapperfile = new QueryWrapper<File>();
         //true null拼接  false 不拼接
-        queryWrapperfile.eq(false,"filemd5", fileparams.getIdentifier()).or().eq("fid", fileparams.getFid());
+        queryWrapperfile.eq(false, "filemd5", fileparams.getIdentifier()).or().eq("fid", fileparams.getFid());
         List<File> userInfoList2 = filemapper.selectList(queryWrapperfile);
 //得到块
         QueryWrapper<Filechunk> queryWrapper = new QueryWrapper<Filechunk>();
-        queryWrapper.eq("chunkmd5",userInfoList2.get(0).getFilemd5()).orderByAsc("chunksnum");
+        queryWrapper.eq("chunkmd5", userInfoList2.get(0).getFilemd5()).orderByAsc("chunksnum");
         List<Filechunk> userInfoList = filechunkMapper.selectList(queryWrapper);
 
         //参考文章  https://www.jianshu.com/p/f8ac039fef5b
@@ -167,21 +165,19 @@ public class FileImageController {
         try {
             //线程等待计算正在写入第几片
             AtomicInteger automIterator = new AtomicInteger(1);
-           //线程等待所有线程执行完成
+            //线程等待所有线程执行完成
             CountDownLatch countDownLatch = new CountDownLatch(userInfoList.get(0).getChunktotalnum());
-          //创建下载线程池
-            ExecutorService executorService = Executors.newFixedThreadPool(10);
+            //创建下载线程池 不能设置超过5个要不会连接池耗尽
+            ExecutorService executorService = Executors.newFixedThreadPool(3);
 
             userInfoList.forEach(val -> {
 
-
-
-                executorService.execute(new DownThread(executorService,countDownLatch,automIterator,val,outputStream,fastdfs));
+                executorService.execute(new DownThread(executorService, countDownLatch, automIterator, val, outputStream, fastdfs));
 
             });
             countDownLatch.await();
 
-            System.out.println("任务结束时间"+ DateUtil.now());
+            System.out.println("任务结束时间" + DateUtil.now());
             //读取指定路径下面的文件
 
 //        InputStream in = new FileInputStream(filepath);
@@ -200,7 +196,6 @@ public class FileImageController {
             e.printStackTrace();
             System.out.println("此时发生了异常");
 
-
         } finally {
             System.out.println("结束流");
             //强制将缓存区的数据进行输出
@@ -211,22 +206,19 @@ public class FileImageController {
 
     }
 
-
-
-    @PostMapping ("/shareLinks")
+    @PostMapping("/shareLinks")
     @ApiOperation(value = "生成文件分享连接")
     public Result sharelinks(@RequestBody Sharelinks sharelinks) throws Exception {
 
         sharelinks.setSharetime(LocalDateTime.now());
-        sharelinks.setPassworld( RandomUtil.randomString(3));
+        sharelinks.setPassworld(RandomUtil.randomString(3));
         //这里后续通过redis自增1
-        sharelinks.setDownweb( RandomUtil.randomString(3));
+        sharelinks.setDownweb(RandomUtil.randomString(3));
         Sharelinks.builder().sharetime(LocalDateTime.now());
 
-        int insert =  sharelinksmapper.insert(sharelinks);
+        int insert = sharelinksmapper.insert(sharelinks);
         HashMap<String, Object> objectObjectHashMap = new HashMap<>();
-        if (insert>0){
-
+        if (insert > 0) {
 
             objectObjectHashMap.put("result", sharelinks);
 
@@ -235,10 +227,7 @@ public class FileImageController {
         return ResultUtils.error("文件链接分享生成失败");
     }
 
-
-
-
-    @GetMapping ("/toencrypt")
+    @GetMapping("/toencrypt")
     @ApiOperation(value = "查看文件是否加密")
     /*
     加密和不加密
@@ -249,35 +238,31 @@ public class FileImageController {
         HashMap<String, Object> objectObjectHashMap = new HashMap<>();
         //查文件名  重名怎么办 下载加上文件id
         QueryWrapper<Sharelinks> queryWrapperfile = new QueryWrapper<Sharelinks>();
-        queryWrapperfile.eq("downweb",  downweb);
-       Sharelinks sharelinkone = sharelinksmapper.selectOne(queryWrapperfile);
-       if (sharelinkone.getToencrypt()){
-           FileWeb  fileweb=FileWeb.builder().toencrypt(true).build();
-           objectObjectHashMap.put("result", fileweb);
-           return ResultUtils.success(objectObjectHashMap);
-       }
-
+        queryWrapperfile.eq("downweb", downweb);
+        Sharelinks sharelinkone = sharelinksmapper.selectOne(queryWrapperfile);
+        if (sharelinkone.getToencrypt()) {
+            FileWeb fileweb = FileWeb.builder().toencrypt(true).build();
+            objectObjectHashMap.put("result", fileweb);
+            return ResultUtils.success(objectObjectHashMap);
+        }
 
 //得到块
         QueryWrapper<File> queryWrapper = new QueryWrapper<File>();
-        queryWrapper.eq("fid",sharelinkone.getFileid());
+        queryWrapper.eq("fid", sharelinkone.getFileid());
         File file = filemapper.selectOne(queryWrapper);
 
 //加密不返回文件id
 //    不加密返回文件id  都返回一些必要的文件信息
-      if (file!=null) {
-          FileWeb fileweb = FileWeb.builder().toencrypt(false).fid(file.getFid()).filename(file.getFileName()).filetype(file.getFileType()).build();
-          objectObjectHashMap.put("result", fileweb);
-          return ResultUtils.success(objectObjectHashMap);
-      }
-
-
+        if (file != null) {
+            FileWeb fileweb = FileWeb.builder().toencrypt(false).fid(file.getFid()).filename(file.getFileName()).filetype(file.getFileType()).build();
+            objectObjectHashMap.put("result", fileweb);
+            return ResultUtils.success(objectObjectHashMap);
+        }
 
         return ResultUtils.error("查询错误");
     }
 
-
-    @PostMapping ("/sharePages2")
+    @PostMapping("/sharePages2")
     @ApiOperation(value = "上送验证码和后坠加密下载")
     /*
     加密和不加密
@@ -288,13 +273,12 @@ public class FileImageController {
         sharelinks.setSharetime(LocalDateTime.now());
         sharelinks.setPassworld(sharelinks.getPassworld());
         //todo 这里后续通过redis自增1
-        sharelinks.setDownweb( RandomUtil.randomString(3));
+        sharelinks.setDownweb(RandomUtil.randomString(3));
         Sharelinks.builder().sharetime(LocalDateTime.now());
 
-        int insert =  sharelinksmapper.insert(sharelinks);
+        int insert = sharelinksmapper.insert(sharelinks);
         HashMap<String, Object> objectObjectHashMap = new HashMap<>();
-        if (insert>0){
-
+        if (insert > 0) {
 
             objectObjectHashMap.put("result", sharelinks);
 
@@ -302,7 +286,5 @@ public class FileImageController {
         }
         return ResultUtils.error("插入失败");
     }
-
-
 
 }
