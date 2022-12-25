@@ -1,5 +1,7 @@
 package yun520.xyz.service;
 
+import java.io.InputStream;
+
 public interface StoreService {
     /**
      * 上传
@@ -7,9 +9,9 @@ public interface StoreService {
      * @param bytes
      * @param fileName
      */
-    public String upload(String group,byte[] bytes,String fileName);
+    public String upload(String groupName, InputStream inputStream, long fileSize, String fileExtName);
 
-    public String upload(byte[] bytes,String fileName);
+    public String upload(byte[] bytes,  long fileSize, String extension);
     /**
      * 下载
      * @param group

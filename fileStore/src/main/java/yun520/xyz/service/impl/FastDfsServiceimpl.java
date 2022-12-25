@@ -1,12 +1,23 @@
 package yun520.xyz.service.impl;
 
 
-import com.luhuiguo.fastdfs.domain.StorePath;
-import com.luhuiguo.fastdfs.service.FastFileStorageClient;
+import com.github.tobato.fastdfs.domain.fdfs.MetaData;
+import com.github.tobato.fastdfs.domain.fdfs.StorePath;
+import com.github.tobato.fastdfs.domain.proto.storage.DownloadByteArray;
+import com.github.tobato.fastdfs.service.FastFileStorageClient;
+
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import yun520.xyz.service.StoreService;
+
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
+
 //fastdfs 实现类
 @Component("FastDfsService")
 @Scope(value = "prototype")
@@ -17,18 +28,25 @@ public class FastDfsServiceimpl  implements StoreService{
     final static  String group="group1";
 
 
+
     //上传有group
     @Override
-    public String upload(String group, byte[] bytes, String fileName) {
-        StorePath sp=storageClient.uploadFile(group, bytes, fileName);
+    public String upload(String groupName, InputStream inputStream, long fileSize, String fileExtName) {
+        //  //文件名不可有中文
+        StorePath sp=storageClient.uploadFile(groupName,inputStream, fileSize,fileExtName);
         return sp.getFullPath();
     }
-    //上传无group
+
     @Override
-    public String upload(byte[] bytes, String fileName) {
-        //  //文件名不可有中文
-        StorePath sp=storageClient.uploadFile(bytes, fileName);
-        return sp.getFullPath();
+    public String upload(byte[] bytes,  long fileSize, String extension){
+        ByteArrayInputStream bais = new ByteArrayInputStream(bytes);
+        // 元数据
+        Set<MetaData> metaDataSet = new HashSet<MetaData>();
+        metaDataSet.add(new MetaData("dateTime", LocalDateTime.now().toString()));
+        metaDataSet.add(new MetaData("Author","Layne"));
+        StorePath storePath = storageClient.uploadFile(bais, fileSize, extension, metaDataSet);
+        return storePath.getFullPath();
+
     }
 
     @Override
@@ -37,17 +55,25 @@ public class FastDfsServiceimpl  implements StoreService{
     }
 
     @Override
-    public byte[] download(String path) {
+    public byte[] download(String filePath) {
 
-        String substring = path.split("/")[0];
-        String path2 = path.substring( path.indexOf("/")+1,path.length());
-        //todo 这里必须填上分组
-        byte[] bytes=storageClient.downloadFile("group1",path2);
+        byte[] bytes = null;
+        if (StringUtils.isNotBlank(filePath)) {
+            String group = filePath.substring(0, filePath.indexOf("/"));
+            String path = filePath.substring(filePath.indexOf("/") + 1);
+            DownloadByteArray byteArray = new DownloadByteArray();
+            bytes = storageClient.downloadFile(group, path, byteArray);
+        }
         return bytes;
+
+
     }
 
     @Override
-    public void delete(String path) {
-        storageClient.deleteFile(path);
+    public void delete(String filePath) {
+        if (StringUtils.isNotBlank(filePath)) {
+            storageClient.deleteFile(filePath);
+        }
+
     }
 }

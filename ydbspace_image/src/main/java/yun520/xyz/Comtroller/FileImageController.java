@@ -73,17 +73,20 @@ public class FileImageController {
         String chunkpath = "";
         int result2 = 0;
 
-        synchronized (FileImageController.class) {
+//        synchronized (FileImageController.class) {
+        String originalFilename = file.getOriginalFilename();
+        String extension = originalFilename.substring(originalFilename.lastIndexOf(".") + 1);
+
 
             result2++;
-            chunkpath = fastdfs.upload(file.getBytes(), String.valueOf(fileparams.getChunkNumber()));
+            chunkpath = fastdfs.upload("group1",file.getInputStream(),file.getSize(), String.valueOf(fileparams.getChunkNumber()));
 
             //填充切片表
             Filechunk filechunk = Filechunk.builder().chunkmd5(fileparams.getIdentifier()).chunksize(fileparams.getChunkSize()).chunkpath(chunkpath).chunktotalnum(fileparams.getTotalChunks()).chunksnum(fileparams.getChunkNumber())
                     .createTime(LocalDateTime.now()).build();
 
             result2 = filechunkMapper.insert(filechunk);
-        }
+//        }
 
         //上传切片表
         System.out.println("插入成功" + result2);
@@ -125,7 +128,7 @@ public class FileImageController {
     public void downfile(FileWeb fileparams, HttpServletResponse response) throws Exception {
         System.out.println("fastdfs地址" + fastdfs.hashCode());
         System.out.println("filemapper地址" + filemapper.hashCode());
-        System.out.println("开始时间" + DateUtil.now());
+        System.out.println("*****开始时间*******" + DateUtil.now());
         //根据文件下md5载文件
         String filename = "";
         //往响应流中写入数据
@@ -167,7 +170,7 @@ public class FileImageController {
             AtomicInteger automIterator = new AtomicInteger(1);
             //线程等待所有线程执行完成
             CountDownLatch countDownLatch = new CountDownLatch(userInfoList.get(0).getChunktotalnum());
-            //创建下载线程池 不能设置超过5个要不会连接池耗尽
+            //创建下载线程池
             ExecutorService executorService = Executors.newFixedThreadPool(3);
 
             userInfoList.forEach(val -> {
@@ -177,7 +180,7 @@ public class FileImageController {
             });
             countDownLatch.await();
 
-            System.out.println("任务结束时间" + DateUtil.now());
+            System.out.println("********任务结束时间*********" + DateUtil.now());
             //读取指定路径下面的文件
 
 //        InputStream in = new FileInputStream(filepath);

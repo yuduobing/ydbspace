@@ -36,12 +36,13 @@ public class DownThread implements Runnable {
     @Override
     public void run() {
         try {
-        System.out.println("开始下载执行线程"+Thread.currentThread().getName()+"时间"+ DateUtil.now()+"下载"+filechunk.getChunksnum());
+
         //检测活性
         outputStream.flush();
+            System.out.println("开始下载"+Thread.currentThread().getName()+"时间"+ DateUtil.now()+"下载"+filechunk.getChunksnum());
         //开始下载
         byte[] download = fastdfs.download(filechunk.getChunkpath());
-        System.out.println("下载结束"+Thread.currentThread().getName()+"时间"+ DateUtil.now());
+        System.out.println("下载结束"+Thread.currentThread().getName()+"时间"+ DateUtil.now()+"下载结束"+filechunk.getChunksnum());
         //等待唤醒
         synchronized (
                 latch
@@ -49,19 +50,22 @@ public class DownThread implements Runnable {
 
                 while (!(Integer.valueOf(this.num.get()).equals(filechunk.getChunksnum()))) {
 
-                    try {
+//                    try {
                         this.latch.wait();
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                    System.out.println("唤醒" + this.num.get());
+                        //检测活性
+                        outputStream.flush();
+//                    } catch (InterruptedException e) {
+//                        e.printStackTrace();
+//                    }
+
 
                 }
 
                 outputStream.write(download);
+             outputStream.flush();
                 this.latch.countDown();
                 int andAdd = this.num.getAndAdd(1);
-                System.out.println("此时写入第" + andAdd);
+                System.out.println(    "开始执行线程"+Thread.currentThread().getName()+"唤醒" + this.num.get()+"此时写入第" + andAdd);
                 //精确唤醒用lock
                 latch.notifyAll();
 
@@ -73,7 +77,7 @@ public class DownThread implements Runnable {
             e.printStackTrace();
             this.executorService.shutdown();
 
-            System.out.println("关闭线程"+Thread.currentThread().getName()+e.getMessage());
+            System.out.println("线程异常"+Thread.currentThread().getName()+e.getMessage());
             while ( this.latch.getCount() >0){
                 this.latch.countDown();
             }
