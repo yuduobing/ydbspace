@@ -28,14 +28,13 @@ import yun520.xyz.service.impl.FastDfsServiceimpl;
 import yun520.xyz.service.impl.FileServiceImpl;
 import yun520.xyz.thread.DownThread;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.net.URLEncoder;
 import java.time.LocalDateTime;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -125,7 +124,8 @@ public class FileImageController {
     @ApiOperation(value = "根据文件id｜文件md5下载文件")
     //为防止刷
     //todo 后续加个临时下载码存在redis ，330分过期
-    public void downfile(FileWeb fileparams, HttpServletResponse response) throws Exception {
+    public void downfile(FileWeb fileparams, HttpServletResponse response, HttpServletRequest request) throws Exception {
+
         System.out.println("fastdfs地址" + fastdfs.hashCode());
         System.out.println("filemapper地址" + filemapper.hashCode());
         System.out.println("*****开始时间*******" + DateUtil.now());
@@ -171,11 +171,18 @@ public class FileImageController {
             //线程等待所有线程执行完成
             CountDownLatch countDownLatch = new CountDownLatch(userInfoList.get(0).getChunktotalnum());
             //创建下载线程池
-            ExecutorService executorService = Executors.newFixedThreadPool(3);
+            LinkedBlockingQueue<Runnable> linkedBlockingQueue = new LinkedBlockingQueue<>();
+
+            ExecutorService executorService = new ThreadPoolExecutor(3, 3,
+                    0L, TimeUnit.MILLISECONDS,
+                    linkedBlockingQueue);;
+
+
+
 
             userInfoList.forEach(val -> {
 
-                executorService.execute(new DownThread(executorService, countDownLatch, automIterator, val, outputStream, fastdfs));
+                executorService.execute(new DownThread(executorService, countDownLatch, automIterator, val, outputStream, fastdfs,linkedBlockingQueue));
 
             });
             countDownLatch.await();

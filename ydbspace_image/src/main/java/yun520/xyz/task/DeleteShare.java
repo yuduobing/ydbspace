@@ -52,7 +52,7 @@ public class DeleteShare {
             //删除24小时的文件  1根据文件表md5找到文件  2删除切片后删除文件表
             QueryWrapper<File> queryWrapperfile = new QueryWrapper<File>();
             Calendar instance = Calendar.getInstance();
-            instance.add(Calendar.DAY_OF_MONTH, -1);
+            instance.add(Calendar.DAY_OF_MONTH, -2);
             Date delettime = instance.getTime();
             queryWrapperfile.apply(
                     "DATE_FORMAT (createTime,'%Y-%m-%d') <= DATE_FORMAT ({0},'%Y-%m-%d')", delettime);
