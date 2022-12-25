@@ -20,7 +20,7 @@
         <module>eurekaservice</module>
         <module>User</module>
         <module>utils-common</module>
-        <module>fileServer</module>
+
         <module>fileStore</module>
     </modules>
 
