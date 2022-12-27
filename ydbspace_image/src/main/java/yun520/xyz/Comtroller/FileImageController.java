@@ -37,12 +37,13 @@ import java.time.LocalDateTime;
 import java.util.*;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.logging.Logger;
 
 @RestController
 @Api(tags = "FileImageController", description = "文件上传")
 @Scope(value = "prototype")
 public class FileImageController {
-
+    private static Logger logger = Logger.getLogger("FileImageController.class");
     @Autowired
     FastDfsServiceimpl fastdfs;
     @Autowired
@@ -88,7 +89,7 @@ public class FileImageController {
 //        }
 
         //上传切片表
-        System.out.println("插入成功" + result2);
+       logger.info("插入成功" + result2);
 
         HashMap<String, Object> objectObjectHashMap = new HashMap<>();
 
@@ -110,7 +111,7 @@ public class FileImageController {
         int result = filemapper.insert(file1); // 帮我们自动生成id
 
         //上传切片表
-        System.out.println("文件上传成功id" + file1.getFid());
+       logger.info("文件上传成功id" + file1.getFid());
 
         HashMap<String, Object> objectObjectHashMap = new HashMap<>();
 
@@ -126,9 +127,9 @@ public class FileImageController {
     //todo 后续加个临时下载码存在redis ，330分过期
     public void downfile(FileWeb fileparams, HttpServletResponse response, HttpServletRequest request) throws Exception {
 
-        System.out.println("fastdfs地址" + fastdfs.hashCode());
-        System.out.println("filemapper地址" + filemapper.hashCode());
-        System.out.println("*****开始时间*******" + DateUtil.now());
+       logger.info("fastdfs地址" + fastdfs.hashCode());
+       logger.info("filemapper地址" + filemapper.hashCode());
+       logger.info("*****开始时间*******" + DateUtil.now());
         //根据文件下md5载文件
         String filename = "";
         //往响应流中写入数据
@@ -187,7 +188,7 @@ public class FileImageController {
             });
             countDownLatch.await();
 
-            System.out.println("********任务结束时间*********" + DateUtil.now());
+           logger.info("********任务结束时间*********" + DateUtil.now());
             //读取指定路径下面的文件
 
 //        InputStream in = new FileInputStream(filepath);
@@ -204,10 +205,10 @@ public class FileImageController {
 
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("此时发生了异常");
+           logger.info("此时发生了异常");
 
         } finally {
-            System.out.println("结束流");
+           logger.info("结束流");
             //强制将缓存区的数据进行输出
             outputStream.flush();
             //关流
