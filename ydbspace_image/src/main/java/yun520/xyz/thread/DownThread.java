@@ -11,9 +11,10 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.logging.Logger;
 
 public class DownThread implements Runnable {
-
+    private static Logger logger = Logger.getLogger("DownThread.class");
     //同个文件记录已经写入第几个切片 从1开始
     private AtomicInteger num = null;
     private Filechunk filechunk = null;
@@ -43,7 +44,7 @@ public class DownThread implements Runnable {
             //检测活性 防止下载完报错耽误下载网速
 
             outputStream.flush();
-
+            logger.info("开始下载" + Thread.currentThread().getName() + "时间" + DateUtil.now() + "下载" + filechunk.getChunksnum());
             System.out.println("开始下载" + Thread.currentThread().getName() + "时间" + DateUtil.now() + "下载" + filechunk.getChunksnum());
             //开始下载
             byte[] download = fastdfs.download(filechunk.getChunkpath());

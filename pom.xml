@@ -36,6 +36,7 @@
     <!-- 该标签只用来控制版本，不能将依赖引入 -->
     <dependencyManagement>
         <dependencies>
+
             <!-- springCloud yilai-->
             <dependency>
                 <groupId>org.springframework.cloud</groupId>

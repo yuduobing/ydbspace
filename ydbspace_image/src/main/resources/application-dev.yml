@@ -33,8 +33,8 @@ eureka:
 fdfs:
   connect-timeout: 30000
   so-timeout: 30000
-#  tracker-list: 1.116.162.163:22122
-  tracker-list: 192.168.3.89:22122
+  tracker-list: 1.116.162.163:22122
+#  tracker-list: 192.168.3.89:22122
   pool:
       max-total: 800   # 连接池最大数量
       max-total-per-key: 200  # 单个tracker最大连接数
@@ -64,4 +64,4 @@ gomyck:
     download-chunk-size: 100  #分块下载大小  单位: byte
     group-id: group1 #fastdfs的组, 文件会被存到这个组下
     file-server-protocol: http #远程文件服务连接协议
-    file-server-url: 192.168.3.89 #远程文件服务连接地址
+    file-server-url: 1.116.162.163 #远程文件服务连接地址
