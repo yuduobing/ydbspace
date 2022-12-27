@@ -132,9 +132,24 @@ ps  routing key可以模糊匹配
 git stash  
 git pull --rebase
 git pull 
-## 多线程线程等待
-开始时间2022-12-24 19:47:21
-结束时间2022-12-24 19:50:20
+## 多线程实践
+
+  1自定义线程队列方便异常的时候把线程队列清空，线程池shutdown只会停止当前线程但是队列中的线程依然会执行，如果针对文件的多线程下载，需在异常后把队列清空
+  LinkedBlockingQueue<Runnable> linkedBlockingQueue = new LinkedBlockingQueue<>();
+   ExecutorService executorService = new ThreadPoolExecutor(3, 3,
+                    0L, TimeUnit.MILLISECONDS,
+                    linkedBlockingQueue);;
+  this.executorService.shutdown();
+  this.linkedBlockingQueue.clear();
+
+  2 线程等待用CountDownLatch，子线程异常要把CountDownLatch减掉
+  CountDownLatch countDownLatch = new CountDownLatch(userInfoList.get(0).getChunktotalnum());
+  
+while (this.latch.getCount() > 0) {
+  this.latch.countDown();
+  }
+ 3子线程异常没法向上抛出，设计理念就是线程的异常自己执行
+ 4 等待执行 wait必须放在synchronized里面。锁对象为synchronized锁对象
 
 ## 使用原型模式
 
