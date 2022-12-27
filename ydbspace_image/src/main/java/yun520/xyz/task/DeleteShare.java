@@ -38,8 +38,7 @@ public class DeleteShare {
     @Autowired
     FastDfsServiceimpl fastdfs;
 
-
-        @Scheduled(cron = "0 35 1 * * ?")
+    @Scheduled(cron = "0 35 1 * * ?")
 //    @Scheduled(fixedRate = 2000)
     public void deleteshare() {
         try {
@@ -67,35 +66,34 @@ public class DeleteShare {
                     nums.getAndIncrement();
 //                开始删除  删除文件  删除切片表  删除文件表
                     QueryWrapper<Filechunk> queryWrapperfilechunk = new QueryWrapper<Filechunk>();
-                    queryWrapperfilechunk.eq("chunkmd5",val.getFilemd5());
+                    queryWrapperfilechunk.eq("chunkmd5", val.getFilemd5());
 
-                    List<Filechunk> userInfoListchunk= filechunkMapper.selectList(queryWrapperfilechunk);
-                    userInfoListchunk.forEach(valchunk->{
-                        fastdfs.delete(valchunk.getChunkpath());
-
+                    List<Filechunk> userInfoListchunk = filechunkMapper.selectList(queryWrapperfilechunk);
+                    userInfoListchunk.forEach(valchunk -> {
+                        try {
+                            fastdfs.delete(valchunk.getChunkpath());
+                        } catch (Exception e) {
+                            System.out.println("异常了" + e);
+                        }
                     });
                     //删除切片表
                     int delete = filechunkMapper.delete(queryWrapperfilechunk);
-
 
                 }
 
             });
             //删除文件，有些文件
             filemapper.delete(queryWrapperfile);
-             //删除过期链接 todo 分享时间判断更加灵活
-                        QueryWrapper<Sharelinks> queryWrapperfilesare = new QueryWrapper<Sharelinks>();
-                        queryWrapperfilesare.apply(
-                                "DATE_FORMAT (sharetime,'%Y-%m-%d') <= DATE_FORMAT ({0},'%Y-%m-%d')", delettime);
+            //删除过期链接 todo 分享时间判断更加灵活
+            QueryWrapper<Sharelinks> queryWrapperfilesare = new QueryWrapper<Sharelinks>();
+            queryWrapperfilesare.apply(
+                    "DATE_FORMAT (sharetime,'%Y-%m-%d') <= DATE_FORMAT ({0},'%Y-%m-%d')", delettime);
             int deleteshare = sharelinksmapper.delete(queryWrapperfilesare);
-
 
             //删除完毕调用tabbitmq发送邮件通知
             mqService.send("删除任务成功，删除临时文件总数" + nums.get());
 
-
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             mqService.send("发生异常了" + e);
         }
     }
