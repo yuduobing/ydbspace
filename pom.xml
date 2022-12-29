@@ -22,6 +22,7 @@
         <module>utils-common</module>
 
         <module>fileStore</module>
+        <module>fileRedis</module>
     </modules>
 
     <properties>

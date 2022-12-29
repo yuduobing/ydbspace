@@ -1,0 +1,24 @@
+server:
+  port: 3056
+spring:
+  application:
+    name: fileRedis
+  redis:
+    # Redis服务器地址
+    host: 1.116.162.163
+    # Redis数据库索引（默认为0）
+#    database: 0
+    # Redis服务器连接端口
+    port: 8057
+    # Redis服务器连接密码（默认为空）
+    password: password
+    # 连接超时时间
+#    timeout: 1000ms
+eureka:
+  instance:
+    instance-id: fileRedis
+  client:
+    service-url:
+      defaultZone: http://127.0.0.1:10086/eureka
+
+

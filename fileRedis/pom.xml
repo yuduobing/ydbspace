@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>ydbspace</artifactId>
+        <groupId>yun520.xyz</groupId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>fileRedis</artifactId>
+
+    <properties>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
+    </properties>
+<!--    jedis：采用的是直连，多个线程操作是不安全的，如果想要避免，使用 jedis pool 连接池！BIO-->
+<!--    lettuce：采用 netty，实例可以在多个线程中共享，不存在线程不安全的情况！可以减少线程数据了，更像 NIO 模式-->
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>65
+            <artifactId>spring-boot-starter-data-redis</artifactId>
+        </dependency>
+    </dependencies>
+</project>

@@ -57,9 +57,9 @@ gomyck:
   config:
     redis: false #是否使用redis存储文件上传信息以及上传锁
   redis:
-    host: 127.0.0.1
-    password: xxxxx
-    port: 6379
+    host: 1.116.162.163
+    password: password
+    port: 8057
   fastdfs: #fastdfs上传配置
     chunk-size: 5 #分块大小, 上传文件分块的大小 单位: MB
     download-chunk-size: 100  #分块下载大小  单位: byte
