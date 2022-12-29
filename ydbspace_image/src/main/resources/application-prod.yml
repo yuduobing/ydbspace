@@ -62,3 +62,9 @@ gomyck:
     group-id: group1 #fastdfs的组, 文件会被存到这个组下
     file-server-protocol: http #远程文件服务连接协议
     file-server-url: 1.116.162.163 #远程文件服务连接地址
+
+  logstash:
+    host: logstash-prod
+  logging:
+    level:
+      root: info

@@ -8,6 +8,8 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
+import java.util.logging.Logger;
+
 @SpringBootApplication
 @EnableFeignClients
 @MapperScan("yun520.xyz.mapper")
@@ -15,6 +17,8 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableScheduling
 public class ImageApplication {
     public static void main(String[] args) {
+//        Logger logger = Logger.getLogger("ImageApplication.class");
+//        logger.info("项目启动了");
         SpringApplication.run(ImageApplication.class, args);
     }
 
