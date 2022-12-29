@@ -5,6 +5,7 @@ import kotlin.jvm.Throws;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import yun520.xyz.entity.Filechunk;
+import yun520.xyz.service.StoreService;
 import yun520.xyz.service.impl.FastDfsServiceimpl;
 
 import java.io.IOException;
@@ -19,7 +20,7 @@ public class DownThread implements Runnable {
     private AtomicInteger num = null;
     private Filechunk filechunk = null;
     private OutputStream outputStream = null;
-    private FastDfsServiceimpl fastdfs = null;
+    private StoreService fastdfs = null;
     //控制所有线程执行完成
     private CountDownLatch latch = null;
     //线程队列 方便异常清楚
@@ -27,7 +28,7 @@ public class DownThread implements Runnable {
     //出现异常时终止所有线程
     private ExecutorService executorService = null;
 
-    public DownThread(ExecutorService executorService, CountDownLatch latch, AtomicInteger num, Filechunk filechunk, OutputStream outputStream, FastDfsServiceimpl fastdfs, LinkedBlockingQueue linkedBlockingQueue) {
+    public DownThread(ExecutorService executorService, CountDownLatch latch, AtomicInteger num, Filechunk filechunk, OutputStream outputStream, StoreService fastdfs, LinkedBlockingQueue linkedBlockingQueue) {
         this.executorService = executorService;
         this.num = num;
         this.latch = latch;

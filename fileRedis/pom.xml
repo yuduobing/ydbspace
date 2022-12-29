@@ -19,8 +19,30 @@
 <!--    lettuce：采用 netty，实例可以在多个线程中共享，不存在线程不安全的情况！可以减少线程数据了，更像 NIO 模式-->
     <dependencies>
         <dependency>
-            <groupId>org.springframework.boot</groupId>65
+            <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-redis</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+        </dependency>
     </dependencies>
+    <build>
+        <finalName>${project.artifactId}</finalName>
+        <plugins>
+            <!--运行插件 -->
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <executions>
+                    <execution></execution>
+                </executions>
+                <configuration>
+                    <classifier>
+                        exec
+                    </classifier>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>

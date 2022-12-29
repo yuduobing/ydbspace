@@ -85,6 +85,11 @@
             <artifactId>filemq</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
+        <dependency>
+            <groupId>yun520.xyz</groupId>
+            <artifactId>fileRedis</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
     </dependencies>
     <build>
         <finalName>${project.artifactId}</finalName>

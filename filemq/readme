@@ -1,9 +1,10 @@
 本项目集成到项目中配置必须信息
-
-开启订阅模式
+目前只有这种模式
+开启订阅模式 交换机名称，队列名称
 ydb.rabbitmq.fanout ：true
 ydb.rabbitmq.exchangname
 ydb.rabbitmq.emailQueue
+其他模式可以自己模仿添加
 
 
 ydb:

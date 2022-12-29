@@ -24,6 +24,8 @@ import yun520.xyz.entity.Sharelinks;
 import yun520.xyz.mapper.FileMapper;
 import yun520.xyz.mapper.FilechunkMapper;
 import yun520.xyz.mapper.SharelinksMapper;
+import yun520.xyz.service.RedisService;
+import yun520.xyz.service.StoreService;
 import yun520.xyz.service.impl.FastDfsServiceimpl;
 import yun520.xyz.service.impl.FileServiceImpl;
 import yun520.xyz.thread.DownThread;
@@ -45,13 +47,16 @@ import java.util.logging.Logger;
 public class FileImageController {
     private static Logger logger = Logger.getLogger("FileImageController.class");
     @Autowired
-    FastDfsServiceimpl fastdfs;
+    StoreService fastdfs;
     @Autowired
     yun520.xyz.mapper.FileMapper filemapper;
     @Autowired
     SharelinksMapper sharelinksmapper;
     @Autowired
     FilechunkMapper filechunkMapper;
+
+    @Autowired
+    private RedisService redisService;
 
     @GetMapping("/uploadImage")
     @ApiOperation(value = "上传图片")
@@ -285,6 +290,7 @@ public class FileImageController {
         sharelinks.setPassworld(sharelinks.getPassworld());
         //todo 这里后续通过redis自增1
         sharelinks.setDownweb(RandomUtil.randomString(3));
+
         Sharelinks.builder().sharetime(LocalDateTime.now());
 
         int insert = sharelinksmapper.insert(sharelinks);

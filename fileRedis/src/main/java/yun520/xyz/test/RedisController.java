@@ -11,22 +11,24 @@ import yun520.xyz.service.RedisService;
 
 @Api(tags = "RedisController", description = "Redis测试")
 @Controller
-@RequestMapping("/redis")
 public class RedisController {
     @Autowired(required=false)
     private RedisService redisService;
 
 
     @ApiOperation("测试简单缓存")
-    @RequestMapping(value = "/simpleTest", method = RequestMethod.GET)
+    @RequestMapping(value = "/redistest", method = RequestMethod.GET)
     @ResponseBody
-    public String  simpleTest() {
-        String id="2";
-        String key = "redis:simple:" + id;
-        redisService.set(key, id);
+    public Object  simpleTest() {
+        String id="这是value测试";
+        String key = "redis:simple:" + "测试";
+        //2小时过期
+        redisService.set(key, id,120);
+        String key2 = "redis:simple:" + "测试map";
+        redisService.hSet(key2,"1","value1",120);
+        redisService.hSet(key2,"2","value1",120);
+        Object ob = redisService.hGetAll(key2);
 
-
-
-        return "存储成功";
+        return ob;
     }
 }

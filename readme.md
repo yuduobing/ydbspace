@@ -155,6 +155,9 @@ while (this.latch.getCount() > 0) {
 
 控制层和服务层都需要加
 @Scope(value = "prototype")
+## 方法传参形式
+    Long sAdd(String key, Object... values);
+Object...values可变参数既可以用数组形式
 
 ## 创建
 
