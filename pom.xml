@@ -15,12 +15,11 @@
     <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
     <modules>
-        <module>filemq</module>
+        <module>fileMq</module>
         <module>ydbspace_image</module>
         <module>eurekaservice</module>
         <module>User</module>
         <module>utils-common</module>
-
         <module>fileStore</module>
         <module>fileRedis</module>
     </modules>
