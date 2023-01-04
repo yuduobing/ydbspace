@@ -5,10 +5,10 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class RedisStart {
+public class FileRedisStart {
     public static void main(String[] args) {
 
-        SpringApplication.run(RedisStart.class, args);
+        SpringApplication.run(FileRedisStart.class, args);
     }
 
 }
