@@ -1,5 +1,9 @@
 server:
   port: 5300
+  servlet:
+    session:
+      cookie:
+        name: OAUTH2-CLIENT-SESSIONID #防止Cookie冲突，冲突会导致登录验证不通过
 spring:
   #  设置文件上传大小
   servlet:

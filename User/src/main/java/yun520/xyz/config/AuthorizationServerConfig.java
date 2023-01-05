@@ -1,19 +1,26 @@
 package yun520.xyz.config;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
-import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
-import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
+import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
+import org.springframework.security.oauth2.provider.token.TokenEnhancer;
+import org.springframework.security.oauth2.provider.token.TokenEnhancerChain;
 import org.springframework.security.oauth2.provider.token.TokenStore;
-import yun520.xyz.Service.UserService;
+import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
+import yun520.xyz.component.JwtTokenEnhancer;
+import yun520.xyz.service.UserService;
+
+import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 认证服务器配置
@@ -32,19 +39,57 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     @Autowired
     private UserService userService;
 
-    @Autowired
-    @Qualifier("redisTokenStore")
+    //    @Qualifier("redisTokenStore")
+//    @Qualifier("jwtTokenStore")
+    @Resource(name="redisTokenStore")
     private TokenStore tokenStore;
+    @Autowired
+    private JwtAccessTokenConverter jwtAccessTokenConverter;
+    @Autowired
+    private JwtTokenEnhancer jwtTokenEnhancer;
 
     /**
-     * 使用密码模式需要配置
+     * 使用密码模式需要配置jwt
+     */
+//    @Override
+//    public void configure(AuthorizationServerEndpointsConfigurer endpoints) {
+//        TokenEnhancerChain enhancerChain = new TokenEnhancerChain();
+//        List<TokenEnhancer> delegates = new ArrayList<>();
+//        delegates.add(jwtTokenEnhancer); //配置JWT的内容增强器
+//        delegates.add(jwtAccessTokenConverter);
+//        enhancerChain.setTokenEnhancers(delegates);
+//        endpoints.authenticationManager(authenticationManager)
+//                .userDetailsService(userService)
+//                .tokenStore(tokenStore) //配置令牌存储策略
+//                .accessTokenConverter(jwtAccessTokenConverter)
+//                .tokenEnhancer(enhancerChain);
+//    }
+
+    /**
+     * 使用密码模式需要配置redis
      */
     @Override
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) {
         endpoints.authenticationManager(authenticationManager)
                 .userDetailsService(userService)
-                .tokenStore(tokenStore);//配置令牌存储策略
+                .tokenStore(tokenStore);
+    }
+    @Override
+    public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
+        clients.inMemory()
+                .withClient("admin")
+                .secret(passwordEncoder.encode("admin123456"))
+                .accessTokenValiditySeconds(3600)
+                .refreshTokenValiditySeconds(864000)
+                .redirectUris("http://www.baidu.com")
+//                .redirectUris("http://localhost:9501/login") //单点登录时配置
+//                .autoApprove(true) //自动授权配置
+                .scopes("all")
+                .authorizedGrantTypes("authorization_code","password","refresh_token");
     }
 
-    //省略代码...
+    @Override
+    public void configure(AuthorizationServerSecurityConfigurer security) {
+        security.tokenKeyAccess("isAuthenticated()"); // 获取密钥需要身份认证，使用单点登录时必须配置
+    }
 }

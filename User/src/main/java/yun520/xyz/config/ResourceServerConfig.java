@@ -7,11 +7,14 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.R
 
 /**
  * 资源服务器配置
+ * Created by macro on 2019/9/30.
  */
 @Configuration
 @EnableResourceServer
 public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 
+
+    //这里配置哪些请求允许访问
     @Override
     public void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
@@ -19,6 +22,6 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
                 .authenticated()
                 .and()
                 .requestMatchers()
-                .antMatchers("/user/**");//配置需要保护的资源路径
+                .antMatchers("/user/**","/file/**");
     }
 }
