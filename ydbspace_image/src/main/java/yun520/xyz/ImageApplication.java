@@ -16,8 +16,7 @@ import java.util.logging.Logger;
 @MapperScan("yun520.xyz.mapper")
 //启动定时任务
 @EnableScheduling
-// springsecurity 受保护的资源
-@EnableResourceServer
+
 public class ImageApplication {
     public static void main(String[] args) {
 //        Logger logger = Logger.getLogger("ImageApplication.class");

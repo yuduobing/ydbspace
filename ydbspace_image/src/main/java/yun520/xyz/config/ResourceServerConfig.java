@@ -15,15 +15,8 @@ import org.springframework.security.oauth2.provider.token.TokenStore;
 @AllArgsConstructor
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
+     //  这些是读取的配置文件配置，不然也可以手动注入
 
-    private final ResourceServerProperties resourceServerProperties;
-    private final TokenStore tokenStore;
-
-    @Override
-    public void configure(ResourceServerSecurityConfigurer resources) {
-        resources.tokenStore(tokenStore)
-                .resourceId(resourceServerProperties.getResourceId());
-    }
     //这里配置哪些请求允许访问
     @Override
     public void configure(HttpSecurity http) throws Exception {
@@ -33,7 +26,7 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
                 .and()
                 .csrf().disable()     // 前后端分离下，可以关闭 csrf
                 .requestMatchers()
-                .antMatchers("/user/**","/file/**");
+                .antMatchers("/user/**","/file/**"); //管理哪些接口
     }
 
 }

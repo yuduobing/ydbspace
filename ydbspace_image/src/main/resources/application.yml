@@ -1,9 +1,19 @@
+#公共配置可覆盖
 spring:
  profiles:
   active: dev
  mvc:
   async:
    request-timeout: 60000
+#   redis链接池配置
+ redis:
+  jedis:
+   pool:
+    max-active: 8
+    max-idle: 8
+    max-wait: -1ms
+    min-idle: 0
+
 #security配置
 server:
  servlet:
@@ -11,18 +21,20 @@ server:
    cookie:
     name: ydbspace-webcloud #防止Cookie冲突，冲突会导致登录验证不通过
 oauth2-server-url: http://localhost:10088
+
+#配置文件注入也可以在代码里注入
 security:
  oauth2: #与oauth2-server对应的配置
   client:
-   client-id: admin
-   client-secret: admin123456
+   client-id: read
+   client-secret: read
    user-authorization-uri: ${oauth2-server-url}/oauth/authorize
    access-token-uri: ${oauth2-server-url}/oauth/token
   resource:
    token-info-uri: ${oauth2-server-url}/oauth/check_token
-   id: test  # 资源id，可能存在多个资源服务器，可以配置客户端拥有哪些资源的访问权限
-#  resource:
-#   jwt:
-#    key-uri: ${oauth2-server-url}/oauth/token_key
+   id: ${spring.application.name}  # 资源id，可能存在多个资源服务器，可以配置客户端拥有哪些资源的访问权限
 
+resource:
+ jwt:
+  key-uri: ${oauth2-server-url}/oauth/token_key
 

@@ -85,11 +85,34 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 //                .redirectUris("http://localhost:9501/login") //单点登录时配置
 //                .autoApprove(true) //自动授权配置
                 .scopes("all")
+//     第二个客户端
+                .and()
+                .withClient("read")
+                .secret(passwordEncoder.encode("read"))
+                .accessTokenValiditySeconds(3600)
+                .refreshTokenValiditySeconds(864000)
+                .redirectUris("http://www.google.com")
+//                .redirectUris("http://localhost:9501/login") //单点登录时配置
+//                .autoApprove(true) //自动授权配置
+                .scopes("read")
+        //配置grant_type，表示授权类型
+                /**
+                 * 配置grant_type，表示授权类型
+                 * authorization_code: 授权码模式
+                 * implicit: 简化模式
+                 * password： 密码模式
+                 * client_credentials: 客户端模式
+                 * refresh_token: 更新令牌
+                 */
                 .authorizedGrantTypes("authorization_code","password","refresh_token");
     }
 
     @Override
     public void configure(AuthorizationServerSecurityConfigurer security) {
         security.tokenKeyAccess("isAuthenticated()"); // 获取密钥需要身份认证，使用单点登录时必须配置
+
+        //允许表单认证 客户端可以检查token  访问 /oauth/check_token不会报 401
+        security.allowFormAuthenticationForClients();
+        security.checkTokenAccess("permitAll()");
     }
 }
