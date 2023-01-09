@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="yun520.xyz.mapper.FilechunkMapper">
+<mapper namespace="yun520.xyz.mapper.UserfileMapper">
 
+    <select id="selectPageVo" resultType="yun520.xyz.vo.file.FileListVo"></select>
 </mapper>

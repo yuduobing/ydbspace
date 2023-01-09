@@ -1,4 +1,4 @@
-package yun520.xyz.Service;
+package yun520.xyz.service;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;

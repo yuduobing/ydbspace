@@ -45,7 +45,8 @@ public class genertor
                     builder.parent("yun520.xyz"); // 设置父包名
                 })
                 .strategyConfig(builder -> {
-                    builder.addInclude("filechunk")
+                    //表名
+                    builder.addInclude("userfile")
                             // 开始实体类配置
                             .entityBuilder()
                             // 开启lombok模型

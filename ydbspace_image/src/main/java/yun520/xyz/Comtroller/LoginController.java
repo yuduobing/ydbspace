@@ -4,7 +4,7 @@ package yun520.xyz.Comtroller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
-import yun520.xyz.Service.LoginService;
+import yun520.xyz.service.LoginService;
 
 //账户登陆
 @RestController
