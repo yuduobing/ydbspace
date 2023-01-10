@@ -1,5 +1,6 @@
-package yun520.xyz;
+package yun520.xyz.result;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 /**

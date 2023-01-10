@@ -1,15 +1,14 @@
 package yun520.xyz.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.beust.jcommander.Parameter;
+
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Parameter;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-import yun520.xyz.RestResult;
+import yun520.xyz.result.RestResult;
 import yun520.xyz.service.IUserfileService;
 import yun520.xyz.vo.file.FileListVo;
 
@@ -25,7 +24,8 @@ import java.util.Map;
  * @since 2023-01-09
  */
 @Controller
-@RequestMapping("/web/userfile")
+@RestController("/web/userfile")
+@Api(tags = "UserfileController", description = "用户文件管理")
 public class UserfileController {
    @Autowired
    public IUserfileService iUserService;
@@ -34,19 +34,18 @@ public class UserfileController {
     @GetMapping(value = "/getfilelist")
     @ResponseBody
     public RestResult getFileList(
-            @Parameter(description = "文件路径", required = true) String filePath,
+            @Parameter(description = "文件路径", required = false) String filePath,
             @Parameter(description = "当前页", required = true) long currentPage,
             @Parameter(description = "页面数量", required = true) long pageCount){
 
         IPage<FileListVo> fileList = iUserService.getFileList(null, filePath, currentPage, pageCount);
-
         Map<String, Object> map = new HashMap<>();
         map.put("total", fileList.getTotal());
         map.put("list", fileList.getRecords());
 
-
         return RestResult.success().data(map);
 
     }
+
 
 }

@@ -2,5 +2,40 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="yun520.xyz.mapper.UserfileMapper">
 
-    <select id="selectPageVo" resultType="yun520.xyz.vo.file.FileListVo"></select>
+<!--    <select id="selectPageVo" resultType="yun520.xyz.vo.file.FileListVo"></select>-->
+    <select id="selectPageVo" parameterType="yun520.xyz.entity.Userfile" resultType="yun520.xyz.vo.file.FileListVo">
+        select * from userfile a
+        left join file on file.fid = a.fileId
+        <where>
+            <if test="fileTypeId != null">
+                <choose>
+                    <when test="fileTypeId != 5">
+                        extendName in (select fileExtendName from fileclassification where fileTypeId = #{fileTypeId})
+                    </when>
+                    <otherwise>
+                        extendName not in (select fileExtendName from fileclassification where fileTypeId in (1, 2, 3, 4))
+                    </otherwise>
+                </choose>
+                and a.isDir = 0
+            </if>
+            <if test="userFile.userId != null">
+                and a.userId = #{userFile.userId}
+            </if>
+            <if test="userFile.filePath != null">
+                and a.filePath = #{userFile.filePath}
+            </if>
+            <if test="userFile.extendName != null">
+                and a.extendName = #{userFile.extendName}
+            </if>
+            <if test="userFile.userFileId != null">
+                and a.userFileId = #{userFile.userFileId}
+            </if>
+            <if test="userFile.fileName != null">
+                and a.fileName = #{userFile.fileName}
+            </if>
+            and a.deleteFlag = 0
+        </where>
+        ORDER BY isDir desc
+    </select>
+
 </mapper>

@@ -1,7 +1,6 @@
 package yun520.xyz.vo.file;
 
-import com.qiwenshare.file.domain.Image;
-import com.qiwenshare.file.domain.Music;
+
 import lombok.Data;
 
 /**
@@ -47,7 +46,5 @@ public class FileDetailVO {
 
     private String deleteBatchNum;
 
-    private Image image;
 
-    private Music music;
 }

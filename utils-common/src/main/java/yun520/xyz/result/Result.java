@@ -1,4 +1,4 @@
-package yun520.xyz;
+package yun520.xyz.result;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;

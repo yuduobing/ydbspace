@@ -1,11 +1,8 @@
-package yun520.xyz.Comtroller;
+package yun520.xyz.controller;
 //上传文件
 
-import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.RandomUtil;
-import cn.hutool.log.Log;
-import cn.hutool.system.UserInfo;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -14,9 +11,8 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
-import yun520.xyz.Result;
-import yun520.xyz.ResultUtils;
+import yun520.xyz.result.Result;
+import yun520.xyz.result.ResultUtils;
 import yun520.xyz.entity.File;
 import yun520.xyz.entity.FileWeb;
 import yun520.xyz.entity.Filechunk;
@@ -26,17 +22,16 @@ import yun520.xyz.mapper.FilechunkMapper;
 import yun520.xyz.mapper.SharelinksMapper;
 import yun520.xyz.service.RedisService;
 import yun520.xyz.service.StoreService;
-import yun520.xyz.service.impl.FastDfsServiceimpl;
-import yun520.xyz.service.impl.FileServiceImpl;
 import yun520.xyz.thread.DownThread;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.*;
+import java.io.BufferedOutputStream;
+import java.io.OutputStream;
 import java.net.URLEncoder;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Logger;
@@ -49,7 +44,7 @@ public class FileImageController {
     @Autowired
     StoreService fastdfs;
     @Autowired
-    yun520.xyz.mapper.FileMapper filemapper;
+    FileMapper filemapper;
     @Autowired
     SharelinksMapper sharelinksmapper;
     @Autowired

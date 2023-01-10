@@ -1,4 +1,4 @@
-package yun520.xyz.Comtroller;
+package yun520.xyz.controller;
 
 
 import org.springframework.beans.factory.annotation.Autowired;

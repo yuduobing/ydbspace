@@ -31,7 +31,8 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
                 .and()
                 .csrf().disable()     // 前后端分离下，可以关闭 csrf
                 .requestMatchers()
-                .antMatchers("/user/**","/file/**"); //管理哪些接口
+                .antMatchers("/user/**","/file/**")
+        ; //管理哪些接口
     }
 
 }
