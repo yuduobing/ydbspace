@@ -50,8 +50,7 @@ public class FileImageController {
     @Autowired
     FilechunkMapper filechunkMapper;
 
-    @Autowired
-    private RedisService redisService;
+
 
     @GetMapping("/uploadImage")
     @ApiOperation(value = "上传图片")
@@ -67,7 +66,7 @@ public class FileImageController {
     @ApiOperation(value = "上传文件")
     @Transactional
     public synchronized Result uplaodChunk(MultipartFile file, FileWeb fileparams) throws Exception {
-        String fileimage = file.getOriginalFilename();
+
 
 //          文件名不可有中文
         String chunkpath = "";

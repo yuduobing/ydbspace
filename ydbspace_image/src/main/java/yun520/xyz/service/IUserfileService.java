@@ -14,6 +14,10 @@ import yun520.xyz.vo.file.FileListVo;
  * @since 2023-01-09
  */
 public interface IUserfileService extends IService<Userfile> {
+     //获取文件旧爱
      public IPage<FileListVo> getFileList (Long userId, String filePath, Long beginCount, Long pageCount);
+     //创建文件夹
+     public Boolean newMk (Long userId, String path, String filename);
+
 
 }

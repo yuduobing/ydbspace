@@ -5,12 +5,13 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import yun520.xyz.chain.core.ContextRequest;
 
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class FileWeb {
+public class FileWeb  extends ContextRequest {
     public  String  filename;
     public  String  totalSize;
     public  String  chunkSize;
@@ -18,7 +19,7 @@ public class FileWeb {
     public  int  chunkNumber;
     public  int  totalChunks;
     public  String  identifier;
-
+    public  String  filePath;
     //文件id
     public Integer fid;
 
@@ -27,6 +28,6 @@ public class FileWeb {
 
     //是否加密
     public  Boolean  toencrypt;
-
-
+//切片存储路径
+    public  String  chunkpath;
 }

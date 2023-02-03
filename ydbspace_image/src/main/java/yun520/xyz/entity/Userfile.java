@@ -3,8 +3,7 @@ package yun520.xyz.entity;
 import java.io.Serializable;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 /**
  * <p>
@@ -14,9 +13,11 @@ import lombok.Setter;
  * @author yuduobin
  * @since 2023-01-09
  */
-@Getter
-@Setter
+@Data
 @ApiModel(value = "Userfile对象", description = "")
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class Userfile implements Serializable {
 
     private static final long serialVersionUID = 1L;

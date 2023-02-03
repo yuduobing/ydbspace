@@ -22,7 +22,6 @@ public class FileListVo {
 
     private Long userId;
 
-
     private String fileName;
 
     private String filePath;
