@@ -84,6 +84,7 @@ public class UserfileServiceImpl extends ServiceImpl<UserfileMapper, Userfile> i
         return false;
     }
     //上传文件
+    @Override
     public  void upload(MultipartFile file, FileWeb fileparams) throws Exception{
 
 

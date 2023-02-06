@@ -90,6 +90,7 @@ public class UserfileController {
     @Transactional
     public synchronized Result uplaodChunk(MultipartFile file, FileWeb fileparams) throws Exception {
 
+        iUserService.upload(file,fileparams);
 
         //上传切片表
         logger.info("插入成功" );
