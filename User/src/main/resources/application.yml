@@ -4,7 +4,7 @@ spring:
   application:
     name: ydbspaceUser
   datasource:
-    url: jdbc:mysql://rm-bp14j69a3p77u76fwbo.mysql.rds.aliyuncs.com:3306/webcloud?useSSL=false
+    url: jdbc:mysql://1.116.162.163:3306/webcloud?useSSL=false
     username: codimd
     password: Tan19970925!
     driver-class-name: com.mysql.jdbc.Driver
@@ -14,7 +14,7 @@ spring:
     # Redis数据库索引（默认为0）
     database: 5
     # Redis服务器连接端口
-    port: 8057
+    port: 6379
     # Redis服务器连接密码（默认为空）
     password: ydbspace
     # 连接超时时间

@@ -14,6 +14,9 @@ import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Logger;
 
+/**
+ * 多线程下载
+ */
 public class DownThread implements Runnable {
     private static Logger logger = Logger.getLogger("DownThread.class");
     //同个文件记录已经写入第几个切片 从1开始

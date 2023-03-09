@@ -19,8 +19,7 @@ import java.util.logging.Logger;
 
 public class ImageApplication {
     public static void main(String[] args) {
-//        Logger logger = Logger.getLogger("ImageApplication.class");
-//        logger.info("项目启动了");
+
         SpringApplication.run(ImageApplication.class, args);
     }
 
