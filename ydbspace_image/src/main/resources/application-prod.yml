@@ -12,7 +12,7 @@ spring:
   application:
     name: ydbspaceimage
   datasource:
-    url: jdbc:mysql://rm-bp14j69a3p77u76fwbo.mysql.rds.aliyuncs.com:3306/webcloud?useSSL=false
+    url: jdbc:mysql://1.116.162.163:3306/webcloud?useSSL=false
     username: codimd
     password: Tan19970925!
     driver-class-name: com.mysql.jdbc.Driver

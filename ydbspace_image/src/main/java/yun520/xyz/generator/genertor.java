@@ -34,7 +34,7 @@ import java.util.Collections;
 public class genertor
 {
     public static void main(String[] args) {
-        FastAutoGenerator.create("jdbc:mysql://rm-bp14j69a3p77u76fwbo.mysql.rds.aliyuncs.com:3306/webcloud", "codimd", "Tan19970925!")
+        FastAutoGenerator.create("jdbc:mysql://1.116.162.163:3306/webcloud", "codimd", "Tan19970925!")
                 .globalConfig(builder -> {
                     builder.author("yuduobin") // 设置作者
                             .enableSwagger() // 开启 swagger 模式
