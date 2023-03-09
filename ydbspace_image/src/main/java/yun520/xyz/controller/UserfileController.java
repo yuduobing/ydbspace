@@ -97,7 +97,7 @@ public class UserfileController {
 
         HashMap<String, Object> objectObjectHashMap = new HashMap<>();
 
-        objectObjectHashMap.put("result", result2);
+        objectObjectHashMap.put("result", "1");
 
         return ResultUtils.success(objectObjectHashMap);
 
@@ -118,7 +118,7 @@ public class UserfileController {
 
 
         //上传文件目录表
-        Userfile userfile = Userfile.builder().userId(userid).isDir(0).filePath(fileparams.getFilePath()).fileName(fileparams.getFilename()).fileId(file1.getFid()).extendName(fileparams.getFilename().substring(fileparams.getFilename().length() - 3)).deleteFlag(0).build();
+        Userfile userfile = Userfile.builder().userId(userid).isDir(0).filePath(fileparams.getFilePath()).fileName(fileparams.getFilename()).fileId(file1.getFid().toString()).extendName(fileparams.getFilename().substring(fileparams.getFilename().length() - 3)).deleteFlag(0).build();
 
         int insert = userfileMapper.insert(userfile);
         if (result>0&&insert>0){

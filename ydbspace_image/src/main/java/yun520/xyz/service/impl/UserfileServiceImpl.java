@@ -43,7 +43,6 @@ public class UserfileServiceImpl extends ServiceImpl<UserfileMapper, Userfile> i
     SharelinksMapper sharelinksmapper;
     @Autowired
     FilechunkMapper filechunkMapper;
-
     @Autowired
      UserfileMapper  userFileMapper;
 //    查询文件目录
@@ -85,12 +84,17 @@ public class UserfileServiceImpl extends ServiceImpl<UserfileMapper, Userfile> i
     }
     //上传文件
     @Override
-    public  void upload(MultipartFile file, FileWeb fileparams) throws Exception{
+    public  void upload(MultipartFile file, FileWeb fileparams) {
 
 
         //文件上传
         String originalFilename = file.getOriginalFilename();
-         String     chunkpath = fastdfs.upload("group1",file.getInputStream(),file.getSize(), String.valueOf(fileparams.getChunkNumber()));
+        String     chunkpath = null;
+        try {
+            chunkpath = fastdfs.upload("group1",file.getInputStream(),file.getSize(), String.valueOf(fileparams.getChunkNumber()));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         fileparams.setChunkpath(chunkpath);
 
         //执行责任链

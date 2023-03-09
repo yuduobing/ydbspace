@@ -46,32 +46,24 @@ public class DownThread implements Runnable {
 
             outputStream.flush();
 
-           logger.info("开始下载" + Thread.currentThread().getName() + "时间" + DateUtil.now() + "下载" + filechunk.getChunksnum());
+            logger.info("开始下载" + Thread.currentThread().getName() + "时间" + DateUtil.now() + "下载" + filechunk.getChunksnum());
             //开始下载
             byte[] download = fastdfs.download(filechunk.getChunkpath());
-           logger.info("下载结束" + Thread.currentThread().getName() + "时间" + DateUtil.now() + "下载结束" + filechunk.getChunksnum());
+            logger.info("下载结束" + Thread.currentThread().getName() + "时间" + DateUtil.now() + "下载结束" + filechunk.getChunksnum());
             //等待唤醒
             synchronized (
                     latch
             ) {
-
                 while (!(Integer.valueOf(this.num.get()).equals(filechunk.getChunksnum()))) {
-
-//                    try {
                     this.latch.wait();
                     //检测活性
                     outputStream.flush();
-//                    } catch (InterruptedException e) {
-//                        e.printStackTrace();
-//                    }
-
                 }
-
                 outputStream.write(download);
                 outputStream.flush();
                 this.latch.countDown();
                 int andAdd = this.num.getAndAdd(1);
-               logger.info("开始执行线程" + Thread.currentThread().getName() + "唤醒" + this.num.get() + "此时写入第" + andAdd);
+                logger.info("开始执行线程" + Thread.currentThread().getName() + "唤醒" + this.num.get() + "此时写入第" + andAdd);
                 //精确唤醒用lock
                 latch.notifyAll();
 
@@ -82,7 +74,7 @@ public class DownThread implements Runnable {
             this.executorService.shutdown();
             this.linkedBlockingQueue.clear();
 
-           logger.info("线程异常" + Thread.currentThread().getName() + "下载" + filechunk.getChunksnum() + e.getMessage());
+            logger.info("线程异常" + Thread.currentThread().getName() + "下载" + filechunk.getChunksnum() + e.getMessage());
             while (this.latch.getCount() > 0) {
                 this.latch.countDown();
             }
