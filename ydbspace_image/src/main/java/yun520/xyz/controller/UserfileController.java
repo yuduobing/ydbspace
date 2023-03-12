@@ -38,8 +38,8 @@ import java.util.logging.Logger;
  * @author yuduobin
  * @since 2023-01-09
  */
-@Controller
-@RestController("/web/userfile")
+@RestController
+@RequestMapping("/web/userfile")
 @Api(tags = "UserfileController", description = "用户文件管理")
 public class UserfileController {
     @Autowired
