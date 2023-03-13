@@ -32,6 +32,8 @@ public class UserfileNewFolder extends HandlerInitializer {
     @Override
     protected void initChannel(Pipeline pipeline) {
 
+
+        //文件表上传
         pipeline.addLast(scu.getHandler(uploadhand.class));
         //1获取接口的所有实现类
         //2把实现类拼接进来

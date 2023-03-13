@@ -48,6 +48,8 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     @Autowired
     private JwtTokenEnhancer jwtTokenEnhancer;
 
+    @Autowired
+    private CustomTokenEnhancer customTokenEnhancer;
     /**
      * 使用密码模式需要配置jwt
      */
@@ -72,7 +74,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) {
         endpoints.authenticationManager(authenticationManager)
                 .userDetailsService(userService)
-                .tokenStore(tokenStore);
+                .tokenStore(tokenStore).tokenEnhancer(customTokenEnhancer);
     }
     @Override
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
@@ -110,7 +112,6 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     @Override
     public void configure(AuthorizationServerSecurityConfigurer security) {
         security.tokenKeyAccess("isAuthenticated()"); // 获取密钥需要身份认证，使用单点登录时必须配置
-
         //允许表单认证 客户端可以检查token  访问 /oauth/check_token不会报 401
         security.allowFormAuthenticationForClients();
         security.checkTokenAccess("permitAll()");

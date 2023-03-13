@@ -27,9 +27,6 @@
             <if test="userFile.extendName != null">
                 and a.extendName = #{userFile.extendName}
             </if>
-            <if test="userFile.userFileId != null">
-                and a.userFileId = #{userFile.userFileId}
-            </if>
             <if test="userFile.fileName != null">
                 and a.fileName = #{userFile.fileName}
             </if>

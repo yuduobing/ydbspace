@@ -30,6 +30,9 @@ public class UserService implements UserDetailsService {
     public void initData() {
         String password = passwordEncoder.encode("123456");
         userList = new ArrayList<>();
+
+        //这里添加额外的参数
+
         userList.add(new User("macro", password, AuthorityUtils.commaSeparatedStringToAuthorityList("admin")));
         userList.add(new User("andy", password, AuthorityUtils.commaSeparatedStringToAuthorityList("client")));
         userList.add(new User("mark", password, AuthorityUtils.commaSeparatedStringToAuthorityList("client")));

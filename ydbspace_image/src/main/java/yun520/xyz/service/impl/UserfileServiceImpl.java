@@ -76,6 +76,10 @@ public class UserfileServiceImpl extends ServiceImpl<UserfileMapper, Userfile> i
 
         userfile.setFilePath(path);
         userfile.setFileName(filename);
+        userfile.setIsDir(1);
+        //删除标志0是未删除
+        userfile.setDeleteFlag(0);
+
         int insert = userFileMapper.insert(userfile);
         if (insert>0){
             return true;

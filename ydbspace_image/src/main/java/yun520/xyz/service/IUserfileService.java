@@ -20,6 +20,6 @@ public interface IUserfileService extends IService<Userfile> {
      public IPage<FileListVo> getFileList (Long userId, String filePath, Long beginCount, Long pageCount);
      //创建文件夹
      public Boolean newMk (Long userId, String path, String filename);
-     public void upload (MultipartFile file, FileWeb fileparams);
+     public void upload (MultipartFile file, FileWeb fileparams) throws Exception;
 
 }
