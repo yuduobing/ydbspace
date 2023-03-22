@@ -179,16 +179,10 @@ public class FileImageController {
             CountDownLatch countDownLatch = new CountDownLatch(userInfoList.get(0).getChunktotalnum());
             //创建下载线程池
             LinkedBlockingQueue<Runnable> linkedBlockingQueue = new LinkedBlockingQueue<>();
-
             ExecutorService executorService = new ThreadPoolExecutor(3, 3,
                     0L, TimeUnit.MILLISECONDS,
                     linkedBlockingQueue);;
-
-
-
-
             userInfoList.forEach(val -> {
-
                 executorService.execute(new DownThread(executorService, countDownLatch, automIterator, val, outputStream, fastdfs,linkedBlockingQueue));
 
             });

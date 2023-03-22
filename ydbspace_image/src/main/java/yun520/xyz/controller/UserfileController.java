@@ -1,5 +1,7 @@
 package yun520.xyz.controller;
 
+import cn.hutool.core.date.DateUtil;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 
 import io.swagger.annotations.Api;
@@ -23,11 +25,20 @@ import yun520.xyz.result.Result;
 import yun520.xyz.result.ResultUtils;
 import yun520.xyz.service.IUserfileService;
 import yun520.xyz.service.StoreService;
+import yun520.xyz.thread.DownThread;
 import yun520.xyz.vo.file.FileListVo;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.BufferedOutputStream;
+import java.io.OutputStream;
+import java.net.URLEncoder;
 import java.time.LocalDateTime;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Logger;
 
 /**
@@ -111,7 +122,7 @@ public class UserfileController {
         long userid=1;
 
         //上传文件表
-        File file1 = File.builder().fileName(fileparams.getFilename()).fileType(fileparams.getFilename().substring(fileparams.getFilename().length() - 3)).fileSize(fileparams.getTotalSize()).fileSaveType("0").filemd5(fileparams.getIdentifier()
+        File file1 = File.builder().fileName(fileparams.getFilename()).fileType(fileparams.getFilename().substring(fileparams.getFilename().length() - 3)).fileSize(fileparams.getTotalSize()).fileSaveType("1").filemd5(fileparams.getIdentifier()
         ).createTime(LocalDateTime.now()).build();
         //填充文件表
         int result = filemapper.insert(file1); // 帮我们自动生成id
@@ -133,5 +144,9 @@ public class UserfileController {
         return ResultUtils.error("插入信息失败");
 
     }
+
+
+
+
 
 }
