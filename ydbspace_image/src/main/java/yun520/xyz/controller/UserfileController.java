@@ -90,7 +90,7 @@ public class UserfileController {
     @ResponseBody
     public RestResult newMk(
             @Parameter(description = "文件路径", required = false) String filePath,
-            @Parameter(description = "文件名称", required = false) String fileName){
+            @Parameter(description = "文件夹名称", required = false) String fileName){
         Boolean fileList = iUserService.newMk(null, filePath, fileName);
         return RestResult.success();
 

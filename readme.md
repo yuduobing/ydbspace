@@ -183,3 +183,34 @@ IPage内部原理也是基于拦截器，但是这个拦截的是方法以及方
 ##开发登陆流程
 先是获取密钥
 https://console-docs.apipost.cn/preview/9ddee58a8a7409a8/fdafb47c24bd1a1a
+
+
+
+关于 Spring Security OAuth2 中 CORS 跨域问题
+@Order(-1)
+配置 Spring Security 策略，不拦截 OPTIONS 请求
+自定义 CorsFilter，设置 order 优先级比 Spring Security 的 order 高。
+配置服务器允许 /oauth/token的 OPTIONS 方法，因为 /oauth/token 接口是先发一个 OPTIONS 请求，然后再发送 POST请求，如果是 OPTIONS 接口不被允许，就会返回 401 错误。
+https://www.bbsmax.com/A/D854L3A25E/
+@Configuration
+@EnableWebSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = true)
+@Order(-1)
+public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
+
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+//        http.requestMatchers().antMatchers(HttpMethod.OPTIONS, "/oauth/**","/login/**","/logout/**")
+//            .and()
+//            .authorizeRequests()
+//            .antMatchers().permitAll()
+//            .and()
+//            .formLogin().permitAll(); //新增login form 支持用户登录及授权
+
+            http.requestMatchers().antMatchers(HttpMethod.OPTIONS, "/oauth/**")
+                    .and()
+                    .cors()
+                    .and()
+                    .csrf().disable();
+    }
+}

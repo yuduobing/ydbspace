@@ -9,7 +9,10 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.logging.Logger;
+import java.util.stream.IntStream;
 
 @SpringBootApplication
 @EnableFeignClients
@@ -19,7 +22,6 @@ import java.util.logging.Logger;
 
 public class ImageApplication {
     public static void main(String[] args) {
-
         SpringApplication.run(ImageApplication.class, args);
     }
 
