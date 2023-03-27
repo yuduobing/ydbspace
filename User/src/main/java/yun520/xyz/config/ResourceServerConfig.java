@@ -8,6 +8,7 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.R
 /**
  * 资源服务器配置
  * 这个是拦截客户端
+ * 不添加他客户认证信息不获取
  */
 @Configuration
 @EnableResourceServer
@@ -22,6 +23,7 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
                 .authenticated()
                 .and()
                 .requestMatchers()
+//                拦截哪些接口
                 .antMatchers("/user/**","/file/**");
     }
 }

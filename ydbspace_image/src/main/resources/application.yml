@@ -20,12 +20,19 @@ server:
   session:
    cookie:
     name: ydbspace-webcloud #防止Cookie冲突，冲突会导致登录验证不通过
+#定义配置文件
 oauth2-server-url: http://localhost:10088
 
 #配置文件注入也可以在代码里注入
+# clientId：OAuth2客户端的ID。
+# clientSecret：OAuth2客户端的密钥。
+# accessTokenUri：OAuth2授权服务器的令牌端点URL。
+# userAuthorizationUri：OAuth2授权服务器的授权端点URL。
+# scope：OAuth2客户端请求的范围。
 security:
  oauth2: #与oauth2-server对应的配置
   client:
+#   OAuth2客户端的ID。在认证服务器配置过
    client-id: read
    client-secret: read
    user-authorization-uri: ${oauth2-server-url}/oauth/authorize

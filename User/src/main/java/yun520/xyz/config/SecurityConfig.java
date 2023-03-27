@@ -58,7 +58,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 //                .cors().disable()
 //                .authorizeRequests()
 //                //匹配加上OPTIONS，应为跨域会先发送HttpMethod.OPTIONS请求
-//                .antMatchers(HttpMethod.OPTIONS,"/oauth/**", "/login/**", "/logout/**")
+//                .antMatchers(HttpMethod.OPTIONS,"/user/**","/oauth/**", "/login/**", "/logout/**")
 //                .permitAll()
 //                .anyRequest()
 //                .authenticated()
@@ -69,7 +69,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests()
                 .requestMatchers(CorsUtils::isPreFlightRequest)
                 .permitAll()
-                .antMatchers("/oauth/**", "/login/**", "/logout/**")
+                .antMatchers("/oauth/**", "/user/**","/login/**", "/logout/**")
                 .permitAll()
                 .anyRequest()
                 .authenticated()
