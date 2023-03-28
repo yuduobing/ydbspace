@@ -20,8 +20,6 @@ server:
   session:
    cookie:
     name: ydbspace-webcloud #防止Cookie冲突，冲突会导致登录验证不通过
-#定义配置文件
-oauth2-server-url: http://localhost:10088
 
 #配置文件注入也可以在代码里注入
 # clientId：OAuth2客户端的ID。
@@ -29,6 +27,7 @@ oauth2-server-url: http://localhost:10088
 # accessTokenUri：OAuth2授权服务器的令牌端点URL。
 # userAuthorizationUri：OAuth2授权服务器的授权端点URL。
 # scope：OAuth2客户端请求的范围。
+oauth2-server-url: http://localhost:10088
 security:
  oauth2: #与oauth2-server对应的配置
   client:
@@ -41,6 +40,8 @@ security:
    token-info-uri: ${oauth2-server-url}/oauth/check_token
    id: ${spring.application.name}  # 资源id，可能存在多个资源服务器，可以配置客户端拥有哪些资源的访问权限
 
+
+#无用配置
 resource:
  jwt:
   key-uri: ${oauth2-server-url}/oauth/token_key

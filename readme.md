@@ -1,4 +1,4 @@
-   
+
 # 把公共类引入别的工程
       <dependency>
             <groupId>yun520.xyz</groupId>
@@ -94,7 +94,7 @@ dataType：参数类型，默认String，其它值dataType="Integer"
 defaultValue：参数的默认值
 
 # 如何上传一个图片流和信息
- 
+
 
 
 ## rabbitmq
@@ -122,7 +122,7 @@ ps  routing key可以模糊匹配
  {
  System.out.println(in)
  }
-~~~ 
+~~~
 ## lcoaldate 转化为date
    ZoneId zoneId = ZoneId.systemDefault();
                 LocalDateTime localDateTime = LocalDateTime.now();
@@ -144,7 +144,7 @@ git pull
 
   2 线程等待用CountDownLatch，子线程异常要把CountDownLatch减掉
   CountDownLatch countDownLatch = new CountDownLatch(userInfoList.get(0).getChunktotalnum());
-  
+
 while (this.latch.getCount() > 0) {
   this.latch.countDown();
   }
@@ -180,13 +180,18 @@ IPage内部原理也是基于拦截器，但是这个拦截的是方法以及方
 进入分页逻辑处理后，拦截器会通过反射获取该方法的参数进行判断是否存在IPage对象的实现类。如果不存在则不进行分页，存在则将该参数赋值给IPage对象。
 然后进行拼接sql的处理完成分页操作。
 
-##开发登陆流程
-先是获取密钥
+## 开发登陆流程
+### 先是获取密钥
 https://console-docs.apipost.cn/preview/9ddee58a8a7409a8/fdafb47c24bd1a1a
 
 
 
-关于 Spring Security OAuth2 中 CORS 跨域问题
+### 关于 Spring Security OAuth2 中 CORS 跨域问题
+
+> 结论试了最后也没用，最后在前端解决的
+>
+> ![image-20230328213521383](readme.assets/image-20230328213521383.png)
+
 @Order(-1)
 配置 Spring Security 策略，不拦截 OPTIONS 请求
 自定义 CorsFilter，设置 order 优先级比 Spring Security 的 order 高。
@@ -214,3 +219,135 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                     .csrf().disable();
     }
 }
+
+## ouath2.0
+
+### 资源服务器配置
+
+ 0 maven配置
+
+~~~
+<!--        springsecurity-->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-oauth2</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-security</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt</artifactId>
+            <version>0.9.0</version>
+        </dependency>
+
+~~~
+
+
+
+ 1开启配置
+
+~~~
+
+
+开启http安全访问
+ */
+
+@Configuration
+//开启资源服务器
+@EnableResourceServer
+//@AllArgsConstructor
+//@EnableGlobalMethodSecurity(prePostEnabled = true)
+public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
+     //  这些是读取的配置文件配置，不然也可以手动注入
+
+    //这里配置哪些请求允许访问
+    @Override
+    public void configure(HttpSecurity http) throws Exception {
+        http.authorizeRequests()
+                .anyRequest()
+                .authenticated()
+                .and()
+                .csrf().disable()     // 前后端分离下，可以关闭 csrf
+                .requestMatchers()
+                //管理哪些接口
+                .antMatchers("/user/**","/file/**","/web/**")
+        ;
+    }
+
+}
+~~~
+
+2yml配置认证服务器和资源服务器的配置
+
+~~~
+#配置文件注入也可以在代码里注入
+# clientId：OAuth2客户端的ID。
+# clientSecret：OAuth2客户端的密钥。
+# accessTokenUri：OAuth2授权服务器的令牌端点URL。
+# userAuthorizationUri：OAuth2授权服务器的授权端点URL。
+# scope：OAuth2客户端请求的范围。
+oauth2-server-url: http://localhost:10088
+security:
+ oauth2: #与oauth2-server对应的配置
+  client:
+#   OAuth2客户端的ID。在认证服务器配置过
+   client-id: read
+   client-secret: read
+   user-authorization-uri: ${oauth2-server-url}/oauth/authorize
+   access-token-uri: ${oauth2-server-url}/oauth/token
+  resource:
+   token-info-uri: ${oauth2-server-url}/oauth/check_token
+   id: ${spring.application.name}  # 资源id，可能存在多个资源服务器，可以配置客户端拥有哪些资源的访问权限
+
+~~~
+
+
+
+### 资源服务器访问认证服务器获得用户信息
+
+> 应为在资源服务器获取用户信息是空值，且不知道为什么是空值现在的方案就是拿着头的节点信息去认证服务获取用户信息，应为同样的方法去认证服务器就能获取值
+
+认证服务器方法
+```
+    @GetMapping("/getUserInformation")
+    public User getUserInformation() {
+        User user =(User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return user;
+    }
+}
+```
+资源服务器方法通过feign调用认证服务器
+
+```
+package yun520.xyz.service;
+
+import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestParam;
+
+@FeignClient("YDBSPACEUSER")
+//FeignClient 微服务名
+public interface LoginService {
+    @GetMapping("/user/login")
+//    ，如果发送的是get请求，那么需要在请求参数前加上@RequestParam注解修饰，Controller里面可以不加该注解修饰。
+     boolean login(@RequestParam("username")String username, @RequestParam("password") String password);
+    @GetMapping("/user/getUserInformation")
+    Object getUserInformation(@RequestHeader("Authorization") String Authorization);
+
+
+}
+```
+
+```
+Object principal2 = SecurityContextHolder.getContext().getAuthentication();
+loginService.getUserInformation("22");
+```

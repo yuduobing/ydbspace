@@ -38,8 +38,6 @@ public class UserController {
     @GetMapping("/getUserInformation")
     public User getUserInformation() {
         User user =(User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
         return user;
-
     }
 }
