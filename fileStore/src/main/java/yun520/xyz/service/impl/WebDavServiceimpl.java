@@ -1,51 +1,61 @@
 package yun520.xyz.service.impl;
 
-
+import com.github.sardine.Sardine;
+import com.github.sardine.SardineFactory;
 import com.github.tobato.fastdfs.domain.fdfs.MetaData;
 import com.github.tobato.fastdfs.domain.fdfs.StorePath;
 import com.github.tobato.fastdfs.domain.proto.storage.DownloadByteArray;
 import com.github.tobato.fastdfs.service.FastFileStorageClient;
-
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import yun520.xyz.service.StoreService;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
+import java.io.*;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
 //fastdfs 实现类
-@Component("FastDfsService")
+@Component("WebDavServiceimpl")
 @Scope(value = "prototype")
-@Primary
-public class FastDfsServiceimpl  implements StoreService{
+public class WebDavServiceimpl implements StoreService {
     @Autowired
     private FastFileStorageClient storageClient;
-     //fastdfs非集群默认有group
-    final static  String group="group1";
-
-
 
     //上传有group
     @Override
     public String upload(String groupName, InputStream inputStream, long fileSize, String fileExtName) {
         //  //文件名不可有中文
-        StorePath sp=storageClient.uploadFile(groupName,inputStream, fileSize,fileExtName);
-        return sp.getFullPath();
+        Sardine sardine = SardineFactory.begin("admin","MNR52kWq");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+        String day = sdf.format(new Date());
+        String baseurl = "http://1.116.162.163:5244/dav/webcloud/" + day + "/";
+        try {
+            if (sardine.exists(baseurl)) {
+                System.out.println("/content/dam folder exists");
+            }
+            sardine.createDirectory(baseurl);
+            baseurl=baseurl+fileExtName;
+
+            sardine.put(baseurl, inputStream);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return baseurl+fileExtName;
+
     }
 
     @Override
-    public String upload(byte[] bytes,  long fileSize, String extension){
+    public String upload(byte[] bytes, long fileSize, String extension) {
         ByteArrayInputStream bais = new ByteArrayInputStream(bytes);
         // 元数据
         Set<MetaData> metaDataSet = new HashSet<MetaData>();
         metaDataSet.add(new MetaData("dateTime", LocalDateTime.now().toString()));
-        metaDataSet.add(new MetaData("Author","Layne"));
+        metaDataSet.add(new MetaData("Author", "Layne"));
         StorePath storePath = storageClient.uploadFile(bais, fileSize, extension, metaDataSet);
         return storePath.getFullPath();
 
@@ -67,7 +77,6 @@ public class FastDfsServiceimpl  implements StoreService{
             bytes = storageClient.downloadFile(group, path, byteArray);
         }
         return bytes;
-
 
     }
 

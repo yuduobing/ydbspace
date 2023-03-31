@@ -13,6 +13,7 @@ import yun520.xyz.domain.User;
 import javax.servlet.http.HttpServletRequest;
 import java.nio.charset.StandardCharsets;
 import java.util.Collection;
+import java.util.logging.Logger;
 
 /**
  * 测试模块
@@ -20,6 +21,7 @@ import java.util.Collection;
 @RestController
 @RequestMapping("/user")
 public class UserController {
+    private static Logger logger = Logger.getLogger("UserController.class");
     @GetMapping("/getCurrentUser")
     public Object getCurrentUser(Authentication authentication, HttpServletRequest request) {
         Object principal2 = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -37,7 +39,9 @@ public class UserController {
     }
     @GetMapping("/getUserInformation")
     public User getUserInformation() {
+
         User user =(User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        logger.info("验证用户信息"+user.getEmail());
         return user;
     }
 }

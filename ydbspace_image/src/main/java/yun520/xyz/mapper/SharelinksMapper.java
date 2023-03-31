@@ -12,7 +12,6 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  * @author yuduobin
  * @since 2022-12-09
  */
-
 public interface SharelinksMapper extends BaseMapper<Sharelinks> {
 
 }

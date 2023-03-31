@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 import yun520.xyz.entity.File;
 import yun520.xyz.entity.Filechunk;
 import yun520.xyz.entity.Sharelinks;
+import yun520.xyz.mapper.FileMapper;
 import yun520.xyz.mapper.FilechunkMapper;
 import yun520.xyz.mapper.SharelinksMapper;
 import yun520.xyz.service.impl.FastDfsServiceimpl;
@@ -30,7 +31,7 @@ public class DeleteShare {
     @Autowired
     MqServiceImpl mqService;
     @Autowired
-    yun520.xyz.mapper.FileMapper filemapper;
+     FileMapper filemapper;
     @Autowired
     SharelinksMapper sharelinksmapper;
     @Autowired

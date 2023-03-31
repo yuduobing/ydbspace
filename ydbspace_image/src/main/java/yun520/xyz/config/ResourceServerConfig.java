@@ -3,6 +3,7 @@ package yun520.xyz.config;
 import lombok.AllArgsConstructor;
 import org.springframework.boot.autoconfigure.security.oauth2.resource.ResourceServerProperties;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
@@ -18,8 +19,7 @@ import org.springframework.security.oauth2.provider.token.TokenStore;
 @Configuration
 //开启资源服务器
 @EnableResourceServer
-//@AllArgsConstructor
-//@EnableGlobalMethodSecurity(prePostEnabled = true)
+
 public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
      //  这些是读取的配置文件配置，不然也可以手动注入
 
@@ -33,7 +33,7 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
                 .csrf().disable()     // 前后端分离下，可以关闭 csrf
                 .requestMatchers()
                 //管理哪些接口
-                .antMatchers("/user/**","/file/**","/web/**")
+                .antMatchers("/user/**","/web/userfile/**")
         ;
     }
 

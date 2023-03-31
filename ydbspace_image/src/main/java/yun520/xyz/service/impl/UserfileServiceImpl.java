@@ -89,8 +89,7 @@ public class UserfileServiceImpl extends ServiceImpl<UserfileMapper, Userfile> i
 
     @Override
     public  void upload(MultipartFile file, FileWeb fileparams) {
-
-
+        
         //文件上传
         String originalFilename = file.getOriginalFilename();
         String     chunkpath = null;
@@ -100,12 +99,18 @@ public class UserfileServiceImpl extends ServiceImpl<UserfileMapper, Userfile> i
             e.printStackTrace();
         }
         fileparams.setChunkpath(chunkpath);
-
         //执行责任链
         Bootstrap bootstrap = new Bootstrap();
         bootstrap.childHandler(new UserfileNewFolder(fileparams,null));
         bootstrap.execute();
 
 
+    }
+
+    @Override
+    public Boolean deletemk(FileWeb fileparams) {
+        //删除文件
+
+        return null;
     }
 }

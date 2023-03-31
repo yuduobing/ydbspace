@@ -9,6 +9,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.v3.oas.annotations.Parameter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,6 +30,7 @@ import yun520.xyz.result.ResultUtils;
 import yun520.xyz.service.IUserfileService;
 import yun520.xyz.service.LoginService;
 import yun520.xyz.service.StoreService;
+import yun520.xyz.service.impl.FastDfsServiceimpl;
 import yun520.xyz.thread.DownThread;
 import yun520.xyz.vo.file.FileListVo;
 
@@ -54,12 +56,14 @@ import java.util.logging.Logger;
  * @since 2023-01-09
  */
 @RestController
-@RequestMapping("/web/userfile")
+@RequestMapping("/web")
 @Api(tags = "UserfileController", description = "用户文件管理")
-public class UserfileController {
+public class UserfileController extends  BaseController {
     private static Logger logger = Logger.getLogger("UserfileController.class");
-    @Autowired
-    StoreService fastdfs;
+
+    @Qualifier(value = "FastDfsService")
+    @Autowired()
+    FastDfsServiceimpl fastdfs;
     @Autowired
     FileMapper filemapper;
     @Autowired
@@ -75,7 +79,7 @@ public class UserfileController {
 
     //查询分页
     @ApiOperation(value = "获取文件列表")
-    @GetMapping(value = "/getfilelist")
+    @GetMapping(value = "/userfile/getfilelist")
     @ResponseBody
     public RestResult getFileList(
             @Parameter(description = "文件路径", required = false) String filePath,
@@ -83,10 +87,10 @@ public class UserfileController {
             @Parameter(description = "页面数量", required = true) long pageCount) {
 
         Object principal2 = SecurityContextHolder.getContext().getAuthentication();
-        loginService.getUserInformation("22");
-
+//        loginService.getUserInformation("22");
+        Long userid = getUserid();
         //       Assert.log principal=null
-        IPage<FileListVo> fileList = iUserService.getFileList(null, filePath, currentPage, pageCount);
+        IPage<FileListVo> fileList = iUserService.getFileList(getUserid(), filePath, currentPage, pageCount);
         Map<String, Object> map = new HashMap<>();
         map.put("total", fileList.getTotal());
         map.put("list", fileList.getRecords());
@@ -97,12 +101,12 @@ public class UserfileController {
 
     //创建文件目录
     @ApiOperation(value = "创建文件目录")
-    @GetMapping(value = "/newMk")
+    @GetMapping(value = "/userfile/newMk")
     @ResponseBody
     public RestResult newMk(
             @Parameter(description = "文件路径", required = false) String filePath,
             @Parameter(description = "文件夹名称", required = false) String fileName) {
-        Boolean fileList = iUserService.newMk(null, filePath, fileName);
+        Boolean fileList = iUserService.newMk(getUserid(), filePath, fileName);
         return RestResult.success();
 
     }
@@ -129,8 +133,6 @@ public class UserfileController {
     @ApiOperation(value = "第一次上传整个文件的信息，返回文件id")
     @Transactional
     public Result uplaodChunkGET(FileWeb fileparams) throws Exception {
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
         //用户id
         long userid = 1;
 
@@ -154,6 +156,17 @@ public class UserfileController {
 
         return ResultUtils.error("插入信息失败");
 
+    }
+
+
+
+    //创建文件目录
+    @ApiOperation(value = "删除文件 或目录")
+    @GetMapping(value = "/userfile/deletemk")
+    @ResponseBody
+    public RestResult deletemk(FileWeb fileparams) {
+        Boolean fileList = iUserService.deletemk( fileparams);
+        return RestResult.success();
     }
 
 }

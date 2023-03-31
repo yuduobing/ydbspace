@@ -21,5 +21,6 @@ public interface IUserfileService extends IService<Userfile> {
      //创建文件夹
      public Boolean newMk (Long userId, String path, String filename);
      public void upload (MultipartFile file, FileWeb fileparams) throws Exception;
+     public Boolean deletemk(FileWeb fileparams);
 
 }
