@@ -6,6 +6,7 @@ import com.github.tobato.fastdfs.domain.fdfs.MetaData;
 import com.github.tobato.fastdfs.domain.fdfs.StorePath;
 import com.github.tobato.fastdfs.domain.proto.storage.DownloadByteArray;
 import com.github.tobato.fastdfs.service.FastFileStorageClient;
+import lombok.SneakyThrows;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -23,22 +24,24 @@ import java.util.Set;
 @Component("WebDavServiceimpl")
 @Scope(value = "prototype")
 public class WebDavServiceimpl implements StoreService {
+    //  //文件名不可有中文
+    Sardine sardine = SardineFactory.begin("admin","MNR52kWq");
     @Autowired
     private FastFileStorageClient storageClient;
 
     //上传有group
     @Override
     public String upload(String groupName, InputStream inputStream, long fileSize, String fileExtName) {
-        //  //文件名不可有中文
-        Sardine sardine = SardineFactory.begin("admin","MNR52kWq");
+
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
         String day = sdf.format(new Date());
-        String baseurl = "http://1.116.162.163:5244/dav/webcloud/" + day + "/";
+        String baseurl = "http://1.116.162.163:5244/dav/webcloud/" + day.substring(0,6) + "/"+ day.substring(6,8) + "/";
         try {
-            if (sardine.exists(baseurl)) {
-                System.out.println("/content/dam folder exists");
+            if (!sardine.exists(baseurl)) {
+
+                sardine.createDirectory(baseurl);
             }
-            sardine.createDirectory(baseurl);
+
             baseurl=baseurl+fileExtName;
 
             sardine.put(baseurl, inputStream);
@@ -51,13 +54,8 @@ public class WebDavServiceimpl implements StoreService {
 
     @Override
     public String upload(byte[] bytes, long fileSize, String extension) {
-        ByteArrayInputStream bais = new ByteArrayInputStream(bytes);
-        // 元数据
-        Set<MetaData> metaDataSet = new HashSet<MetaData>();
-        metaDataSet.add(new MetaData("dateTime", LocalDateTime.now().toString()));
-        metaDataSet.add(new MetaData("Author", "Layne"));
-        StorePath storePath = storageClient.uploadFile(bais, fileSize, extension, metaDataSet);
-        return storePath.getFullPath();
+
+        return null;
 
     }
 
@@ -66,8 +64,12 @@ public class WebDavServiceimpl implements StoreService {
         return new byte[0];
     }
 
+
+    @SneakyThrows
     @Override
     public byte[] download(String filePath) {
+
+        InputStream inputStream = sardine.get(filePath);
 
         byte[] bytes = null;
         if (StringUtils.isNotBlank(filePath)) {
@@ -80,10 +82,13 @@ public class WebDavServiceimpl implements StoreService {
 
     }
 
+    @SneakyThrows
     @Override
     public void delete(String filePath) {
         if (StringUtils.isNotBlank(filePath)) {
-            storageClient.deleteFile(filePath);
+
+                sardine.delete(filePath);
+
         }
 
     }
