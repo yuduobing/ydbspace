@@ -4,6 +4,7 @@ package yun520.xyz.service.impl;
 import com.github.tobato.fastdfs.domain.fdfs.MetaData;
 import com.github.tobato.fastdfs.domain.fdfs.StorePath;
 import com.github.tobato.fastdfs.domain.proto.storage.DownloadByteArray;
+import com.github.tobato.fastdfs.domain.proto.storage.DownloadFileStream;
 import com.github.tobato.fastdfs.service.FastFileStorageClient;
 
 import org.apache.commons.lang3.StringUtils;
@@ -13,8 +14,10 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import yun520.xyz.service.StoreService;
 
+import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
@@ -57,16 +60,18 @@ public class FastDfsServiceimpl  implements StoreService{
     }
 
     @Override
-    public byte[] download(String filePath) {
+    public InputStream download(String filePath) {
 
-        byte[] bytes = null;
+        InputStream inputStream = null;
+        OutputStream outputStream = null;
         if (StringUtils.isNotBlank(filePath)) {
             String group = filePath.substring(0, filePath.indexOf("/"));
             String path = filePath.substring(filePath.indexOf("/") + 1);
-            DownloadByteArray byteArray = new DownloadByteArray();
-            bytes = storageClient.downloadFile(group, path, byteArray);
+            DownloadFileStream stream = new DownloadFileStream(outputStream);
+            storageClient.downloadFile(group, path, stream)
+
         }
-        return bytes;
+        return inputStream;
 
 
     }

@@ -1,14 +1,13 @@
 package yun520.xyz.thread;
 
 import cn.hutool.core.date.DateUtil;
-import kotlin.jvm.Throws;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import yun520.xyz.entity.Filechunk;
 import yun520.xyz.service.StoreService;
 import yun520.xyz.service.impl.FastDfsServiceimpl;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -44,36 +43,37 @@ public class DownThread implements Runnable {
     @Override
     public void run() {
         try {
-
             //检测活性 防止下载完报错耽误下载网速
-
             outputStream.flush();
 
             logger.info("开始下载" + Thread.currentThread().getName() + "时间" + DateUtil.now() + "下载" + filechunk.getChunksnum());
             //开始下载
-            byte[] download = fastdfs.download(filechunk.getChunkpath());
+            try (InputStream inputStream = fastdfs.download(filechunk.getChunkpath())) {
+                byte[] buffer = new byte[1024 * 1024];
+                int len;
+                while ((len = inputStream.read(buffer)) > 0) {
+                    outputStream.write(buffer, 0, len);
+                }
+                outputStream.flush();
+            }
             logger.info("下载结束" + Thread.currentThread().getName() + "时间" + DateUtil.now() + "下载结束" + filechunk.getChunksnum());
+
             //等待唤醒
-            synchronized (
-                    latch
-            ) {
+            synchronized (latch) {
                 while (!(Integer.valueOf(this.num.get()).equals(filechunk.getChunksnum()))) {
                     this.latch.wait();
                     //检测活性
                     outputStream.flush();
                 }
-                outputStream.write(download);
-                outputStream.flush();
                 this.latch.countDown();
                 int andAdd = this.num.getAndAdd(1);
                 logger.info("开始执行线程" + Thread.currentThread().getName() + "唤醒" + this.num.get() + "此时写入第" + andAdd);
                 //精确唤醒用lock
                 latch.notifyAll();
-
             }
         } catch (Exception e) {
-//            shutdown 会等待线程池中的任务执行完成之后关闭线程池，而 shutdownNow 会给所有线程发送中断信号，中断任务执行，然后关闭线程池
-//            shutdown 没有返回值，而 shutdownNow 会返回关闭前任务队列中未执行的任务集合（List）
+            //shutdown会等待线程池中的任务执行完成之后关闭线程池，而shutdownNow会给所有线程发送中断信号，中断任务执行，然后关闭线程池
+            //shutdown没有返回值，而shutdownNow会返回关闭前任务队列中未执行的任务集合（List）
             this.executorService.shutdown();
             this.linkedBlockingQueue.clear();
 
@@ -81,9 +81,6 @@ public class DownThread implements Runnable {
             while (this.latch.getCount() > 0) {
                 this.latch.countDown();
             }
-            //如果对方关闭了链接我们应该停止所有线程
-
         }
-
     }
 }

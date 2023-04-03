@@ -24,7 +24,8 @@ public interface StoreService {
      * @param path
      * @return
      */
-    public byte[] download(String path);
+    public InputStream download(String path);
+
     /**
      * 删除
      * @param path

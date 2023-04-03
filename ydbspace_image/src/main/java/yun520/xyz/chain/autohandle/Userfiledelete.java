@@ -10,7 +10,7 @@ import yun520.xyz.util.SpringContentUtils;
 //自动组装责任链第构造链
 
 public class Userfiledelete extends HandlerInitializer {
-
+  //创建一个数组
 
     public Userfiledelete(ContextRequest request, ContextResponse response) {
         super(request, response);

@@ -67,18 +67,11 @@ public class WebDavServiceimpl implements StoreService {
 
     @SneakyThrows
     @Override
-    public byte[] download(String filePath) {
+    public InputStream download(String filePath) {
 
         InputStream inputStream = sardine.get(filePath);
 
-        byte[] bytes = null;
-        if (StringUtils.isNotBlank(filePath)) {
-            String group = filePath.substring(0, filePath.indexOf("/"));
-            String path = filePath.substring(filePath.indexOf("/") + 1);
-            DownloadByteArray byteArray = new DownloadByteArray();
-            bytes = storageClient.downloadFile(group, path, byteArray);
-        }
-        return bytes;
+        return inputStream;
 
     }
 
