@@ -73,7 +73,7 @@ public class FileImageController {
     @ApiOperation(value = "上传文件")
     @Transactional
     public synchronized Result uplaodChunk(MultipartFile file, FileWeb fileparams) throws Exception {
-        String fileimage = file.getOriginalFilename();
+        String filename = file.getOriginalFilename();
 
 //          文件名不可有中文
         String chunkpath = "";
@@ -85,7 +85,7 @@ public class FileImageController {
 
 
             result2++;
-            chunkpath = fastdfs.upload("group1",file.getInputStream(),file.getSize(), String.valueOf(fileparams.getChunkNumber()));
+            chunkpath = fastdfs.upload("group1",file.getInputStream(),file.getSize(), String.valueOf(originalFilename+RandomUtil.randomString(3)));
 
             //填充切片表
             Filechunk filechunk = Filechunk.builder().chunkmd5(fileparams.getIdentifier()).chunksize(fileparams.getChunkSize()).chunkpath(chunkpath).chunktotalnum(fileparams.getTotalChunks()).chunksnum(fileparams.getChunkNumber())

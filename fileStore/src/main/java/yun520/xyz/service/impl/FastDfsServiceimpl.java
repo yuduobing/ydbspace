@@ -25,7 +25,6 @@ import java.util.Set;
 //fastdfs 实现类
 @Component("FastDfsService")
 @Scope(value = "prototype")
-@Primary
 public class FastDfsServiceimpl  implements StoreService{
     @Autowired
     private FastFileStorageClient storageClient;
@@ -33,11 +32,10 @@ public class FastDfsServiceimpl  implements StoreService{
     final static  String group="group1";
 
 
-
     //上传有group
     @Override
     public String upload(String groupName, InputStream inputStream, long fileSize, String fileExtName) {
-        //  //文件名不可有中文
+        //文件名不可有中文
         StorePath sp=storageClient.uploadFile(groupName,inputStream, fileSize,fileExtName);
         return sp.getFullPath();
     }
@@ -68,7 +66,7 @@ public class FastDfsServiceimpl  implements StoreService{
             String group = filePath.substring(0, filePath.indexOf("/"));
             String path = filePath.substring(filePath.indexOf("/") + 1);
             DownloadFileStream stream = new DownloadFileStream(outputStream);
-            storageClient.downloadFile(group, path, stream)
+            storageClient.downloadFile(group, path, stream);
 
         }
         return inputStream;
