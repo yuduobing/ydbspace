@@ -113,6 +113,8 @@ public class UserfileServiceImpl extends ServiceImpl<UserfileMapper, Userfile> i
     @Override
     public Boolean deletemk(FileWeb fileparams) {
         try {
+            fileparams.setFilePath(fileparams.getFilePath()+fileparams.getFilename());
+
             //执行责任链
             Bootstrap bootstrap = new Bootstrap();
             bootstrap.childHandler(new Userfiledelete(fileparams, null));
