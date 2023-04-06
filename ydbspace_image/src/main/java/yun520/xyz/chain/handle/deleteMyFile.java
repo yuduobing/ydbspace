@@ -44,8 +44,6 @@ public class deleteMyFile extends Handler {
     public void doHandler(ContextRequest request, ContextResponse response) {
         if (request instanceof FileWeb){
             FileWeb fileparams=(FileWeb)request;
-
-
             QueryWrapper<File> queryWrapperfile = new QueryWrapper<>();
             queryWrapperfile.in("file_id", fileparams.getDeleteList());
 
@@ -82,21 +80,17 @@ public class deleteMyFile extends Handler {
         }
 
     }
-    //是否可以安全删除
+    //是否可以安全删除   文件表是否有相同md5
     public boolean isSafedelte(String identifier) {
         AtomicReference<Boolean> bz = new AtomicReference<>(true);
         //1 永久性文件是否包含
         QueryWrapper<File> queryWrapperfile2 = new QueryWrapper<File>();
         queryWrapperfile2.eq("filemd5", identifier);
         List<File> userInfoListpermanent = filemapper.selectList(queryWrapperfile2);
-
         if(userInfoListpermanent.size()>0){
             return false;
 
         }
-
-
-
         return true;
 
     }

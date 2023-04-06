@@ -19,41 +19,31 @@ import java.util.stream.Collectors;
 public class deleteMyFodle extends Handler {
     private static Logger logger = Logger.getLogger("deleteMyFodle.class");
 
-   @Autowired
-    UserfileMapper  userfileMapper;
+    @Autowired
+    UserfileMapper userfileMapper;
 
     @Override
     public void doHandler(ContextRequest request, ContextResponse response) {
-        if (request instanceof FileWeb){
-            FileWeb fileparams=(FileWeb)request;
-
+        if (request instanceof FileWeb) {
+            FileWeb fileparams = (FileWeb) request;
 
             //文件夹删除所有前缀相同的
-           if (1==fileparams.getIsDir()){
-               QueryWrapper<Userfile> objectQueryWrapper = new QueryWrapper<>();
-               objectQueryWrapper.eq("userId",fileparams.getUserId());
-               objectQueryWrapper.like("name", "%"+fileparams.getFilePath());
-               List<Userfile> userfiles = userfileMapper.selectList(objectQueryWrapper);
-               //删除文件夹，返回文件id
-               userfiles.stream().filter(val->val.getIsDir()==1).forEach(val->{
-                   userfileMapper.deleteById(val.getFileId());
+            if (1 == fileparams.getIsDir()) {
+                QueryWrapper<Userfile> objectQueryWrapper = new QueryWrapper<>();
+                objectQueryWrapper.eq("userId", fileparams.getUserId());
+                objectQueryWrapper.like("name", fileparams.getFilePath()+"%");
+                List<Userfile> userfiles = userfileMapper.selectList(objectQueryWrapper);
+                //删除文件夹，返回文件id
+                userfiles.stream().filter(val -> val.getIsDir() == 1).forEach(val -> {
+                    userfileMapper.deleteById(val.getFileId());
 
-               });
-
-            List<String>  list=  userfiles.stream().filter(val->val.getIsDir()==0).map(Userfile::getFileId).collect(Collectors.toList());
-
-
-               logger.info("删除"+fileparams.getUserId()+list);
-
-               fileparams.setDeleteList(list);
-           }
-
-//                1找出来
-//                2 文件夹直接删
-//                3文件便利其他表删除
-            //文件根据id删除
-
-
+                });
+                //获得所有文件id
+                List<String> list = userfiles.stream().filter(val -> val.getIsDir() == 0).map(Userfile::getFileId).collect(Collectors.toList());
+                logger.info("删除" + fileparams.getUserId() + list);
+                //所有需要删除的文件
+                fileparams.setDeleteList(list);
+            }
 
         }
 

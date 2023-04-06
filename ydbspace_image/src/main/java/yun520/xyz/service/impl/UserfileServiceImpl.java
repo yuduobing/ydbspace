@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.multipart.MultipartFile;
 import yun520.xyz.chain.autohandle.UserfileNewFolder;
+import yun520.xyz.chain.autohandle.Userfiledelete;
 import yun520.xyz.chain.core.Bootstrap;
 import yun520.xyz.chain.handle.uploadhand;
 import yun520.xyz.context.StoreContext;
@@ -28,7 +29,7 @@ import java.time.LocalDateTime;
 
 /**
  * <p>
- *  服务实现类
+ * 服务实现类
  * </p>
  *
  * @author yuduobin
@@ -45,12 +46,13 @@ public class UserfileServiceImpl extends ServiceImpl<UserfileMapper, Userfile> i
     @Autowired
     FilechunkMapper filechunkMapper;
     @Autowired
-     UserfileMapper  userFileMapper;
-//    查询文件目录
+    UserfileMapper userFileMapper;
+
+    //    查询文件目录
     @Override
     public IPage<FileListVo> getFileList(Long userId, String filePath, Long currentPage, Long pageCount) {
         //这里userid写死
-       long   userId2= 1L;
+        long userId2 = 1L;
         Page<FileListVo> page = new Page<>(currentPage, pageCount);
         Userfile userFile = new Userfile();
 //        JwtUser sessionUserBean = SessionUtil.getSession();
@@ -68,7 +70,7 @@ public class UserfileServiceImpl extends ServiceImpl<UserfileMapper, Userfile> i
 
     @Override
     public Boolean newMk(Long userId, String path, String filename) {
-        Userfile userfile=new Userfile();
+        Userfile userfile = new Userfile();
         if (userId == null) {
             userfile.setUserId(1L);
         } else {
@@ -82,37 +84,45 @@ public class UserfileServiceImpl extends ServiceImpl<UserfileMapper, Userfile> i
         userfile.setDeleteFlag(0);
 
         int insert = userFileMapper.insert(userfile);
-        if (insert>0){
+        if (insert > 0) {
             return true;
         }
         return false;
     }
 
     @Override
-    public  void upload(MultipartFile file, FileWeb fileparams) {
-        
+    public void upload(MultipartFile file, FileWeb fileparams) {
+
         //文件上传
         String originalFilename = file.getOriginalFilename();
-        String     chunkpath = null;
+        String chunkpath = null;
         try {
             StoreService storeService = storeContext.getStoreService("1");
-            chunkpath = storeService.upload("group1",file.getInputStream(),file.getSize(), String.valueOf(fileparams.getChunkNumber()));
+            chunkpath = storeService.upload("group1", file.getInputStream(), file.getSize(), String.valueOf(fileparams.getChunkNumber()));
         } catch (IOException e) {
             e.printStackTrace();
         }
         fileparams.setChunkpath(chunkpath);
         //执行责任链
         Bootstrap bootstrap = new Bootstrap();
-        bootstrap.childHandler(new UserfileNewFolder(fileparams,null));
+        bootstrap.childHandler(new UserfileNewFolder(fileparams, null));
         bootstrap.execute();
-
 
     }
 
     @Override
     public Boolean deletemk(FileWeb fileparams) {
+        try {
+            //执行责任链
+            Bootstrap bootstrap = new Bootstrap();
+            bootstrap.childHandler(new Userfiledelete(fileparams, null));
+            bootstrap.execute();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
         //删除文件
 
-        return null;
+        return true;
     }
 }
