@@ -22,7 +22,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 //fastdfs 实现类
-@Component("WebDavServiceimpl")
+@Component("WebDavService")
 @Scope(value = "prototype")
 @Primary
 public class WebDavServiceimpl implements StoreService {
@@ -39,10 +39,9 @@ public class WebDavServiceimpl implements StoreService {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
         String day = sdf.format(new Date());
         String baseurl = "http://1.116.162.163:5244/dav/webcloud/" + day.substring(0,6) + "/"+ day.substring(6,8) + "/";
-            if (!sardine.exists(baseurl)) {
-
+//   判断存在报错         if (!sardine.exists(baseurl)) {
                 sardine.createDirectory(baseurl);
-            }
+//            }
             baseurl=baseurl+fileExtName;
             sardine.put(baseurl, inputStream);
 

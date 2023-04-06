@@ -8,6 +8,7 @@ import org.springframework.web.multipart.MultipartFile;
 import yun520.xyz.chain.autohandle.UserfileNewFolder;
 import yun520.xyz.chain.core.Bootstrap;
 import yun520.xyz.chain.handle.uploadhand;
+import yun520.xyz.context.StoreContext;
 import yun520.xyz.entity.FileWeb;
 import yun520.xyz.entity.Filechunk;
 import yun520.xyz.entity.Userfile;
@@ -36,7 +37,7 @@ import java.time.LocalDateTime;
 @Service
 public class UserfileServiceImpl extends ServiceImpl<UserfileMapper, Userfile> implements IUserfileService {
     @Autowired
-    StoreService fastdfs;
+    StoreContext storeContext;
     @Autowired
     FileMapper filemapper;
     @Autowired
@@ -94,7 +95,8 @@ public class UserfileServiceImpl extends ServiceImpl<UserfileMapper, Userfile> i
         String originalFilename = file.getOriginalFilename();
         String     chunkpath = null;
         try {
-            chunkpath = fastdfs.upload("group1",file.getInputStream(),file.getSize(), String.valueOf(fileparams.getChunkNumber()));
+            StoreService storeService = storeContext.getStoreService("1");
+            chunkpath = storeService.upload("group1",file.getInputStream(),file.getSize(), String.valueOf(fileparams.getChunkNumber()));
         } catch (IOException e) {
             e.printStackTrace();
         }

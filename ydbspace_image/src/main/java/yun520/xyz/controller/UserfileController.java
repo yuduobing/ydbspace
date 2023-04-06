@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.multipart.MultipartFile;
+import yun520.xyz.context.StoreContext;
 import yun520.xyz.entity.File;
 import yun520.xyz.entity.FileWeb;
 import yun520.xyz.entity.Filechunk;
@@ -61,9 +62,8 @@ import java.util.logging.Logger;
 public class UserfileController extends  BaseController {
     private static Logger logger = Logger.getLogger("UserfileController.class");
 
-    @Qualifier(value = "FastDfsService")
-    @Autowired()
-    FastDfsServiceimpl fastdfs;
+
+
     @Autowired
     FileMapper filemapper;
     @Autowired

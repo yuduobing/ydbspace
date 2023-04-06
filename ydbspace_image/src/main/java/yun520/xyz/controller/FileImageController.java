@@ -15,7 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-
+import yun520.xyz.context.StoreContext;
 import yun520.xyz.entity.File;
 import yun520.xyz.entity.FileWeb;
 import yun520.xyz.entity.Filechunk;
@@ -48,7 +48,7 @@ import java.util.logging.Logger;
 public class FileImageController {
     private static Logger logger = Logger.getLogger("FileImageController.class");
     @Autowired
-    StoreService fastdfs;
+    StoreContext storeContext;
     @Autowired
     FileMapper filemapper;
     @Autowired
@@ -85,7 +85,8 @@ public class FileImageController {
 
 
             result2++;
-            chunkpath = fastdfs.upload("group1",file.getInputStream(),file.getSize(), String.valueOf(originalFilename+RandomUtil.randomString(3)));
+        StoreService storeService = storeContext.getStoreService("0");
+        chunkpath = storeService.upload("group1",file.getInputStream(),file.getSize(), String.valueOf(originalFilename+RandomUtil.randomString(3)));
 
             //填充切片表
             Filechunk filechunk = Filechunk.builder().chunkmd5(fileparams.getIdentifier()).chunksize(fileparams.getChunkSize()).chunkpath(chunkpath).chunktotalnum(fileparams.getTotalChunks()).chunksnum(fileparams.getChunkNumber())
@@ -133,7 +134,7 @@ public class FileImageController {
     //todo 后续加个临时下载码存在redis ，330分过期
     public void downfile(FileWeb fileparams, HttpServletResponse response, HttpServletRequest request) throws Exception {
 
-       logger.info("fastdfs地址" + fastdfs.hashCode());
+
        logger.info("filemapper地址" + filemapper.hashCode());
        logger.info("*****开始时间*******" + DateUtil.now());
         //根据文件下md5载文件
@@ -171,6 +172,8 @@ public class FileImageController {
         response.setContentType("application/" + userInfoList2.get(0).getFileType());
         OutputStream outputStream = new BufferedOutputStream(response.getOutputStream());
 
+        StoreService storeService = storeContext.getStoreService("0");
+
         //多线程下载等待线程
         try {
             //线程等待计算正在写入第几片
@@ -181,9 +184,10 @@ public class FileImageController {
             LinkedBlockingQueue<Runnable> linkedBlockingQueue = new LinkedBlockingQueue<>();
             ExecutorService executorService = new ThreadPoolExecutor(3, 3,
                     0L, TimeUnit.MILLISECONDS,
-                    linkedBlockingQueue);;
+                    linkedBlockingQueue);
+
             userInfoList.forEach(val -> {
-                executorService.execute(new DownThread(executorService, countDownLatch, automIterator, val, outputStream, fastdfs,linkedBlockingQueue));
+                executorService.execute(new DownThread(executorService, countDownLatch, automIterator, val, outputStream, storeService,linkedBlockingQueue));
 
             });
             countDownLatch.await();
