@@ -351,3 +351,8 @@ public interface LoginService {
 Object principal2 = SecurityContextHolder.getContext().getAuthentication();
 loginService.getUserInformation("22");
 ```
+myatisplus
+deletebyid
+
+    @TableId("userFileId")
+    private int userFileId;

@@ -165,8 +165,9 @@ public class UserfileController extends  BaseController {
     @GetMapping(value = "/userfile/deletemk")
     @ResponseBody
     public RestResult deletemk(FileWeb fileparams) {
-        Boolean fileList = iUserService.deletemk( fileparams);
-        return RestResult.success();
+        Boolean result = iUserService.deletemk( fileparams);
+
+        return result?RestResult.success():RestResult.fail();
     }
 
 }

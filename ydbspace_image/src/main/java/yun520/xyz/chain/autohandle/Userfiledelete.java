@@ -4,6 +4,8 @@ import yun520.xyz.chain.core.ContextRequest;
 import yun520.xyz.chain.core.ContextResponse;
 import yun520.xyz.chain.core.HandlerInitializer;
 import yun520.xyz.chain.core.Pipeline;
+import yun520.xyz.chain.handle.deleteMyFile;
+import yun520.xyz.chain.handle.deleteMyFodle;
 import yun520.xyz.chain.handle.uploadhand;
 import yun520.xyz.util.SpringContentUtils;
 
@@ -31,15 +33,14 @@ public class Userfiledelete extends HandlerInitializer {
     protected void initChannel(Pipeline pipeline) {
         SpringContentUtils sc = new SpringContentUtils();
 
-        //文件表上传
-        pipeline.addLast(sc.getHandler(uploadhand.class));
-        //个人文件表也要上传
-        pipeline.addLast(sc.getHandler(uploadhand.class));
-//        pipeline.addLast(scu.getHandler(uploadhand.class));
-        //1获取接口的所有实现类
-        //2把实现类拼接进来
+        //1删除文件夹
+        pipeline.addLast(sc.getHandler(deleteMyFodle.class));
+        //2删除文件
+        pipeline.addLast(sc.getHandler(deleteMyFile.class));
+        //3更新容量
+
     }
 
-    //通过自定义注解 反射排序，确定顺讯
+
 
 }
