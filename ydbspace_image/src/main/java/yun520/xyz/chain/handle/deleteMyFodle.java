@@ -5,6 +5,7 @@ import io.jsonwebtoken.lang.Collections;
 import lombok.val;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import yun520.xyz.chain.core.ContextRequest;
 import yun520.xyz.chain.core.ContextResponse;
 import yun520.xyz.chain.core.Handler;
@@ -16,6 +17,7 @@ import java.util.List;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
+@Component
 public class deleteMyFodle extends Handler {
     private static Logger logger = Logger.getLogger("deleteMyFodle.class");
 
@@ -31,12 +33,13 @@ public class deleteMyFodle extends Handler {
             if (1 == fileparams.getIsDir()) {
                 QueryWrapper<Userfile> objectQueryWrapper = new QueryWrapper<>();
                 objectQueryWrapper.eq("userId", fileparams.getUserId());
-                objectQueryWrapper.like("name", fileparams.getFilePath()+"%");
+                objectQueryWrapper.like("filePath", fileparams.getFilePath() + "%");
+                objectQueryWrapper.or();
+                objectQueryWrapper.eq("userFileId", fileparams.getUserFileId());
                 List<Userfile> userfiles = userfileMapper.selectList(objectQueryWrapper);
-                //删除文件夹，返回文件id
+                //删除子文件夹，返回文件id
                 userfiles.stream().filter(val -> val.getIsDir() == 1).forEach(val -> {
-                    userfileMapper.deleteById(val.getFileId());
-
+                    userfileMapper.deleteById(val);
                 });
                 //获得所有文件id
                 List<String> list = userfiles.stream().filter(val -> val.getIsDir() == 0).map(Userfile::getFileId).collect(Collectors.toList());

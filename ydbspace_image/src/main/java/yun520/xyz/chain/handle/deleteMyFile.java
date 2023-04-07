@@ -4,6 +4,7 @@ import cn.hutool.core.date.DateUnit;
 import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import yun520.xyz.chain.core.ContextRequest;
 import yun520.xyz.chain.core.ContextResponse;
 import yun520.xyz.chain.core.Handler;
@@ -26,7 +27,7 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
-
+@Component
 public class deleteMyFile extends Handler {
     private static Logger logger = Logger.getLogger("deleteMyFodle.class");
     @Autowired
@@ -67,13 +68,11 @@ public class deleteMyFile extends Handler {
                         }
                     });
                     filechunkMapper.delete(queryWrapperfilechunk);
-
-
                 }
-
+                //删除文件表
+                filemapper.deleteById(val);
             });
-            //删除文件表
-            filemapper.delete(queryWrapperfile);
+
 
 
 
