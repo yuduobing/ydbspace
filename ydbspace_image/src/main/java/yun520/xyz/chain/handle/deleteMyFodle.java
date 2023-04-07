@@ -31,22 +31,23 @@ public class deleteMyFodle extends Handler {
 
             //文件夹删除所有前缀相同的
 
-                QueryWrapper<Userfile> objectQueryWrapper = new QueryWrapper<>();
-                objectQueryWrapper.eq("userId", fileparams.getUserId());
-                objectQueryWrapper.like("filePath", fileparams.getFilePath() + "%");
-                objectQueryWrapper.or();
-                objectQueryWrapper.eq("userFileId", fileparams.getUserFileId());
-                List<Userfile> userfiles = userfileMapper.selectList(objectQueryWrapper);
-                //删除文件夹和文件，返回文件id
-                userfiles.forEach(val -> {
-                    userfileMapper.deleteById(val);
-                });
-                //获得所有文件id
-                List<String> list = userfiles.stream().filter(val -> val.getIsDir() == 0).map(Userfile::getFileId).collect(Collectors.toList());
-                logger.info("删除" + fileparams.getUserId() + list);
-                //所有需要删除的文件
-                fileparams.setDeleteList(list);
+            QueryWrapper<Userfile> objectQueryWrapper = new QueryWrapper<>();
+            objectQueryWrapper.eq("userId", fileparams.getUserId());
+            objectQueryWrapper.like("filePath", fileparams.getFilePath() + "%");
+            objectQueryWrapper.or();
+            objectQueryWrapper.eq("userFileId", fileparams.getUserFileId());
+            List<Userfile> userfiles = userfileMapper.selectList(objectQueryWrapper);
+            //删除文件夹和文件，返回文件id
 
+            //获得所有文件id
+            List<String> list = userfiles.stream().filter(val -> val.getIsDir() == 0).map(Userfile::getFileId).collect(Collectors.toList());
+            logger.info("删除" + fileparams.getUserId() + list);
+            //所有需要删除的文件
+            fileparams.setDeleteList(list);
+
+            userfiles.forEach(val -> {
+                userfileMapper.deleteById(val);
+            });
 
         }
 

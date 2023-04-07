@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 import yun520.xyz.chain.core.ContextRequest;
 import yun520.xyz.chain.core.ContextResponse;
 import yun520.xyz.chain.core.Handler;
+import yun520.xyz.context.StoreContext;
 import yun520.xyz.entity.File;
 import yun520.xyz.entity.FileWeb;
 import yun520.xyz.entity.Filechunk;
@@ -38,15 +39,16 @@ public class deleteMyFile extends Handler {
     @Autowired
     FilechunkMapper filechunkMapper;
     @Autowired
-    StoreService storeService;
+    StoreContext storeContext;
     @Autowired
     UserfileMapper userfileMapper;
 
     @Override
     public void doHandler(ContextRequest request, ContextResponse response) {
         if (request instanceof FileWeb) {
+            StoreService storeService = storeContext.getStoreService("1");
             FileWeb fileparams = (FileWeb) request;
-            if (null == fileparams.getDeleteList()) {
+            if (null == fileparams.getDeleteList()||fileparams.getDeleteList().size()==0) {
                 return;
             }
             QueryWrapper<File> queryWrapperfile = new QueryWrapper<>();
@@ -66,6 +68,7 @@ public class deleteMyFile extends Handler {
                     List<Filechunk> userInfoListchunk = filechunkMapper.selectList(queryWrapperfilechunk);
                     userInfoListchunk.forEach(valchunk -> {
                         try {
+
                             storeService.delete(valchunk.getChunkpath());
                         } catch (Exception e) {
                             logger.severe(e.getMessage());
@@ -88,7 +91,7 @@ public class deleteMyFile extends Handler {
         QueryWrapper<File> queryWrapperfile2 = new QueryWrapper<File>();
         queryWrapperfile2.eq("filemd5", identifier);
         List<File> userInfoListpermanent = filemapper.selectList(queryWrapperfile2);
-        if (userInfoListpermanent.size() > 0) {
+        if (userInfoListpermanent.size() > 1) {
             return false;
 
         }
