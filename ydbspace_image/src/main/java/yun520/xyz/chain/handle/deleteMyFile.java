@@ -53,22 +53,18 @@ public class deleteMyFile extends Handler {
             }
             QueryWrapper<File> queryWrapperfile = new QueryWrapper<>();
             queryWrapperfile.in("fid", fileparams.getDeleteList());
-
             List<File> userInfoList2 = filemapper.selectList(queryWrapperfile);
             //遍历删除还是要确定其他永久文件md5是否存在
             userInfoList2.forEach(val -> {
                 boolean safedelte = isSafedelte(val.getFilemd5());
                 //切片是否可以安全删除
                 if (safedelte) {
-
 //                开始删除  删除文件  删除切片表  删除文件表
                     QueryWrapper<Filechunk> queryWrapperfilechunk = new QueryWrapper<Filechunk>();
                     queryWrapperfilechunk.eq("chunkmd5", val.getFilemd5());
-
                     List<Filechunk> userInfoListchunk = filechunkMapper.selectList(queryWrapperfilechunk);
                     userInfoListchunk.forEach(valchunk -> {
                         try {
-
                             storeService.delete(valchunk.getChunkpath());
                         } catch (Exception e) {
                             logger.severe(e.getMessage());
