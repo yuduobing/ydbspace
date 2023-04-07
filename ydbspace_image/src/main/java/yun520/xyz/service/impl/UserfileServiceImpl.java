@@ -1,6 +1,7 @@
 package yun520.xyz.service.impl;
 
 import cn.hutool.core.net.URLDecoder;
+import cn.hutool.core.util.RandomUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -98,7 +99,7 @@ public class UserfileServiceImpl extends ServiceImpl<UserfileMapper, Userfile> i
         String chunkpath = null;
         try {
             StoreService storeService = storeContext.getStoreService("1");
-            chunkpath = storeService.upload("group1", file.getInputStream(), file.getSize(), String.valueOf(fileparams.getChunkNumber()));
+            chunkpath = storeService.upload("group1", file.getInputStream(), file.getSize(), String.valueOf(originalFilename+ RandomUtil.randomString(3)));
         } catch (IOException e) {
             e.printStackTrace();
         }

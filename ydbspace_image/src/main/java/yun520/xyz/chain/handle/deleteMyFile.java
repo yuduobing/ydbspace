@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
+
 @Component
 public class deleteMyFile extends Handler {
     private static Logger logger = Logger.getLogger("deleteMyFodle.class");
@@ -39,14 +40,17 @@ public class deleteMyFile extends Handler {
     @Autowired
     StoreService storeService;
     @Autowired
-    UserfileMapper  userfileMapper;
+    UserfileMapper userfileMapper;
 
     @Override
     public void doHandler(ContextRequest request, ContextResponse response) {
-        if (request instanceof FileWeb){
-            FileWeb fileparams=(FileWeb)request;
+        if (request instanceof FileWeb) {
+            FileWeb fileparams = (FileWeb) request;
+            if (null == fileparams.getDeleteList()) {
+                return;
+            }
             QueryWrapper<File> queryWrapperfile = new QueryWrapper<>();
-            queryWrapperfile.in("file_id", fileparams.getDeleteList());
+            queryWrapperfile.in("fid", fileparams.getDeleteList());
 
             List<File> userInfoList2 = filemapper.selectList(queryWrapperfile);
             //遍历删除还是要确定其他永久文件md5是否存在
@@ -73,12 +77,10 @@ public class deleteMyFile extends Handler {
                 filemapper.deleteById(val);
             });
 
-
-
-
         }
 
     }
+
     //是否可以安全删除   文件表是否有相同md5
     public boolean isSafedelte(String identifier) {
         AtomicReference<Boolean> bz = new AtomicReference<>(true);
@@ -86,7 +88,7 @@ public class deleteMyFile extends Handler {
         QueryWrapper<File> queryWrapperfile2 = new QueryWrapper<File>();
         queryWrapperfile2.eq("filemd5", identifier);
         List<File> userInfoListpermanent = filemapper.selectList(queryWrapperfile2);
-        if(userInfoListpermanent.size()>0){
+        if (userInfoListpermanent.size() > 0) {
             return false;
 
         }

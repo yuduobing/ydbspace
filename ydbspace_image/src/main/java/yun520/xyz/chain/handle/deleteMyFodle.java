@@ -30,15 +30,15 @@ public class deleteMyFodle extends Handler {
             FileWeb fileparams = (FileWeb) request;
 
             //文件夹删除所有前缀相同的
-            if (1 == fileparams.getIsDir()) {
+
                 QueryWrapper<Userfile> objectQueryWrapper = new QueryWrapper<>();
                 objectQueryWrapper.eq("userId", fileparams.getUserId());
                 objectQueryWrapper.like("filePath", fileparams.getFilePath() + "%");
                 objectQueryWrapper.or();
                 objectQueryWrapper.eq("userFileId", fileparams.getUserFileId());
                 List<Userfile> userfiles = userfileMapper.selectList(objectQueryWrapper);
-                //删除子文件夹，返回文件id
-                userfiles.stream().filter(val -> val.getIsDir() == 1).forEach(val -> {
+                //删除文件夹和文件，返回文件id
+                userfiles.forEach(val -> {
                     userfileMapper.deleteById(val);
                 });
                 //获得所有文件id
@@ -46,7 +46,7 @@ public class deleteMyFodle extends Handler {
                 logger.info("删除" + fileparams.getUserId() + list);
                 //所有需要删除的文件
                 fileparams.setDeleteList(list);
-            }
+
 
         }
 
