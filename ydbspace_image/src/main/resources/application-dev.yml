@@ -70,21 +70,3 @@ ydb:
     exchangname: deletechange
     emailQueue: deletequeue
     fanout: true
-gomyck:
-  config:
-    redis: false #是否使用redis存储文件上传信息以及上传锁
-  redis:
-    host: 1.116.162.163
-    password: password
-    port: 8057
-  fastdfs: #fastdfs上传配置
-    chunk-size: 5 #分块大小, 上传文件分块的大小 单位: MB
-    download-chunk-size: 100  #分块下载大小  单位: byte
-    group-id: group1 #fastdfs的组, 文件会被存到这个组下
-    file-server-protocol: http #远程文件服务连接协议
-    file-server-url: 1.116.162.163 #远程文件服务连接地址
-  logstash:
-    host: 1.116.162.163
-  logging:
-    level:
-      root: debug

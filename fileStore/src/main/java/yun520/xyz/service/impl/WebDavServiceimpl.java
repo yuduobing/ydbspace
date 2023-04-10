@@ -21,14 +21,16 @@ import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.logging.Logger;
 
 //fastdfs 实现类
 @Component("WebDavService")
 @Scope(value = "prototype")
 @Primary
 public class WebDavServiceimpl implements StoreService {
+    private static Logger logger = Logger.getLogger("WebDavServiceimpl.class");
     //  //文件名不可有中文
-    Sardine sardine = SardineFactory.begin("admin","MNR52kWq");
+    Sardine sardine = SardineFactory.begin("admin", "MNR52kWq");
     @Autowired
     private FastFileStorageClient storageClient;
 
@@ -42,13 +44,13 @@ public class WebDavServiceimpl implements StoreService {
         String day = sdf.format(new Date());
         SimpleDateFormat sdf2 = new SimpleDateFormat("yyyyMMddHHmmssSSSS");
         String filename = sdf2.format(new Date());
-        String baseurl = "http://1.116.162.163:5244/dav/webcloud/" + day.substring(0,6) + "/"+ day.substring(6,8) + "/";
+        String baseurl = "http://1.116.162.163:5244/dav/webcloud/" + day.substring(0, 6) + "/" + day.substring(6, 8) + "/";
 //   判断存在报错         if (!sardine.exists(baseurl)) {
-                sardine.createDirectory(baseurl);
+        sardine.createDirectory(baseurl);
 //            }
 
-            baseurl=baseurl+filename+"."+fileExtName;
-            sardine.put(baseurl, inputStream);
+        baseurl = baseurl + filename + "." + fileExtName;
+        sardine.put(baseurl, inputStream);
 
         return baseurl;
     }
@@ -65,13 +67,29 @@ public class WebDavServiceimpl implements StoreService {
         return new byte[0];
     }
 
-
     @SneakyThrows
     @Override
     public byte[] download(String filePath) {
+        int a = 1;
+        boolean begin =true;
+//        失败重试机制
+        InputStream inputStream = null;
 
-         InputStream inputStream = sardine.get(filePath);
+        while ( a < 5 && a>1 ||begin==true ) {
+            if (begin==true ){
+                begin=false;
+            }
+            try {
 
+                inputStream = sardine.get(filePath);
+            } catch (Exception e) {
+                a++;
+                logger.severe("下载失败" + e.getMessage() + "重试次数" + a+ "路径" + filePath);
+                if (a > 4) {
+                    throw e;
+                }
+            }
+        }
 
         return IOUtils.toByteArray(inputStream);
 
@@ -82,7 +100,7 @@ public class WebDavServiceimpl implements StoreService {
     public void delete(String filePath) {
         if (StringUtils.isNotBlank(filePath)) {
 
-                sardine.delete(filePath);
+            sardine.delete(filePath);
 
         }
 

@@ -65,7 +65,11 @@ public class FastDfsServiceimpl  implements StoreService{
             String path = filePath.substring(filePath.indexOf("/") + 1);
             DownloadByteArray byteArray = new DownloadByteArray();
             bytes = storageClient.downloadFile(group, path, byteArray);
+
+
         }
+
+
         return bytes;
 
 

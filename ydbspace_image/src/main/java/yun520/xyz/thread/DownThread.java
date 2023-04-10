@@ -52,6 +52,7 @@ public class DownThread implements Runnable {
             logger.info("开始下载" + Thread.currentThread().getName() + "时间" + DateUtil.now() + "下载" + filechunk.getChunksnum());
             //开始下载
             byte[] download = fastdfs.download(filechunk.getChunkpath());
+
             logger.info("下载结束" + Thread.currentThread().getName() + "时间" + DateUtil.now() + "下载结束" + filechunk.getChunksnum());
             //等待唤醒
             synchronized (
@@ -72,6 +73,11 @@ public class DownThread implements Runnable {
 
             }
         } catch (Exception e) {
+            //异常重试机制
+
+
+
+
 //            shutdown 会等待线程池中的任务执行完成之后关闭线程池，而 shutdownNow 会给所有线程发送中断信号，中断任务执行，然后关闭线程池
 //            shutdown 没有返回值，而 shutdownNow 会返回关闭前任务队列中未执行的任务集合（List）
             this.executorService.shutdown();
@@ -81,6 +87,7 @@ public class DownThread implements Runnable {
             while (this.latch.getCount() > 0) {
                 this.latch.countDown();
             }
+            e.printStackTrace();
             //如果对方关闭了链接我们应该停止所有线程
 
         }
