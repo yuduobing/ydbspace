@@ -3,6 +3,7 @@ package yun520.xyz.controller;
 
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.log.Log;
 import cn.hutool.system.UserInfo;
@@ -171,8 +172,8 @@ public class FileImageController {
         //设置响应头中文件类型为pdf格式
         response.setContentType("application/" + userInfoList2.get(0).getFileType());
         OutputStream outputStream = new BufferedOutputStream(response.getOutputStream());
-
-        StoreService storeService = storeContext.getStoreService("0");
+        Assert.notEmpty(fileparams.getFiletype(),"文件类型不能为空");
+        StoreService storeService = storeContext.getStoreService(fileparams.getFiletype());
 
         //多线程下载等待线程
         try {
@@ -194,7 +195,6 @@ public class FileImageController {
 
            logger.info("********任务结束时间*********" + DateUtil.now());
             //读取指定路径下面的文件
-
 //        InputStream in = new FileInputStream(filepath);
 //
 //        //创建存放文件内容的数组
