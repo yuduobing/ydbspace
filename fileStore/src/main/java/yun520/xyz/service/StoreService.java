@@ -1,6 +1,7 @@
 package yun520.xyz.service;
 
 import java.io.InputStream;
+import java.io.OutputStream;
 
 public interface StoreService {
     /**
@@ -24,7 +25,7 @@ public interface StoreService {
      * @param path
      * @return
      */
-    public InputStream download(String path);
+    public  byte[]  download(String path);
 
     /**
      * 删除

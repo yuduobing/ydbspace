@@ -19,7 +19,6 @@ import org.springframework.security.oauth2.provider.token.TokenStore;
 @Configuration
 //开启资源服务器
 @EnableResourceServer
-
 public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
      //  这些是读取的配置文件配置，不然也可以手动注入
 
@@ -30,7 +29,8 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
                 .anyRequest()
                 .authenticated()
                 .and()
-                .csrf().disable()     // 前后端分离下，可以关闭 csrf
+                .csrf().disable()
+                .cors().disable()// 前后端分离下，可以关闭 csrf
                 .requestMatchers()
                 //管理哪些接口
                 .antMatchers("/user/**","/web/userfile/**")

@@ -87,7 +87,7 @@ public class FileImageController {
 
             result2++;
         StoreService storeService = storeContext.getStoreService("0");
-        chunkpath = storeService.upload("group1",file.getInputStream(),file.getSize(), String.valueOf(originalFilename+RandomUtil.randomString(3)));
+        chunkpath = storeService.upload("group1",file.getInputStream(),file.getSize(), extension);
 
             //填充切片表
             Filechunk filechunk = Filechunk.builder().chunkmd5(fileparams.getIdentifier()).chunksize(fileparams.getChunkSize()).chunkpath(chunkpath).chunktotalnum(fileparams.getTotalChunks()).chunksnum(fileparams.getChunkNumber())

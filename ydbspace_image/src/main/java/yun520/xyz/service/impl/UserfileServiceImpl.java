@@ -96,10 +96,12 @@ public class UserfileServiceImpl extends ServiceImpl<UserfileMapper, Userfile> i
 
         //文件上传
         String originalFilename = file.getOriginalFilename();
+
+        String extension = originalFilename.substring(originalFilename.lastIndexOf(".") + 1);
         String chunkpath = null;
         try {
             StoreService storeService = storeContext.getStoreService("1");
-            chunkpath = storeService.upload("group1", file.getInputStream(), file.getSize(), String.valueOf(originalFilename+ RandomUtil.randomString(3)));
+            chunkpath = storeService.upload("group1", file.getInputStream(), file.getSize(), String.valueOf(extension+ RandomUtil.randomString(3)));
         } catch (IOException e) {
             e.printStackTrace();
         }

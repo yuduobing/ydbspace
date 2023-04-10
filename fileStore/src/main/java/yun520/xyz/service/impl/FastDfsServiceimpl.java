@@ -14,10 +14,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import yun520.xyz.service.StoreService;
 
-import java.io.BufferedInputStream;
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
@@ -33,6 +30,7 @@ public class FastDfsServiceimpl  implements StoreService{
 
 
     //上传有group
+    //fileExtName 文件扩展名
     @Override
     public String upload(String groupName, InputStream inputStream, long fileSize, String fileExtName) {
         //文件名不可有中文
@@ -42,13 +40,13 @@ public class FastDfsServiceimpl  implements StoreService{
 
     @Override
     public String upload(byte[] bytes,  long fileSize, String extension){
-        ByteArrayInputStream bais = new ByteArrayInputStream(bytes);
-        // 元数据
-        Set<MetaData> metaDataSet = new HashSet<MetaData>();
-        metaDataSet.add(new MetaData("dateTime", LocalDateTime.now().toString()));
-        metaDataSet.add(new MetaData("Author","Layne"));
-        StorePath storePath = storageClient.uploadFile(bais, fileSize, extension, metaDataSet);
-        return storePath.getFullPath();
+//        ByteArrayInputStream bais = new ByteArrayInputStream(bytes);
+//        // 元数据
+//        Set<MetaData> metaDataSet = new HashSet<MetaData>();
+//        metaDataSet.add(new MetaData("dateTime", LocalDateTime.now().toString()));
+//        metaDataSet.add(new MetaData("Author","Layne"));
+//        StorePath storePath = storageClient.uploadFile(bais, fileSize, extension, metaDataSet);
+        return null;
 
     }
 
@@ -58,18 +56,18 @@ public class FastDfsServiceimpl  implements StoreService{
     }
 
     @Override
-    public InputStream download(String filePath) {
+    public  byte[]  download(String filePath) {
 
-        InputStream inputStream = null;
-        OutputStream outputStream = null;
+
+        byte[] bytes = null;
         if (StringUtils.isNotBlank(filePath)) {
             String group = filePath.substring(0, filePath.indexOf("/"));
             String path = filePath.substring(filePath.indexOf("/") + 1);
-            DownloadFileStream stream = new DownloadFileStream(outputStream);
-            storageClient.downloadFile(group, path, stream);
-
+            DownloadByteArray byteArray = new DownloadByteArray();
+            bytes = storageClient.downloadFile(group, path, byteArray);
         }
-        return inputStream;
+        return bytes;
+
 
 
     }
@@ -79,6 +77,5 @@ public class FastDfsServiceimpl  implements StoreService{
         if (StringUtils.isNotBlank(filePath)) {
             storageClient.deleteFile(filePath);
         }
-
     }
 }

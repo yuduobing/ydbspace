@@ -7,6 +7,7 @@ import com.github.tobato.fastdfs.domain.fdfs.StorePath;
 import com.github.tobato.fastdfs.domain.proto.storage.DownloadByteArray;
 import com.github.tobato.fastdfs.service.FastFileStorageClient;
 import lombok.SneakyThrows;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
@@ -32,17 +33,21 @@ public class WebDavServiceimpl implements StoreService {
     private FastFileStorageClient storageClient;
 
     //上传有group
+    //文件扩展名
     @SneakyThrows
     @Override
     public String upload(String groupName, InputStream inputStream, long fileSize, String fileExtName) {
 
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
         String day = sdf.format(new Date());
+        SimpleDateFormat sdf2 = new SimpleDateFormat("yyyyMMddHHmmssSSSS");
+        String filename = sdf2.format(new Date());
         String baseurl = "http://1.116.162.163:5244/dav/webcloud/" + day.substring(0,6) + "/"+ day.substring(6,8) + "/";
 //   判断存在报错         if (!sardine.exists(baseurl)) {
                 sardine.createDirectory(baseurl);
 //            }
-            baseurl=baseurl+fileExtName;
+
+            baseurl=baseurl+filename+"."+fileExtName;
             sardine.put(baseurl, inputStream);
 
         return baseurl;
@@ -63,11 +68,12 @@ public class WebDavServiceimpl implements StoreService {
 
     @SneakyThrows
     @Override
-    public InputStream download(String filePath) {
+    public byte[] download(String filePath) {
 
-        InputStream inputStream = sardine.get(filePath);
+         InputStream inputStream = sardine.get(filePath);
 
-        return inputStream;
+
+        return IOUtils.toByteArray(inputStream);
 
     }
 
