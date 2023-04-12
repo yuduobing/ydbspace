@@ -20,20 +20,19 @@ jobs:
 
     steps:
       - name: 拉去最新的代码
-      - uses: actions/checkout@v3
+        uses: actions/checkout@v3
       - name: 设置jdk
         uses: actions/setup-java@v3
         with:
           java-version: '8'
           distribution: 'temurin'
-          server-id: github # Value of the distributionManagement/repository/id field of the pom.xml
-          settings-path: ${{ github.workspace }} # location for the settings.xml file
+          server-id: github
+          settings-path: ${{ github.workspace }}
       - name: 项目打包
-      - run: mvn -B package
+        run: mvn -B package
 #        run: mvn -B clean package -Dmaven.test.skip=true
             # - name: 删除旧的jar包以及运行脚本
             #         run: sshpass -p ${{secrets.REMOTE_PWD}} ssh -o StrictHostKeyChecking=no root@${{secrets.REMOTE_IP}} "cd /root/GitHub_Action && rm -rf ./*"
-
       - name: 上传jar包和启动脚本到服务器中
         run: sshpass -p ${{secrets.REMOTE_PWD}} scp -r -o StrictHostKeyChecking=no ./ydbspace_image/target ./eurekaservice/target ./fileMq/target ./User/target root@${{secrets.REMOTE_IP}}:/docker/部署/target
 
