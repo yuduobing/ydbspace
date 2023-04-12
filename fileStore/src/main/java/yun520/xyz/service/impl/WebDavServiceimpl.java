@@ -101,6 +101,8 @@ public class WebDavServiceimpl implements StoreService {
         if (StringUtils.isNotBlank(filePath)) {
 
             sardine.delete(filePath);
+            logger.info("成功删除"+filePath);
+
 
         }
 
