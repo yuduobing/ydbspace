@@ -5,9 +5,10 @@ name: master发部到腾讯云
 
 on:
   push:
-    branches: ["master"]
-  release:
-    types: [created]
+    branches:
+      - master
+  # 手动触发部署
+  workflow_dispatch:
 
 jobs:
   build:
