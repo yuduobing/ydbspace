@@ -18,28 +18,29 @@ import java.io.*;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.logging.Logger;
 
 //fastdfs 实现类
 @Component("FastDfsService")
 @Scope(value = "prototype")
-public class FastDfsServiceimpl  implements StoreService{
+public class FastDfsServiceimpl implements StoreService {
+    private static Logger logger = Logger.getLogger("StoreService.class");
     @Autowired
     private FastFileStorageClient storageClient;
-     //fastdfs非集群默认有group
-    final static  String group="group1";
-
+    //fastdfs非集群默认有group
+    final static String group = "group1";
 
     //上传有group
     //fileExtName 文件扩展名
     @Override
     public String upload(String groupName, InputStream inputStream, long fileSize, String fileExtName) {
         //文件名不可有中文
-        StorePath sp=storageClient.uploadFile(groupName,inputStream, fileSize,fileExtName);
+        StorePath sp = storageClient.uploadFile(groupName, inputStream, fileSize, fileExtName);
         return sp.getFullPath();
     }
 
     @Override
-    public String upload(byte[] bytes,  long fileSize, String extension){
+    public String upload(byte[] bytes, long fileSize, String extension) {
 //        ByteArrayInputStream bais = new ByteArrayInputStream(bytes);
 //        // 元数据
 //        Set<MetaData> metaDataSet = new HashSet<MetaData>();
@@ -56,23 +57,31 @@ public class FastDfsServiceimpl  implements StoreService{
     }
 
     @Override
-    public  byte[]  download(String filePath) {
-
-
+    public byte[] download(String filePath) {
         byte[] bytes = null;
-        if (StringUtils.isNotBlank(filePath)) {
-            String group = filePath.substring(0, filePath.indexOf("/"));
-            String path = filePath.substring(filePath.indexOf("/") + 1);
-            DownloadByteArray byteArray = new DownloadByteArray();
-            bytes = storageClient.downloadFile(group, path, byteArray);
-
-
+        int a = 1;
+        boolean begin = true;
+        String group = filePath.substring(0, filePath.indexOf("/"));
+        String path = filePath.substring(filePath.indexOf("/") + 1);
+        while (1 < a && a < 5 || begin == true) {
+            if (begin == true) {
+                begin = false;
+            }
+            try {
+                if (StringUtils.isNotBlank(filePath)) {
+                    DownloadByteArray byteArray = new DownloadByteArray();
+                    bytes = storageClient.downloadFile(group, path, byteArray);
+                }
+            } catch (Exception e) {
+                a++;
+                logger.severe("webdav下载失败" + e.getMessage() + "重试次数" + a + "路径" + filePath);
+                if (a > 4) {
+                    throw e;
+                }
+            }
         }
 
-
         return bytes;
-
-
 
     }
 

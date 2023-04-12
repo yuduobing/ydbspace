@@ -75,7 +75,7 @@ public class WebDavServiceimpl implements StoreService {
 //        失败重试机制
         InputStream inputStream = null;
 
-        while ( a < 5 && a>1 ||begin==true ) {
+        while ( 1< a&& a < 5 ||begin==true ) {
             if (begin==true ){
                 begin=false;
             }
@@ -84,7 +84,7 @@ public class WebDavServiceimpl implements StoreService {
                 inputStream = sardine.get(filePath);
             } catch (Exception e) {
                 a++;
-                logger.severe("下载失败" + e.getMessage() + "重试次数" + a+ "路径" + filePath);
+                logger.severe("webdav下载失败" + e.getMessage() + "重试次数" + a+ "路径" + filePath);
                 if (a > 4) {
                     throw e;
                 }

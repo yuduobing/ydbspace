@@ -183,12 +183,20 @@ public class FileImageController {
             CountDownLatch countDownLatch = new CountDownLatch(userInfoList.get(0).getChunktotalnum());
             //创建下载线程池
             LinkedBlockingQueue<Runnable> linkedBlockingQueue = new LinkedBlockingQueue<>();
-            ExecutorService executorService = new ThreadPoolExecutor(3, 3,
-                    0L, TimeUnit.MILLISECONDS,
-                    linkedBlockingQueue);
-
+            ExecutorService executorService=null;
+            if ("1".equals( fileparams.getFiletype())){
+                 executorService = new ThreadPoolExecutor(1, 1,
+                        0L, TimeUnit.MILLISECONDS,
+                        linkedBlockingQueue);
+            }
+            else {
+                 executorService = new ThreadPoolExecutor(3, 3,
+                        0L, TimeUnit.MILLISECONDS,
+                        linkedBlockingQueue);
+            }
+            ExecutorService finalExecutorService = executorService;
             userInfoList.forEach(val -> {
-                executorService.execute(new DownThread(executorService, countDownLatch, automIterator, val, outputStream, storeService,linkedBlockingQueue));
+                finalExecutorService.execute(new DownThread(finalExecutorService, countDownLatch, automIterator, val, outputStream, storeService,linkedBlockingQueue));
 
             });
             countDownLatch.await();
