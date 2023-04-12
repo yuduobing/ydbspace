@@ -29,7 +29,8 @@ jobs:
           server-id: github # Value of the distributionManagement/repository/id field of the pom.xml
           settings-path: ${{ github.workspace }} # location for the settings.xml file
       - name: 项目打包
-        run: mvn -B clean package -Dmaven.test.skip=true
+        run: mvn -B package
+#        run: mvn -B clean package -Dmaven.test.skip=true
             # - name: 删除旧的jar包以及运行脚本
             #         run: sshpass -p ${{secrets.REMOTE_PWD}} ssh -o StrictHostKeyChecking=no root@${{secrets.REMOTE_IP}} "cd /root/GitHub_Action && rm -rf ./*"
 
