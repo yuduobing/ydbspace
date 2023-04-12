@@ -18,6 +18,7 @@ public class BaseController {
         return userid;
 
     }
+    //通过token去user服务调用
     public JSONObject getUser(){
         Object details = SecurityContextHolder.getContext().getAuthentication().getDetails();
         Assert.notNull(details,"获得用户details为空");

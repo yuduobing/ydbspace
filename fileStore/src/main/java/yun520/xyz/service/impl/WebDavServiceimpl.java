@@ -51,6 +51,7 @@ public class WebDavServiceimpl implements StoreService {
 
         baseurl = baseurl + filename + "." + fileExtName;
         sardine.put(baseurl, inputStream);
+        logger.info("上传成功"+baseurl);
 
         return baseurl;
     }
