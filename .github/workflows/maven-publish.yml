@@ -30,11 +30,11 @@ jobs:
           settings-path: ${{ github.workspace }} # location for the settings.xml file
       - name: 项目打包
           run: mvn -B clean package -Dmaven.test.skip=true
-          # - name: 删除旧的jar包以及运行脚本
-          #         run: sshpass -p ${{secrets.REMOTE_PWD}} ssh -o StrictHostKeyChecking=no root@${{secrets.REMOTE_IP}} "cd /root/GitHub_Action && rm -rf ./*"
+            # - name: 删除旧的jar包以及运行脚本
+            #         run: sshpass -p ${{secrets.REMOTE_PWD}} ssh -o StrictHostKeyChecking=no root@${{secrets.REMOTE_IP}} "cd /root/GitHub_Action && rm -rf ./*"
 
-          - name: 上传jar包和启动脚本到服务器中
-            run: sshpass -p ${{secrets.REMOTE_PWD}} scp -r -o StrictHostKeyChecking=no ./ydbspace_image/target ./eurekaservice/target ./fileMq/target ./User/target root@${{secrets.REMOTE_IP}}:/docker/部署/target
+      - name: 上传jar包和启动脚本到服务器中
+        run: sshpass -p ${{secrets.REMOTE_PWD}} scp -r -o StrictHostKeyChecking=no ./ydbspace_image/target ./eurekaservice/target ./fileMq/target ./User/target root@${{secrets.REMOTE_IP}}:/docker/部署/target
 
-          - name: 启动项目
-            run: sshpass -p ${{secrets.REMOTE_PWD}} ssh -o StrictHostKeyChecking=no root@${{secrets.REMOTE_IP}} " - cd /docker/部署 &&./start.sh start"
+      - name: 启动项目
+        run: sshpass -p ${{secrets.REMOTE_PWD}} ssh -o StrictHostKeyChecking=no root@${{secrets.REMOTE_IP}} " - cd /docker/部署 &&./start.sh start"
