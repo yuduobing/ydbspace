@@ -23,7 +23,7 @@ jobs:
     # todo2   执行shell脚本名称
       DEPLOY_SHNAME: startgithub.sh
     steps:
-      - name: 拉去最新的代码
+      - name: 拉取最新的代码
         uses: actions/checkout@v3
       - name: 设置jdk
         uses: actions/setup-java@v3
@@ -38,7 +38,7 @@ jobs:
         #         run: sshpass -p ${{secrets.REMOTE_PWD}} ssh -o StrictHostKeyChecking=no root@${{secrets.REMOTE_IP}} "cd /root/GitHub_Action && rm -rf ./*"
       - name: 上传jar包和启动脚本到服务器中
 #todo3        部署那些jar包及拷贝运行shell
-        run: sshpass -p ${{secrets.REMOTE_PASSWD}} scp -r -o StrictHostKeyChecking=no ./ydbspace_image/target/ydbspace_image.jar ./eurekaservice/target/eurekaservice.jar ./fileMq/target ./User/target/User.jar  ./部署/$DEPLOY_SHNAME root@${{secrets.REMOTE_IP}}:$DEPLOY_PATH
+        run: sshpass -p ${{secrets.REMOTE_PASSWD}} scp -r -o StrictHostKeyChecking=no ./ydbspace_image/target/ydbspace_image.jar ./eurekaservice/target/eurekaservice.jar ./fileMq/target ./User/target/User.jar  ./部署/startgithub.sh root@${{secrets.REMOTE_IP}}:/docker/ydbspace_github
 
       - name: 启动项目
         run: sshpass -p ${{secrets.REMOTE_PASSWD}} ssh -o StrictHostKeyChecking=no root@${{secrets.REMOTE_IP}} "  cd $DEPLOY_PATH && ./$DEPLOY_SHNAME start"
