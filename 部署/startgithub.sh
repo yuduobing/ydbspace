@@ -1,6 +1,7 @@
-##设置jar包位置
+##todo1 设置jar包位置
 path=/docker/ydbspace_github
-#   jar包名字
+mkdir -p $path
+#todo2   jar包名字
 jarname=()
 jarname[0]=eurekaservice.jar
 jarname[1]=ydbspace_image.jar

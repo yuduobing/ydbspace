@@ -1,10 +1,11 @@
+##todo1 设置jar包位置
+path=//docker/部署
+mkdir -p $path
 
-mkdir -p /docker/部署
 #打得包解压
 tar zxvf ~/gitee_go/deploy/output.tar.gz -C /docker/部署
 ##关闭之前jar包
-#定义部署的位置和jar包
-path=/docker/部署
+
 #   jar包名字
 jarname=()
 jarname[0]=eurekaservice.jar

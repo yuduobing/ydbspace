@@ -1,6 +1,4 @@
-# This workflow will build a package using Maven and then publish it to GitHub packages when a release is created
-# For more information see: https://github.com/actions/setup-java/blob/main/docs/advanced-usage.md#apache-maven-with-a-settings-path
-
+#需要设置的有todo
 name: master发部到腾讯云1
 #设置触发条件
 on:
@@ -18,8 +16,9 @@ jobs:
       contents: read
       packages: write
   env:
-#    部署到服务器目录
+#todo1    部署到服务器目录
     DEPLOY_PATH: /docker/ydbspace_github
+# todo2   执行shell脚本名称
     DEPLOY_SHNAME: startgithub.sh
     steps:
       - name: 拉去最新的代码
@@ -36,7 +35,7 @@ jobs:
         # - name: 删除旧的jar包以及运行脚本
         #         run: sshpass -p ${{secrets.REMOTE_PWD}} ssh -o StrictHostKeyChecking=no root@${{secrets.REMOTE_IP}} "cd /root/GitHub_Action && rm -rf ./*"
       - name: 上传jar包和启动脚本到服务器中
-#        部署那些jar包及拷贝运行shell
+#todo3        部署那些jar包及拷贝运行shell
         run: sshpass -p ${{secrets.REMOTE_PASSWD}} scp -r -o StrictHostKeyChecking=no ./ydbspace_image/target/ydbspace_image.jar ./eurekaservice/target/eurekaservice.jar ./fileMq/target ./User/target/User.jar  ./部署/$DEPLOY_SHNAME root@${{secrets.REMOTE_IP}}:$DEPLOY_PATH
 
       - name: 启动项目
