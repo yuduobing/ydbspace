@@ -70,7 +70,7 @@ stages:
             artifactVersion: latest
         script:
           - cd /docker/部署
-          - ./start.sh start
+          - ./startgithub.sh start
           - ''
         notify: []
         strategy:
