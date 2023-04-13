@@ -9,6 +9,11 @@ on:
       - master
   # 手动触发部署
   workflow_dispatch:
+env:
+  #todo1    部署到服务器目录
+  DEPLOY_PATH: /docker/ydbspace_github
+  # todo2   执行shell脚本名称
+  DEPLOY_SHNAME: startgithub.sh
 #执行任务
 jobs:
   build:
@@ -17,11 +22,6 @@ jobs:
     permissions:
       contents: read
       packages: write
-    env:
-    #todo1    部署到服务器目录
-      DEPLOY_PATH: /docker/ydbspace_github
-    # todo2   执行shell脚本名称
-      DEPLOY_SHNAME: startgithub.sh
     steps:
       - name: 拉取最新的代码
         uses: actions/checkout@v3
@@ -37,9 +37,9 @@ jobs:
         # - name: 删除旧的jar包以及运行脚本
         #         run: sshpass -p ${{secrets.REMOTE_PWD}} ssh -o StrictHostKeyChecking=no root@${{secrets.REMOTE_IP}} "cd /root/GitHub_Action && rm -rf ./*"
       - name: 上传jar包和启动脚本到服务器中
-        run：echo "$DEPLOY_SHNAME"
-#todo3        部署那些jar包及拷贝运行shell
+        run：echo "${DEPLOY_SHNAME}"
+        #todo3        部署那些jar包及拷贝运行shell
         run: sshpass -p ${{secrets.REMOTE_PASSWD}} scp -r -o StrictHostKeyChecking=no ./ydbspace_image/target/ydbspace_image.jar ./eurekaservice/target/eurekaservice.jar ./fileMq/target ./User/target/User.jar  ./部署/startgithub.sh root@${{secrets.REMOTE_IP}}:/docker/ydbspace_github
 
       - name: 启动项目
-        run: sshpass -p ${{secrets.REMOTE_PASSWD}} ssh -o StrictHostKeyChecking=no root@${{secrets.REMOTE_IP}} "  cd $DEPLOY_PATH && ./$DEPLOY_SHNAME start"
+        run: sshpass -p ${{secrets.REMOTE_PASSWD}} ssh -o StrictHostKeyChecking=no root@${{secrets.REMOTE_IP}} "  cd $DEPLOY_PATH && ./${DEPLOY_SHNAME} start"
