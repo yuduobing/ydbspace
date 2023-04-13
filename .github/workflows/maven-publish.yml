@@ -45,3 +45,4 @@ jobs:
 
       - name: 启动项目
         run: sshpass -p ${{secrets.REMOTE_PASSWD}} ssh -o StrictHostKeyChecking=no root@${{secrets.REMOTE_IP}} "  cd ${DEPLOY_PATH} && ./${DEPLOY_SHNAME} start"
+#不能使用注意文件夹权限问题ß
