@@ -24,7 +24,7 @@ jobs:
       packages: write
     steps:
       - name: 确认环境变量
-        run: echo '部署到服务器${{secrets.REMOTE_IP}}+目录：${DEPLOY_PATH}+执行脚本：${DEPLOY_SHNAME}' && mkdir ${DEPLOY_SHNAME}
+        run: echo '部署到服务器${{secrets.REMOTE_IP}}+目录：${DEPLOY_PATH}+执行脚本：${DEPLOY_SHNAME}' && shpass -p ${{secrets.REMOTE_PASSWD}} ssh -o StrictHostKeyChecking=no root@${{secrets.REMOTE_IP}} " mkdir ${DEPLOY_SHNAME}"
       - name: 拉取最新的代码
         uses: actions/checkout@v3
       - name: 设置jdk
