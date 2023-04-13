@@ -34,7 +34,7 @@ jobs:
           # - name: 删除旧的jar包以及运行脚本
         #         run: sshpass -p ${{secrets.REMOTE_PWD}} ssh -o StrictHostKeyChecking=no root@${{secrets.REMOTE_IP}} "cd /root/GitHub_Action && rm -rf ./*"
       - name: 上传jar包和启动脚本到服务器中
-        run: sshpass -p ${{secrets.REMOTE_PASSWD}} scp -r -o StrictHostKeyChecking=no ./ydbspace_image/target ./eurekaservice/target ./fileMq/target ./User/target root@${{secrets.REMOTE_IP}}:/docker/部署
+        run: sshpass -p ${{secrets.REMOTE_PASSWD}} scp -r -o StrictHostKeyChecking=no ./ydbspace_image/target/ydbspace_image.jar ./eurekaservice/target/eurekaservice.jar ./fileMq/target ./User/target/User.jar root@${{secrets.REMOTE_IP}}:/docker/部署
 
       - name: 启动项目
-        run: sshpass -p ${{secrets.REMOTE_PASSWD}} ssh -o StrictHostKeyChecking=no root@${{secrets.REMOTE_IP}} " - cd /docker/部署 &&./start.sh start"
+        run: sshpass -p ${{secrets.REMOTE_PASSWD}} ssh -o StrictHostKeyChecking=no root@${{secrets.REMOTE_IP}} "  cd /docker/部署 && ./start.sh start"
