@@ -32,3 +32,15 @@ for ((i = 0; i < ${#jarname[@]}; i++)); do
   nohup java -jar $APP_NAME --spring.profiles.active=prod >$APP_NAME.log &
 
 done
+
+
+
+#shell学习
+#在shell脚本中，使用${}语法可以帮助您更好地引用变量。${}可以明确地将变量名与其他字符分离，从而避免错误地解释变量值。
+#
+#例如，如果您有一个名为VAR的变量，您可以使用以下任一语法来引用它：
+#
+#echo $VAR
+#或者
+#
+#echo ${VAR}

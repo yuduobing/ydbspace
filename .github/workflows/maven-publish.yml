@@ -11,7 +11,7 @@ on:
   workflow_dispatch:
 env:
   #todo1    部署到服务器目录
-  DEPLOY_PATH: /docker/ydbspace_github
+  DEPLOY_PATH: /docker/部署/ydbspace_github
   # todo2   执行shell脚本名称
   DEPLOY_SHNAME: startgithub.sh
 #执行任务
