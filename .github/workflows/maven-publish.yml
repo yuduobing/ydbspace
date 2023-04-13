@@ -23,11 +23,9 @@ jobs:
       contents: read
       packages: write
     steps:
-      - name: step-2
-        run: echo "${DEPLOY_SHNAME}"
       - name: 确认环境变量
 #        && shpass -p ${{secrets.REMOTE_PASSWD}} ssh -o StrictHostKeyChecking=no root@${{secrets.REMOTE_IP}} " mkdir ${DEPLOY_SHNAME}"
-        run: echo '部署到服务器${{secrets.REMOTE_IP}}+目录：${DEPLOY_PATH}+执行脚本：${DEPLOY_SHNAME}'
+        run: echo "部署到服务器${{secrets.REMOTE_IP}}+目录：${DEPLOY_PATH}+执行脚本：${DEPLOY_SHNAME}"
       - name: 拉取最新的代码
         uses: actions/checkout@v3
       - name: 设置jdk
@@ -43,7 +41,7 @@ jobs:
         #         run: sshpass -p ${{secrets.REMOTE_PWD}} ssh -o StrictHostKeyChecking=no root@${{secrets.REMOTE_IP}} "cd /root/GitHub_Action && rm -rf ./*"
       - name: 上传jar包和启动脚本到服务器中
         #todo3        部署那些jar包及拷贝运行shell
-        run: sshpass -p ${{secrets.REMOTE_PASSWD}} scp -r -o StrictHostKeyChecking=no ./ydbspace_image/target/ydbspace_image.jar ./eurekaservice/target/eurekaservice.jar ./fileMq/target ./User/target/User.jar  ./部署/startgithub.sh root@${{secrets.REMOTE_IP}}:${DEPLOY_PATH}
+        run: sshpass -p ${{secrets.REMOTE_PASSWD}} scp -r -o StrictHostKeyChecking=no ./ydbspace_image/target/ydbspace_image.jar ./eurekaservice/target/eurekaservice.jar ./fileMq/target ./User/target/User.jar   root@${{secrets.REMOTE_IP}}:${DEPLOY_PATH}
 
       - name: 启动项目
         run: sshpass -p ${{secrets.REMOTE_PASSWD}} ssh -o StrictHostKeyChecking=no root@${{secrets.REMOTE_IP}} "  cd ${DEPLOY_PATH} && ./${DEPLOY_SHNAME} start"
