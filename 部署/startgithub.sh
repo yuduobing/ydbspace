@@ -18,7 +18,8 @@ jarname[2]=filemq-exec.jar
 jarname[3]=User.jar
 
 cd $DEPLOY_PATH
-echo "${DEPLOY_PATH}jar包开始执行啦。噜啦啦噜啦啦"
+pwd
+echo "jar包开始执行啦。噜啦啦噜啦啦"
 for ((i = 0; i < ${#jarname[@]}; i++)); do
   #${#jarname[@]}获取数组长度用于循环
 
