@@ -41,7 +41,7 @@ jobs:
         #         run: sshpass -p ${{secrets.REMOTE_PWD}} ssh -o StrictHostKeyChecking=no root@${{secrets.REMOTE_IP}} "cd /root/GitHub_Action && rm -rf ./*"
       - name: 上传jar包和启动脚本到服务器中
         #todo3        部署那些jar包及拷贝运行shell ，不能写到具体的jar包应为还有依赖导入
-        run: sshpass -p ${{secrets.REMOTE_PASSWD}} scp -r -o StrictHostKeyChecking=no ./ydbspace_image/target/* ./eurekaservice/target/eurekaservice.jar ./fileMq/target/fileMq-exec.jar ./User/target/User.jar ./部署/${DEPLOY_SHNAME} ./target root@${{secrets.REMOTE_IP}}:${DEPLOY_PATH}
+        run: sshpass -p ${{secrets.REMOTE_PASSWD}} scp -r -o StrictHostKeyChecking=no ./ydbspace_image/target/* ./eurekaservice/target/eurekaservice.jar ./fileMq/target/fileMq-exec.jar ./User/target/User.jar ./部署/${DEPLOY_SHNAME}  root@${{secrets.REMOTE_IP}}:${DEPLOY_PATH}
 
       - name: 启动项目
         run: sshpass -p ${{secrets.REMOTE_PASSWD}} ssh -o StrictHostKeyChecking=no root@${{secrets.REMOTE_IP}} "  cd ${DEPLOY_PATH} && chmod +x ${DEPLOY_PATH}/* && ./${DEPLOY_SHNAME} start"
