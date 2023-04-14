@@ -44,7 +44,7 @@ for ((i = 0; i < ${#jarname[@]}; i++)); do
 #  MaxMetaspaceSize — 永久内存最大值
   echo "启动jar包：  java -jar -Xms64M -Xmx128M -XX:MetaspaceSize=64M -XX:MaxMetaspaceSize=128M  $APP_NAME --spring.profiles.active=prod >$APP_NAME.log & "
   #   指定生产环境包，必须用绝对路径
-  nohup java -jar $DEPLOY_PATH/$APP_NAME --spring.profiles.active=prod >$APP_NAME.log &
+  nohup java -jar  -Xms64M -Xmx128M -XX:MetaspaceSize=64M -XX:MaxMetaspaceSize=128M   $DEPLOY_PATH/$APP_NAME --spring.profiles.active=prod >$APP_NAME.log &
 #   等待程序执行
 
   echo  "${APP_NAME}执行结束***------------------------***"
