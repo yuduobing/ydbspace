@@ -38,7 +38,11 @@ for ((i = 0; i < ${#jarname[@]}; i++)); do
     echo '杀死进程'
     kill -9 $tpid
   fi
-  echo "启动jar包：  java -jar $APP_NAME --spring.profiles.active=prod >$APP_NAME.log & "
+#  Xms — 堆内存初始大小
+#  Xmx — 堆内存最大值
+#  MetaspaceSize — 永久内存初始大小
+#  MaxMetaspaceSize — 永久内存最大值
+  echo "启动jar包：  java -jar -Xms64M -Xmx256M -XX:MetaspaceSize=64M -XX:MaxMetaspaceSize=128M  $APP_NAME --spring.profiles.active=prod >$APP_NAME.log & "
   #   指定生产环境包，必须用绝对路径
   nohup java -jar $DEPLOY_PATH/$APP_NAME --spring.profiles.active=prod >$APP_NAME.log &
 #   等待程序执行
