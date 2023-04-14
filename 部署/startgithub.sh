@@ -40,7 +40,7 @@ for ((i = 0; i < ${#jarname[@]}; i++)); do
   fi
   echo "启动jar包：  java -jar $APP_NAME --spring.profiles.active=prod >$APP_NAME.log & "
   #   指定生产环境包
-  nohup java -jar $APP_NAME --spring.profiles.active=prod >$APP_NAME.log &
+  nohup java -jar $DEPLOY_PATH/$APP_NAME --spring.profiles.active=prod >$APP_NAME.log &
 #   等待程序执行
    sleep 5
   echo  "${APP_NAME}执行结束***------------------------***"
