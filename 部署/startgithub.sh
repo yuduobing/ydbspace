@@ -8,7 +8,7 @@
 #
 #echo ${VAR}
 ##todo1 设置jar包位置
-DEPLOY_PATH=/docker/部署/ydbspace_github
+DEPLOY_PATH=/docker/ydbspace_github
 mkdir -p $DEPLOY_PATH 
 #todo2   jar包名字
 jarname=()
@@ -45,3 +45,6 @@ for ((i = 0; i < ${#jarname[@]}; i++)); do
    sleep 5
   echo  "${APP_NAME}执行结束***------------------------***"
 done
+#问题记录
+#github action启动shell脚本启动jar包报Error: Could not find or load main class org.springframework.boot.loade
+#用绝对路径启动jar包
