@@ -5,8 +5,10 @@ import cn.easyes.annotation.IndexId;
 import cn.easyes.annotation.IndexName;
 import cn.easyes.annotation.rely.FieldType;
 import cn.easyes.annotation.rely.IdType;
+import lombok.Data;
 
 @IndexName(value = "customer")
+@Data
 public class Doc {
     private static final long serialVersionUID = -1L;
     @IndexId(type = IdType.CUSTOMIZE)
@@ -19,7 +21,5 @@ public class Doc {
     private String gender;
     private String address;
     private String employer;
-    private String email;
-    private String city;
-    private String state;
+
 }
