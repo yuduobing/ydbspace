@@ -21,11 +21,11 @@ cd $DEPLOY_PATH
 echo "${DEPLOY_PATH}jar包开始执行啦。噜啦啦噜啦啦"
 for ((i = 0; i < ${#jarname[@]}; i++)); do
   #${#jarname[@]}获取数组长度用于循环
-  echo ${jarname[i]}
+
 
   #    停止jar包
   APP_NAME=${jarname[i]}
-  echo '$APP_NAME开始执行------------'
+  echo  "${APP_NAME}开始执行***------------------------***"
   tpid=$(ps -ef | grep $APP_NAME | grep -v grep | grep -v kill | awk '{print $2}')
   if [ ${tpid} ]; then
     echo '停止进程' $APP_NAME
@@ -40,5 +40,7 @@ for ((i = 0; i < ${#jarname[@]}; i++)); do
   echo "启动jar包：  java -jar $APP_NAME --spring.profiles.active=prod >$APP_NAME.log & "
   #   指定生产环境包
   nohup java -jar $APP_NAME --spring.profiles.active=prod >$APP_NAME.log &
-  echo '$APP_NAME结束执行------------'
+#   等待程序执行
+   sleep 5
+  echo  "${APP_NAME}执行结束***------------------------***"
 done

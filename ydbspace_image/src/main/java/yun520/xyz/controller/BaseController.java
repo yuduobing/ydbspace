@@ -27,4 +27,13 @@ public class BaseController {
         Assert.notNull(userInformation,"获得用户信息为空");
         return    new JSONObject(userInformation);
     }
+    public  Long getUserid(String authention){
+
+        Assert.notNull(authention,"获得用户authention为空");
+        Object userInformation = loginService.getUserInformation(authention);
+        long userid = Long.valueOf((String) userInformation.get("userid"));
+        Assert.notNull(userid,"获得userid为空");
+        return userid;
+
+    }
 }

@@ -134,7 +134,7 @@ public class UserfileController extends  BaseController {
     @Transactional
     public Result uplaodChunkGET(FileWeb fileparams) throws Exception {
         //用户id
-        Long userid = getUserid();
+        Long userid = getUserid(fileparams.getUserId());
 
         //上传文件表
         File file1 = File.builder().fileName(fileparams.getFilename()).fileType(fileparams.getFilename().substring(fileparams.getFilename().length() - 3)).fileSize(fileparams.getTotalSize()).fileSaveType("1").filemd5(fileparams.getIdentifier()
