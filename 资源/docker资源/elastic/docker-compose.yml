@@ -1,0 +1,27 @@
+version: '3'
+services:
+  es:
+   # 这里要先去dockfiel生成镜像。   命令：  docker  build -t ikanalyzer .
+    image: elasticsearch:7.6.2
+    container_name: elasticsearch
+    restart: always  #开机启动，失败也会一直重启
+    environment:
+      - "cluster.name=elasticsearch" #设置集群名称为elasticsearch
+      - "discovery.type=single-node" #以单一节点模式启动
+      - "ES_JAVA_OPTS=-Xms256m -Xmx512m" #设置使用jvm内存大小
+    container_name: es
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    volumes:
+      - ./config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml 
+      - ./plugins:/usr/share/elasticsearch/plugins
+  kinaba:
+    image: kibana:7.12.1
+    container_name: kinaba
+    environment:
+      - "ELASTICSEARCH_HOSTS=http://elasticsearch:9200"
+    ports:
+      - "5601:5601"
+    depends_on:
+      - es
