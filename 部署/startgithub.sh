@@ -14,7 +14,7 @@ mkdir -p $DEPLOY_PATH
 jarname=()
 jarname[0]=eurekaservice.jar
 jarname[1]=ydbspace_image.jar
-jarname[2]=filemq-exec.jar
+jarname[2]=fileMq-exec.jar
 jarname[3]=User.jar
 
 cd $DEPLOY_PATH
@@ -39,7 +39,7 @@ for ((i = 0; i < ${#jarname[@]}; i++)); do
     kill -9 $tpid
   fi
   echo "启动jar包：  java -jar $APP_NAME --spring.profiles.active=prod >$APP_NAME.log & "
-  #   指定生产环境包
+  #   指定生产环境包，必须用绝对路径
   nohup java -jar $DEPLOY_PATH/$APP_NAME --spring.profiles.active=prod >$APP_NAME.log &
 #   等待程序执行
    sleep 5
