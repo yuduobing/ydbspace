@@ -41,9 +41,11 @@ jobs:
         #         run: sshpass -p ${{secrets.REMOTE_PWD}} ssh -o StrictHostKeyChecking=no root@${{secrets.REMOTE_IP}} "cd /root/GitHub_Action && rm -rf ./*"
       - name: 上传jar包和启动脚本到服务器中
         #todo3        部署那些jar包及拷贝运行shell
-        run: sshpass -p ${{secrets.REMOTE_PASSWD}} scp -r -o StrictHostKeyChecking=no ./ydbspace_image/target/ydbspace_image.jar ./eurekaservice/target/eurekaservice.jar ./fileMq/target ./User/target/User.jar ./部署/${DEPLOY_SHNAME}  root@${{secrets.REMOTE_IP}}:${DEPLOY_PATH}
+        run: sshpass -p ${{secrets.REMOTE_PASSWD}} scp -r -o StrictHostKeyChecking=no ./ydbspace_image/target/ydbspace_image.jar ./eurekaservice/target/eurekaservice.jar ./fileMq/target/fileMq-exec.jar ./User/target/User.jar ./部署/${DEPLOY_SHNAME}  root@${{secrets.REMOTE_IP}}:${DEPLOY_PATH}
 
       - name: 启动项目
         run: sshpass -p ${{secrets.REMOTE_PASSWD}} ssh -o StrictHostKeyChecking=no root@${{secrets.REMOTE_IP}} "  cd ${DEPLOY_PATH} && chmod +x ${DEPLOY_SHNAME} && ./${DEPLOY_SHNAME} start"
 #不能使用注意文件夹权限问题
 #  chmod +x ${DEPLOY_SHNAME}
+#git代理
+#  git config --global http.proxy socks5://127.0.0.1:7890
