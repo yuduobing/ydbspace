@@ -7,15 +7,16 @@ jarname[0]=eurekaservice.jar
 jarname[1]=ydbspace_image.jar
 jarname[2]=filemq-exec.jar
 jarname[3]=User.jar
-echo "循环停止jar包开始"
+
 cd $DEPLOY_PATH
+echo "循环停止${DEPLOY_PATH}jar包开始"
 for ((i = 0; i < ${#jarname[@]}; i++)); do
   #${#jarname[@]}获取数组长度用于循环
   echo ${jarname[i]}
 
   #    停止jar包
   APP_NAME=${jarname[i]}
-  echo '开始执行' $APP_NAME
+  echo '开始执行------------' $APP_NAME
   tpid=$(ps -ef | grep $APP_NAME | grep -v grep | grep -v kill | awk '{print $2}')
   if [ ${tpid} ]; then
     echo 'Stop Process...' $APP_NAME
@@ -30,7 +31,7 @@ for ((i = 0; i < ${#jarname[@]}; i++)); do
   echo "启动 jar包"
   #   指定生产环境包
   nohup java -jar $APP_NAME --spring.profiles.active=prod >$APP_NAME.log &
-
+  echo "---------------"
 done
 
 
