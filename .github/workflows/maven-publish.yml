@@ -40,13 +40,12 @@ jobs:
         # - name: 删除旧的jar包以及运行脚本
         #         run: sshpass -p ${{secrets.REMOTE_PWD}} ssh -o StrictHostKeyChecking=no root@${{secrets.REMOTE_IP}} "cd /root/GitHub_Action && rm -rf ./*"
       - name: 创建文件夹
-        run: sshpass -p ${{secrets.REMOTE_PASSWD}} ssh -o StrictHostKeyChecking=no root@${{secrets.REMOTE_IP}} "  mkdir -p ${DEPLOY_PATH}  && chmod 777 ${DEPLOY_PATH}/* "
+        run: sshpass -p ${{secrets.REMOTE_PASSWD}} ssh -o StrictHostKeyChecking=no root@${{secrets.REMOTE_IP}} "  mkdir -p ${DEPLOY_PATH}  "
       - name: 上传jar包和启动脚本到服务器中
         #todo3        部署那些jar包及拷贝运行shell ，不能写到具体的jar包应为还有依赖导入
         run: sshpass -p ${{secrets.REMOTE_PASSWD}} scp -r -o StrictHostKeyChecking=no ./ydbspace_image/target/* ./eurekaservice/target/* ./fileMq/target/* ./User/target/* ./部署/${DEPLOY_SHNAME}  root@${{secrets.REMOTE_IP}}:${DEPLOY_PATH}
-
       - name: 启动项目
-        run: sshpass -p ${{secrets.REMOTE_PASSWD}} ssh -o StrictHostKeyChecking=no root@${{secrets.REMOTE_IP}} "   ${DEPLOY_PATH}/${DEPLOY_SHNAME} start"
+        run: sshpass -p ${{secrets.REMOTE_PASSWD}} ssh -o StrictHostKeyChecking=no root@${{secrets.REMOTE_IP}} "  chmod 777 ${DEPLOY_PATH}/*  &&  ${DEPLOY_PATH}/${DEPLOY_SHNAME} start"
 #不能使用注意文件夹权限问题
 #  chmod +x ${DEPLOY_SHNAME}
 #git代理
