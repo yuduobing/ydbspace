@@ -10,7 +10,7 @@ tar zxvf ~/gitee_go/deploy/output.tar.gz -C /docker/部署
 jarname=()
 jarname[0]=eurekaservice.jar
 jarname[1]=ydbspace_image.jar
-jarname[2]=filemq-exec.jar
+jarname[2]=fileMq-exec.jar
 jarname[3]=User.jar
 echo "循环停止jar包开始"
 cd /docker/部署/target
