@@ -1,6 +1,6 @@
 ##todo1 设置jar包位置
-path=/docker/ydbspace_github
-mkdir -p $path
+DEPLOY_PATH=/docker/部署/ydbspace_github
+mkdir -p $DEPLOY_PATH 
 #todo2   jar包名字
 jarname=()
 jarname[0]=eurekaservice.jar
@@ -8,7 +8,7 @@ jarname[1]=ydbspace_image.jar
 jarname[2]=filemq-exec.jar
 jarname[3]=User.jar
 echo "循环停止jar包开始"
-cd $path/target
+cd $DEPLOY_PATH/target
 for ((i = 0; i < ${#jarname[@]}; i++)); do
   #${#jarname[@]}获取数组长度用于循环
   echo ${jarname[i]}
