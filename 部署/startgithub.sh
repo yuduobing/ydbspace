@@ -8,7 +8,7 @@ jarname[1]=ydbspace_image.jar
 jarname[2]=filemq-exec.jar
 jarname[3]=User.jar
 echo "循环停止jar包开始"
-cd $DEPLOY_PATH/target
+cd $DEPLOY_PATH
 for ((i = 0; i < ${#jarname[@]}; i++)); do
   #${#jarname[@]}获取数组长度用于循环
   echo ${jarname[i]}
