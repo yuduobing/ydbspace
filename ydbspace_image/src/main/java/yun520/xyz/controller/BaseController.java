@@ -31,7 +31,7 @@ public class BaseController {
 
         Assert.notNull(authention,"获得用户authention为空");
         Object userInformation = loginService.getUserInformation(authention);
-        long userid = Long.valueOf((String) userInformation.get("userid"));
+        long userid = Long.valueOf((String) new JSONObject( userInformation).get("userid"));
         Assert.notNull(userid,"获得userid为空");
         return userid;
 
