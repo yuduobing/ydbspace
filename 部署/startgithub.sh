@@ -32,7 +32,7 @@ for ((i = 0; i < ${#jarname[@]}; i++)); do
     echo '停止进程' $APP_NAME
     kill -15 $tpid
   fi
-  sleep 5
+  sleep 2
   tpid=$(ps -ef | grep $APP_NAME | grep -v grep | grep -v kill | awk '{print $2}')
   if [ ${tpid} ]; then
     echo '杀死进程'
@@ -42,7 +42,7 @@ for ((i = 0; i < ${#jarname[@]}; i++)); do
   #   指定生产环境包，必须用绝对路径
   nohup java -jar $DEPLOY_PATH/$APP_NAME --spring.profiles.active=prod >$APP_NAME.log &
 #   等待程序执行
-   sleep 5
+
   echo  "${APP_NAME}执行结束***------------------------***"
 done
 #问题记录
