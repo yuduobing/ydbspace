@@ -146,7 +146,7 @@
                 <pattern>
                     <pattern>
                         {
-                        "project": "mall-tiny",
+                        "project": "ydbspace_image",
                         "level": "%level",
                         "service": "${APP_NAME:-}",
                         "pid": "${PID:-}",

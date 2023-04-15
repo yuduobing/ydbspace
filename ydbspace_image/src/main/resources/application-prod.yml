@@ -57,12 +57,13 @@ mybatis-plus:
   configuration:
     #数据库驼峰命名转换
     map-underscore-to-camel-case: false
-
+#调用rabbitmq
 ydb:
   rabbitmq:
     exchangname: deletechange
     emailQueue: deletequeue
     fanout: true
+#    fastdfs
 gomyck:
   config:
     redis: false #是否使用redis存储文件上传信息以及上传锁
@@ -76,7 +77,7 @@ gomyck:
     group-id: group1 #fastdfs的组, 文件会被存到这个组下
     file-server-protocol: http #远程文件服务连接协议
     file-server-url: 1.116.162.163 #远程文件服务连接地址
-
+#日志系统
   logstash:
     host: logstash-prod
   logging:
