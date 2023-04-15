@@ -79,7 +79,7 @@ gomyck:
     file-server-url: 1.116.162.163 #远程文件服务连接地址
 #日志系统
   logstash:
-    host: logstash-prod
+    host: 1.116.162.163
   logging:
     level:
       root: info
