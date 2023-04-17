@@ -360,3 +360,7 @@ deletebyid
 > 参考 12
 https://blog.csdn.net/weixin_43461520/article/details/127475965
 语雀也有我自己写的
+## 依赖注入产生循环依赖的三种方式
+1、构造方法注入产生的循环依赖
+2、setter 方法单例模式注入产生的循环依赖
+3、setter 方法原型模式注入产生的循环依赖

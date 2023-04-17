@@ -9,9 +9,11 @@ import cn.easyes.annotation.rely.FieldType;
 import cn.easyes.annotation.rely.IdType;
 import lombok.Data;
 
+import java.io.Serializable;
+
 @IndexName(value = "customer")
 @Data
-public class Doc {
+public class Doc implements Serializable {
     private static final long serialVersionUID = -1L;
     @IndexId(type = IdType.CUSTOMIZE)
     private Long id;

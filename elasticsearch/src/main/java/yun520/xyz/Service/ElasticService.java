@@ -2,10 +2,10 @@ package yun520.xyz.Service;
 
 import cn.easyes.core.conditions.update.LambdaEsUpdateWrapper;
 
-import java.util.LinkedList;
+import java.io.Serializable;
 import java.util.List;
 
-public interface ElasticService<T> {
+public interface ElasticService<T extends Serializable> {
     List<T> searchAllText(T t, String seachercontnet);
 
     //全字段查询
