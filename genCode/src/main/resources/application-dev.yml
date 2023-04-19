@@ -1,0 +1,16 @@
+server:
+  port: 6101
+spring:
+  #  设置文件上传大小
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
+  application:
+    name: ydbspaceimage
+  datasource:
+    url: jdbc:mysql://1.116.162.163:3306/webcloud?useSSL=false
+    username: codimd
+    password: Tan19970925!
+    driver-class-name: com.mysql.jdbc.Driver
+
