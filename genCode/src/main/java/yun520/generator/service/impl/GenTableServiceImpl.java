@@ -210,7 +210,7 @@ public class GenTableServiceImpl implements IGenTableService
 
         VelocityContext context = VelocityUtils.prepareContext(table);
 
-        // 获取模板列表
+        // 获取模板列表  有新加模版这里要添加路径
         List<String> templates = VelocityUtils.getTemplateList(table.getTplCategory());
         for (String template : templates)
         {
