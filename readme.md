@@ -364,3 +364,12 @@ https://blog.csdn.net/weixin_43461520/article/details/127475965
 1、构造方法注入产生的循环依赖
 2、setter 方法单例模式注入产生的循环依赖
 3、setter 方法原型模式注入产生的循环依赖
+
+## 代码生成
+org.apache.velocity.exception.ResourceNotFoundException: Unable to find resource 'classpath:/vm/java/domain.java.vm'
+目录正确的情况下pom没有写打包路径
+<dependency>
+<groupId>org.apache.velocity</groupId>
+<artifactId>velocity-engine-core</artifactId>
+<version>2.3</version>
+</dependency>
