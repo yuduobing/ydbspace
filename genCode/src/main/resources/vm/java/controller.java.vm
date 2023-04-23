@@ -39,7 +39,7 @@ public class ${ClassName}Controller extends BaseController
     @Autowired
     private I${ClassName}Service ${className}Service;
 
-    @RequiresPermissions("${permissionPrefix}:view")
+
     @GetMapping()
     public String ${businessName}()
     {
@@ -50,7 +50,7 @@ public class ${ClassName}Controller extends BaseController
     /**
      * 查询${functionName}列表
      */
-    @RequiresPermissions("${permissionPrefix}:list")
+
     @PostMapping("/list")
     @ResponseBody
     public TableDataInfo list(${ClassName} ${className})
@@ -63,7 +63,7 @@ public class ${ClassName}Controller extends BaseController
     /**
      * 查询${functionName}树列表
      */
-    @RequiresPermissions("${permissionPrefix}:list")
+
     @PostMapping("/list")
     @ResponseBody
     public List<${ClassName}> list(${ClassName} ${className})
@@ -76,7 +76,7 @@ public class ${ClassName}Controller extends BaseController
     /**
      * 导出${functionName}列表
      */
-    @RequiresPermissions("${permissionPrefix}:export")
+
     @Log(title = "${functionName}", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
     @ResponseBody
