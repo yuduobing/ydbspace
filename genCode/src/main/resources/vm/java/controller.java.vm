@@ -77,8 +77,7 @@ public class ${ClassName}Controller extends BaseController
      * 导出${functionName}列表
      */
 
-    @Log(title = "${functionName}", businessType = BusinessType.EXPORT)
-    @PostMapping("/export")
+     @PostMapping("/export")
     @ResponseBody
     public AjaxResult export(${ClassName} ${className})
     {
@@ -138,8 +137,7 @@ public class ${ClassName}Controller extends BaseController
     /**
      * 修改保存${functionName}
      */
-    @RequiresPermissions("${permissionPrefix}:edit")
-    @Log(title = "${functionName}", businessType = BusinessType.UPDATE)
+
     @PostMapping("/edit")
     @ResponseBody
     public AjaxResult editSave(${ClassName} ${className})
@@ -151,9 +149,7 @@ public class ${ClassName}Controller extends BaseController
     /**
      * 删除${functionName}
      */
-    @RequiresPermissions("${permissionPrefix}:remove")
-    @Log(title = "${functionName}", businessType = BusinessType.DELETE)
-    @PostMapping( "/remove")
+      @PostMapping( "/remove")
     @ResponseBody
     public AjaxResult remove(String ids)
     {
@@ -163,9 +159,7 @@ public class ${ClassName}Controller extends BaseController
     /**
      * 删除
      */
-    @RequiresPermissions("${permissionPrefix}:remove")
-    @Log(title = "${functionName}", businessType = BusinessType.DELETE)
-    @GetMapping("/remove/{${pkColumn.javaField}}")
+       @GetMapping("/remove/{${pkColumn.javaField}}")
     @ResponseBody
     public AjaxResult remove(@PathVariable("${pkColumn.javaField}") ${pkColumn.javaType} ${pkColumn.javaField})
     {
