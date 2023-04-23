@@ -1,36 +1,20 @@
 package yun520.generator.controller;
 
-
-import com.alibaba.druid.sql.SQLUtils;
-import com.alibaba.druid.sql.ast.SQLStatement;
-import com.alibaba.druid.sql.dialect.mysql.ast.statement.MySqlCreateTableStatement;
-import com.alibaba.fastjson.JSON;
-
-import lombok.extern.java.Log;
+import org.apache.commons.io.IOUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
 import yun520.generator.common.core.controller.BaseController;
 import yun520.generator.common.core.domain.AjaxResult;
-import yun520.generator.common.core.domain.CxSelect;
 import yun520.generator.common.core.page.TableDataInfo;
 import yun520.generator.common.core.text.Convert;
-
-import yun520.generator.common.utils.StringUtils;
-
-import yun520.generator.common.utils.sql.SqlUtil;
 import yun520.generator.domain.GenTable;
 import yun520.generator.domain.GenTableColumn;
 import yun520.generator.service.IGenTableColumnService;
 import yun520.generator.service.IGenTableService;
-import org.apache.commons.io.IOUtils;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -42,7 +26,6 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/tool/gen")
-@CrossOrigin
 public class GenController extends BaseController
 {
     @Autowired
@@ -204,8 +187,10 @@ public class GenController extends BaseController
      */
     private void genCode(HttpServletResponse response, byte[] data) throws IOException
     {
+//        这里必须要清楚
         response.reset();
         response.addHeader("Access-Control-Allow-Origin", "*");
+//        response.addHeader("1231", "*11");
         response.addHeader("Access-Control-Expose-Headers", "Content-Disposition");
         response.setHeader("Content-Disposition", "attachment; filename=\"ruoyi.zip\"");
         response.addHeader("Content-Length", "" + data.length);

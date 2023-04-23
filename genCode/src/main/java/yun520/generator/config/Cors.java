@@ -5,27 +5,65 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+import javax.annotation.Resource;
+import java.util.Arrays;
+
+//之前说过用拦截器去处理浏览器的OPTIONS请求来解决跨域问题，但是如果项目中配置了一些校验请求的过滤器则会使其失效，因为过滤器比拦截器要早，所以有可能会使其失效。
 @Configuration
-public class Cors {
-    @Bean
-    public CorsFilter corsFilter(){
-        // SpringMvc 提供了 CorsFilter 过滤器
+public class Cors implements WebMvcConfigurer {
+    @Resource
+    private CorsInterceptor corsInterceptor;
 
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        // 跨域拦截器需放在最上面
+//        registry.addInterceptor(corsInterceptor).addPathPatterns("/**");
 
-        // 初始化cors配置对象
-        CorsConfiguration corsConfiguration = new CorsConfiguration();
-        // 允许跨域的域名，如果要携带cookie,不要写*，*：代表所有域名都可以跨域访问
-        corsConfiguration.addAllowedOrigin("*");
-        corsConfiguration.setAllowCredentials(true);  // 设置允许携带cookie
-        corsConfiguration.addAllowedMethod("*"); // 代表所有的请求方法：GET POST PUT DELETE...
-        corsConfiguration.addAllowedHeader("*"); // 允许携带任何头信息
-
-        //初始化cors配置源对象
-        UrlBasedCorsConfigurationSource corsConfigurationSource = new UrlBasedCorsConfigurationSource();
-        corsConfigurationSource.registerCorsConfiguration("/**",corsConfiguration);
-
-        // 返回corsFilter实例，参数：cors配置源对象
-        return new CorsFilter(corsConfigurationSource);
     }
+
+    //  过滤器
+    @Bean
+    public CorsFilter corsFilter() {
+
+        CorsConfiguration config = new CorsConfiguration();
+        //开放哪些ip、端口、域名的访问权限，星号表示开放所有域，但是返回前端仍然是具体的地址
+        config.addAllowedOrigin("*");
+        //是否允许发送Cookie信息
+        config.setAllowCredentials(true);
+         //不能*
+        config.setAllowedHeaders( Arrays.asList("Authorization","Content-Type"));
+        //开放哪些Http方法，允许跨域访问
+        config.addAllowedMethod("*");
+
+//        config.addAllowedMethod("*");
+
+        //添加映射路径，“/**”表示对所有的路径实行全局跨域访问权限的设置
+        UrlBasedCorsConfigurationSource configSource = new UrlBasedCorsConfigurationSource();
+        configSource.registerCorsConfiguration("/**", config);
+        return new CorsFilter(configSource);
+
+    }
+//    private CorsConfiguration buildConfig() {
+//        CorsConfiguration corsConfiguration = new CorsConfiguration();
+//        corsConfiguration.addAllowedOrigin("*"); // 1允许任何域名使用
+//        corsConfiguration.addAllowedHeader("*"); // 2允许任何头
+//        corsConfiguration.addAllowedMethod("*"); // 3允许任何方法（post、get等）
+//        corsConfiguration.addAllowedMethod("*");
+//        // corsConfiguration.setAllowCredentials(true); // 允许cookies跨域
+//        return corsConfiguration;
+//    }
+//
+//    @Bean
+//    public FilterRegistrationBean corsFilter() {
+//        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+//        source.registerCorsConfiguration("/**", buildConfig());
+//        FilterRegistrationBean filterRegistrationBean = new FilterRegistrationBean(new CorsFilter(source));
+//        // 设置 Filter 的优先级为最高优先级(如果有多个过滤器这些过滤器会有一个先后顺序的问题)
+//        filterRegistrationBean.setOrder(Ordered.HIGHEST_PRECEDENCE);
+//        return filterRegistrationBean;
+//    }
+
 }

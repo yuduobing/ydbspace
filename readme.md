@@ -375,3 +375,77 @@ org.apache.velocity.exception.ResourceNotFoundException: Unable to find resource
 <artifactId>velocity-engine-core</artifactId>
 <version>2.3</version>
 </dependency>
+
+
+## 设置跨域
+> 过滤器》拦截器，过滤器过滤了拦截器就不会执行。
+#### Access-Control-Allow-Origin:配置
+
+#### 1springboot设置* 返回的是请求网址（正常用这种就可以了）
+
+```
+// 初始化cors配置对象
+CorsConfiguration corsConfiguration = new CorsConfiguration();
+// 允许跨域的域名，如果要携带cookie,不要写*，*：代表所有域名都可以跨域访问
+corsConfiguration.addAllowedOrigin("*");
+```
+
+返回这种跨域成功
+
+Access-Control-Allow-Origin: 
+
+http://localhost:8083
+
+#### 2如果自己写个拦截器手动设置Access-Control-Allow-Origin: *则发送请求不能上送cookie 关闭 withCredentials: false,
+
+> 比如文件下载时候，返回respose自己手写
+
+否则报错
+cess to XMLHttpRequest at 'http://127.0.0.1:5301//tool/gen/batchGenCode?tables=userfile' from origin 'http://localhost:8083' has been blocked by CORS policy: Response to preflight request doesn't pass access control check: The value of the 'Access-Control-Allow-Origin' header in the response must not be the wildcard '*' when the request's credentials mode is 'include'. The credentials mode of requests initiated by the XMLHttpRequest is controlled by the withCredentials attribute.
+```前端
+      axios({
+        method: 'get',
+        url: url,
+        responseType: 'blob',
+        withCredentials: false,
+        headers: {
+          Authorization: 'Bearer ' + common.getCookies(globalConfig.tokenKeyName)
+        }
+      }).then((res) => {
+        const isBlob = blobValidate(res.data)
+        if (isBlob) {
+          const blob = new Blob([res.data], { type: 'application/zip' })
+          this.saveAs(blob, name)
+        } else {
+          this.printErrMsg(res.data)
+        }
+      })
+```
+
+
+```后端hou d
+  private void genCode(HttpServletResponse response, byte[] data) throws IOException
+    {
+//        这里必须要清除
+        response.reset();
+        response.addHeader("Access-Control-Allow-Origin", "*");
+//        response.addHeader("1231", "*11");
+        response.addHeader("Access-Control-Expose-Headers", "Content-Disposition");
+        response.setHeader("Content-Disposition", "attachment; filename=\"ruoyi.zip\"");
+        response.addHeader("Content-Length", "" + data.length);
+        response.setContentType("application/octet-stream; charset=UTF-8");
+        IOUtils.write(data, response.getOutputStream());
+    }
+```
+
+####  Access-Control-Allow-Headers配置
+
+
+
+> 在跨域请求中，服务器需要设置Access-Control-Allow-Headers响应头，告诉浏览器允许携带哪些请求头信息，才能保证跨域请求的成功。如果有额外的请求头，要手动加进来，不能设置*
+
+当设置Access-Control-Allow-Headers为*时，表示允许浏览器携带任意请求头信息，但是需要注意的是，有些请求头信息是浏览器默认不允许携带的，如Authorization等信息。因此，当跨域请求中需要携带特定请求头信息时，需要在Access-Control-Allow-Headers中明确指定，否则浏览器将拒绝该请求。
+
+在你的问题中，浏览器在发送跨域请求时携带了Authorization请求头信息，但是服务器在响应头中将Access-Control-Allow-Headers设置为*，并没有明确指定允许携带Authorization请求头信息，因此浏览器会拒绝该请求。
+
+response.setHeader("Access-Control-Allow-Headers", "Authorization,Content-Type");
