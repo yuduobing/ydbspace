@@ -22,7 +22,7 @@ import ${packageName}.domain.${subClassName};
 import ${packageName}.mapper.${ClassName}Mapper;
 import ${packageName}.domain.${ClassName};
 import ${packageName}.service.I${ClassName}Service;
-import yun520.generator.common.core.text.Convert;
+
 
 /**
  * ${functionName}Service业务层处理

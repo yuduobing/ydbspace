@@ -5,12 +5,6 @@ import ${import};
 #end
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-import yun520.generator.common.annotation.Excel;
-#if($table.crud || $table.sub)
-import yun520.generator.common.core.domain.BaseEntity;
-#elseif($table.tree)
-import yun520.generator.common.core.domain.TreeEntity;
-#end
 
 /**
  * ${functionName}对象 ${tableName}
@@ -23,7 +17,7 @@ import yun520.generator.common.core.domain.TreeEntity;
 #elseif($table.tree)
 #set($Entity="TreeEntity")
 #end
-public class ${ClassName} extends ${Entity}
+public class ${ClassName}
 {
     private static final long serialVersionUID = 1L;
 
@@ -37,13 +31,8 @@ public class ${ClassName} extends ${Entity}
 #else
 #set($comment=$column.columnComment)
 #end
-#if($parentheseIndex != -1)
-    @Excel(name = "${comment}", readConverterExp = "$column.readConverterExp()")
-#elseif($column.javaType == 'Date')
+#if($column.javaType == 'Date')
     @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "${comment}", width = 30, dateFormat = "yyyy-MM-dd")
-#else
-    @Excel(name = "${comment}")
 #end
 #end
     private $column.javaType $column.javaField;
