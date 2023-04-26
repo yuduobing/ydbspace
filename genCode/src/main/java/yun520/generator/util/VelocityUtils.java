@@ -44,7 +44,10 @@ public class VelocityUtils
         String functionName = genTable.getFunctionName();
 
         VelocityContext velocityContext = new VelocityContext();
+        //使用的模版
         velocityContext.put("tplCategory", genTable.getTplCategory());
+        //列信息
+        velocityContext.put("columns", genTable.getColumns());
         velocityContext.put("tableName", genTable.getTableName());
         velocityContext.put("functionName", StringUtils.isNotEmpty(functionName) ? functionName : "【请填写功能名称】");
         velocityContext.put("ClassName", genTable.getClassName());
@@ -59,7 +62,6 @@ public class VelocityUtils
         velocityContext.put("pkColumn", genTable.getPkColumn());
         velocityContext.put("importList", getImportList(genTable));
         velocityContext.put("permissionPrefix", getPermissionPrefix(moduleName, businessName));
-        velocityContext.put("columns", genTable.getColumns());
         velocityContext.put("table", genTable);
         velocityContext.put("dicts", getDicts(genTable));
         setMenuVelocityContext(velocityContext, genTable);
@@ -130,7 +132,7 @@ public class VelocityUtils
     public static List<String> getTemplateList(String tplCategory)
     {
         List<String> templates = new ArrayList<String>();
-
+        templates.add("vm/html/list.html.vm");
         templates.add("vm/java/domain.java.vm");
         templates.add("vm/java/mapper.java.vm");
         templates.add("vm/java/service.java.vm");

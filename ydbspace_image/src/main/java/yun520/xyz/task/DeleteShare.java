@@ -92,7 +92,10 @@ public class DeleteShare {
             int deleteshare = sharelinksmapper.delete(queryWrapperfilesare);
 
             //删除完毕调用tabbitmq发送邮件通知
-            mqService.send("删除任务成功，删除临时文件总数" + nums.get());
+            if(nums.get()>0){
+                mqService.send("删除任务成功，删除临时文件总数" + nums.get());
+            }
+
 
         } catch (Exception e) {
             mqService.send("发生异常了" + e);
