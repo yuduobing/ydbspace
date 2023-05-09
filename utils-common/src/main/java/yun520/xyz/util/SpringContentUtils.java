@@ -20,7 +20,7 @@ public class SpringContentUtils implements ApplicationContextAware{
 	
 
 
-	public Object getBean(String name) {
+	public  Object getBean(String name) {
 		// 先判断是否存在上下文对象
 		if (applicationContext == null) {
 			return null;
