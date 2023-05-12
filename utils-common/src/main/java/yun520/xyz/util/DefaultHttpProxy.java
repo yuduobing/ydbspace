@@ -18,18 +18,25 @@ public class DefaultHttpProxy {
     public  DefaultHttpProxy(Map<String,String> headerMap,Integer timeout,String charset) {
         this.headerMap=headerMap;
         this.timeout=timeout;
-
         this.charset=charset;
     }
     //请求json
     //返回json post
     public JSONObject post(String url,JSONObject  body){
-        logger.info("请求参数"+body+"请求地址"+url);
+        logger.info("请求参数"+body+"请求地址"+url+"请求头"+headerMap);
         String bodyJSon = HttpUtil.createPost(url).timeout(timeout).charset(charset).body(body.toString())
                 .headerMap(headerMap, true).execute().body();
-        logger.info("返回参数");
+        logger.info("返回参数"+bodyJSon);
         return new JSONObject(bodyJSon);
 
     }
 
+    public JSONObject get(String url,JSONObject  body){
+        logger.info("请求参数"+body+"请求地址"+url+"请求头"+headerMap);
+        String bodyJSon = HttpUtil.createGet(url).timeout(timeout).charset(charset).body(body.toString())
+                .headerMap(headerMap, true).execute().body();
+        logger.info("返回参数"+bodyJSon);
+        return new JSONObject(bodyJSon);
+
+    }
 }

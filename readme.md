@@ -449,3 +449,14 @@ cess to XMLHttpRequest at 'http://127.0.0.1:5301//tool/gen/batchGenCode?tables=u
 在你的问题中，浏览器在发送跨域请求时携带了Authorization请求头信息，但是服务器在响应头中将Access-Control-Allow-Headers设置为*，并没有明确指定允许携带Authorization请求头信息，因此浏览器会拒绝该请求。
 
 response.setHeader("Access-Control-Allow-Headers", "Authorization,Content-Type");
+
+
+# picgoapi策划书 
+登录后需要拽授权码开启此付费功能
+1 开放此api需要授权码.
+开放后页面显示一维码授权登录后就开放了web上传接口。
+存储的时候路径地址
+2开放api，用户上传上送用户id 和密码（md5 加密)，验证后存储，redis热缓存
+3新建一张表存储文件上传和文件 fileid
+1/所以存储拦截器临时下载拦截 fileid，和脸时下载地址15分钟，如果没有再去申请
+4下载302重定向到用户地址(已验证可行)
