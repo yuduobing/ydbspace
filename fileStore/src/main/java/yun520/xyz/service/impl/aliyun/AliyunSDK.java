@@ -108,10 +108,11 @@ public class AliyunSDK {
                 aliyun = aliaccount.get(driveId);
                 aliaccount.put(alidto_update.getDriveId(), aliyun);
             }
-            HashMap<String, String> headerMap = new HashMap<>();
-            headerMap.put("Authorization", "Bearer " + aliyun.getAccessToken());
-            headers.put(aliyun.getDriveId(), headerMap);
+
         }
+        HashMap<String, String> headerMap = new HashMap<>();
+        headerMap.put("Authorization", "Bearer " + aliyun.getAccessToken());
+        headers.put(aliyun.getDriveId(), headerMap);
 
     }
 
@@ -122,7 +123,7 @@ public class AliyunSDK {
         HashMap<String, String> objectObjectHashMap = new HashMap<>();
         objectObjectHashMap.put("client_id", client_id);
         objectObjectHashMap.put("client_secret", client_secret);
-        objectObjectHashMap.put("grant_type", grant_type);
+        objectObjectHashMap.put("grant_type", "authorization_code");
         //授权码
         objectObjectHashMap.put("code", codescan);
         JSONObject entries = new JSONObject(objectObjectHashMap);
@@ -138,13 +139,13 @@ public class AliyunSDK {
     //刷新token
     public JSONObject reFreshAccess_token(String token) throws Exception {
         //以下都是不变的
-        String url = baseUrl + "oauth/access_token ";
+        String url = baseUrl + "/oauth/access_token";
         HashMap<String, String> objectObjectHashMap = new HashMap<>();
         objectObjectHashMap.put("client_id", client_id);
         objectObjectHashMap.put("client_secret", client_secret);
-        objectObjectHashMap.put("grant_type", grant_type);
+        objectObjectHashMap.put("grant_type", "refresh_token");
         //todo 授权码
-        objectObjectHashMap.put("code", token);
+        objectObjectHashMap.put("refresh_token", token);
         JSONObject entries = new JSONObject(objectObjectHashMap);
         String post = HttpUtil.post(url, entries.toString(), 30000);
         Assert.notNull(new JSONObject(post).get("access_token"), "access_token为空" + post);
@@ -177,6 +178,7 @@ public class AliyunSDK {
         String url = baseUrl + "/adrive/v1.0/openFile/search";
         HashMap<String, String> bodyMap = new HashMap<>();
         bodyMap.put("drive_id", driveId);
+        bodyMap.put("parent_file_id", "root");
         bodyMap.put("query", "name  match  '" + filename + "'");
         JSONObject entries = new JSONObject(bodyMap);
         DefaultHttpProxy defaultHttpProxy = new DefaultHttpProxy(headers.get(driveId), 30000, "utf-8");

@@ -55,6 +55,15 @@ public class CommonUtilsTest {
 
     @Test
     public void test2() throws ParseException {
+        JSONObject set = new JSONObject().set("driveId", "8520066");
+        set.set("filename", "22");
+        JSON json = null;
+        try {
+            json = aliyunSDK.searchFile(set);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        System.out.println(json);
 
     }
 }
