@@ -9,7 +9,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import yun520.xyz.util.SpringContentUtils;
 
 @SpringBootApplication
-@MapperScan("yun520.xyz.mapper")
+@MapperScan("yun520.xyz.service.impl.aliyun.mapper")
 //启动定时任务
 //@EnableScheduling
 @Import(SpringContentUtils.class)

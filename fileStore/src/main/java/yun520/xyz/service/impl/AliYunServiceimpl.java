@@ -6,7 +6,7 @@ import yun520.xyz.service.StoreService;
 
 import java.io.InputStream;
 
-@Component("FastDfsService")
+@Component("AliYunService")
 @Scope(value = "prototype")
 public class AliYunServiceimpl implements StoreService {
     @Override

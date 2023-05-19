@@ -462,3 +462,23 @@ response.setHeader("Access-Control-Allow-Headers", "Authorization,Content-Type")
 3新建一张表存储文件上传和文件 fileid
 1/所以存储拦截器临时下载拦截 fileid，和脸时下载地址15分钟，如果没有再去申请
 4下载302重定向到用户地址(已验证可行)
+
+## 测试类
+### mapper不能注入
+为了给mapper接口 自动根据一个添加@Mapper注解的接口生成一个实现类
+
+怎么注入都是失败，ProductMapper 使用@Mapper 注解，这个不能注入到spring 容器中（其中原因还是不了解）。
+
+@Autowired 注入不进去的。
+
+
+@Repository
+@Mapper
+public interface ProductMapper {
+这下能注入容器中了。
+
+2
+目录要一致否则指定启动类
+//@SpringBootTest(classes = { FileStoreApplication.class})
+@SpringBootTest
+@RunWith(SpringRunner.class)

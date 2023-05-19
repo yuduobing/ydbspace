@@ -20,6 +20,7 @@ import yun520.xyz.service.impl.aliyun.entity.Aliyun;
 import yun520.xyz.service.impl.aliyun.mapper.AliyunMapper;
 import yun520.xyz.util.DefaultHttpProxy;
 
+import javax.annotation.Resource;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;

@@ -1,5 +1,7 @@
 package yun520.xyz.service.impl.aliyun.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.Builder;
 import lombok.Data;
 
@@ -11,12 +13,13 @@ import java.util.Date;
 @Data
 @Builder
 public class Aliyun {
-    private      String  id="";
+    @TableId(type= IdType.AUTO)
+    private      String  id;
     //用户id admin 用户为
-    private      String  userid="";
-    private      String  driveId="";
-    private      String  accessToken="";
-    private      String  refreshToken="";
+    private      String  userid;
+    private      String  driveId;
+    private      String  accessToken;
+    private      String  refreshToken;
     //是否激活正常使用 0关闭 1开启
     private      String  active="1";
     //刷新时间
