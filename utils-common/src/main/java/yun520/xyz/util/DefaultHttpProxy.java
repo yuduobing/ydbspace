@@ -17,6 +17,8 @@ public class DefaultHttpProxy {
     private  String  charset="utf-8";
     public  DefaultHttpProxy(Map<String,String> headerMap,Integer timeout,String charset) {
         this.headerMap=headerMap;
+        this.headerMap.put("Content-Type","application/json");
+
         this.timeout=timeout;
         this.charset=charset;
     }
@@ -30,7 +32,14 @@ public class DefaultHttpProxy {
         return new JSONObject(bodyJSon);
 
     }
+    public JSONObject post(String url){
+        logger.info("请求地址"+url+"请求头"+headerMap);
+        String bodyJSon = HttpUtil.createPost(url).timeout(timeout).charset(charset)
+                .headerMap(headerMap, true).execute().body();
+        logger.info("返回参数"+bodyJSon);
+        return new JSONObject(bodyJSon);
 
+    }
     public JSONObject get(String url,JSONObject  body){
         logger.info("请求参数"+body+"请求地址"+url+"请求头"+headerMap);
         String bodyJSon = HttpUtil.createGet(url).timeout(timeout).charset(charset).body(body.toString())

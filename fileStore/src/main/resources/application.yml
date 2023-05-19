@@ -1,0 +1,48 @@
+#公共配置可覆盖
+spring:
+ profiles:
+  active: dev
+ mvc:
+  async:
+   request-timeout: 60000
+#   redis链接池配置
+ redis:
+  jedis:
+   pool:
+    max-active: 8
+    max-idle: 8
+    max-wait: -1ms
+    min-idle: 0
+
+#security配置
+server:
+ servlet:
+  session:
+   cookie:
+    name: ydbspace-webcloud #防止Cookie冲突，冲突会导致登录验证不通过
+
+#配置文件注入也可以在代码里注入
+# clientId：OAuth2客户端的ID。
+# clientSecret：OAuth2客户端的密钥。
+# accessTokenUri：OAuth2授权服务器的令牌端点URL。
+# userAuthorizationUri：OAuth2授权服务器的授权端点URL。
+# scope：OAuth2客户端请求的范围。
+oauth2-server-url: http://localhost:10088
+security:
+ oauth2: #与oauth2-server对应的配置
+  client:
+#   OAuth2客户端的ID。在认证服务器配置过
+   client-id: read
+   client-secret: read
+   user-authorization-uri: ${oauth2-server-url}/oauth/authorize
+   access-token-uri: ${oauth2-server-url}/oauth/token
+  resource:
+   token-info-uri: ${oauth2-server-url}/oauth/check_token
+   id: ${spring.application.name}  # 资源id，可能存在多个资源服务器，可以配置客户端拥有哪些资源的访问权限
+
+
+#无用配置
+resource:
+ jwt:
+  key-uri: ${oauth2-server-url}/oauth/token_key
+

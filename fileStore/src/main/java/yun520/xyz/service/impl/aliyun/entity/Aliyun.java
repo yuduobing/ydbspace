@@ -2,13 +2,16 @@ package yun520.xyz.service.impl.aliyun.entity;
 
 import lombok.Builder;
 import lombok.Data;
-import org.apache.poi.hpsf.Date;
+
 import yun520.xyz.util.DefaultHttpProxy;
+
+import java.util.Date;
 
 //阿里云账户实体
 @Data
 @Builder
 public class Aliyun {
+    private      String  id="";
     //用户id admin 用户为
     private      String  userid="";
     private      String  driveId="";

@@ -1,0 +1,85 @@
+springfox:
+  documentation:
+      enabled: false  #关闭swagger
+server:
+  port: 5300
+spring:
+  #  设置文件上传大小
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
+  application:
+    name: ydbspaceimage
+  datasource:
+    url: jdbc:mysql://1.116.162.163:3306/webcloud?useSSL=false
+    username: codimd
+    password: Tan19970925!
+    driver-class-name: com.mysql.jdbc.Driver
+  rabbitmq:
+    host: 127.0.0.1
+    port: 5672
+    username: root
+    password: ydb
+    virtual-host: /
+  redis:
+    # Redis服务器地址
+    host: 1.116.162.163
+    # Redis数据库索引（默认为0）
+    database: 7
+    # Redis服务器连接端口
+    port: 6379
+    # Redis服务器连接密码（默认为空）
+    password: ydbspace
+    # 连接超时时间
+    timeout: 1000ms
+logging:
+  level:
+    com.xn2001: debug
+  pattern:
+    dateformat: MM-dd HH:mm:ss:SSS
+eureka:
+  instance:
+    instance-id: 自测
+  client:
+    service-url:
+      defaultZone: http://127.0.0.1:10086/eureka
+fdfs:
+  connect-timeout: 30000
+  so-timeout: 30000
+  tracker-list: 1.116.162.163:22122
+  pool:
+    max-total: 800   # 连接池最大数量
+    max-total-per-key: 200  # 单个tracker最大连接数
+    max-wait-millis: 5000 # 连接耗尽最大等待时间 毫秒
+mybatis-plus:
+  mapper-locations: classpath*:xml/*.xml
+  configuration:
+    #数据库驼峰命名转换
+    map-underscore-to-camel-case: false
+#调用rabbitmq
+ydb:
+  rabbitmq:
+    exchangname: deletechange
+    emailQueue: deletequeue
+    fanout: true
+#    fastdfs
+gomyck:
+  config:
+    redis: false #是否使用redis存储文件上传信息以及上传锁
+  redis:
+    host: 127.0.0.1
+    password: xxxxx
+    port: 6379
+  fastdfs: #fastdfs上传配置
+    chunk-size: 5 #分块大小, 上传文件分块的大小 单位: MB
+    download-chunk-size: 100  #分块下载大小  单位: byte
+    group-id: group1 #fastdfs的组, 文件会被存到这个组下
+    file-server-protocol: http #远程文件服务连接协议
+    file-server-url: 1.116.162.163 #远程文件服务连接地址
+#日志系统
+  logstash:
+    host: 1.116.162.163
+  logging:
+    level:
+      root: info

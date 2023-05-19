@@ -452,7 +452,9 @@ response.setHeader("Access-Control-Allow-Headers", "Authorization,Content-Type")
 
 
 # picgoapi策划书 
-登录后需要拽授权码开启此付费功能
+
+
+登录后需要通过授权码开启此付费功能
 1 开放此api需要授权码.
 开放后页面显示一维码授权登录后就开放了web上传接口。
 存储的时候路径地址
