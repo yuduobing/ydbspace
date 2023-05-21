@@ -185,4 +185,25 @@ public class AliyunSDK {
         //这里有个很重要的accesstoken存储
         return post;
     }
+/*
+下载文件 根据文件id获取下载链接
+ */
+    public JSONObject downfile(String driveId,String fileid) throws Exception {
+
+
+        init(driveId);
+        JSONObject bodyMap = new JSONObject();
+        String url = baseUrl + "/adrive/v1.0/openFile/getDownloadUrl";
+        bodyMap.put("drive_id", driveId);
+        bodyMap.put("file_id",  fileid);
+       //最长32小时
+        bodyMap.put("expire_sec", "115200");
+        JSONObject entries = new JSONObject(bodyMap);
+        logger.info("开始搜索文件");
+        DefaultHttpProxy defaultHttpProxy = new DefaultHttpProxy(headers.get(driveId), 30000, "utf-8");
+        JSONObject post = defaultHttpProxy.post(url, entries);
+        //这里有个很重要的accesstoken存储
+        return post;
+    }
+
 }

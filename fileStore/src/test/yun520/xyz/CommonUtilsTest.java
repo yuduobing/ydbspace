@@ -44,7 +44,7 @@ public class CommonUtilsTest {
 
     //文件索索
     @Test
-    public void test2() throws ParseException {
+    public void search() throws ParseException {
         //设备ID
         JSONObject set = new JSONObject().set("driveId", "8520066");
         //文件名
@@ -58,12 +58,34 @@ public class CommonUtilsTest {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
         String url = json.getJSONArray("items").getJSONObject(0).getStr("url");
         String fileid = json.getJSONArray("items").getJSONObject(0).getStr("file_id");
         //643eb1958b3188361c074914a52a17d79ec72c77
         Assert.notNull(url, "路径为空" + json);
 
         System.out.println("下载地址：       "+url);
+
+    }
+    //文件下载
+    @Test
+    public void down() throws ParseException {
+
+        //个人信息里的driverid
+        String driveId= "8520066";
+        String fileid="643eb1958b3188361c074914a52a17d79ec72c77";
+        JSONObject json = null;
+        try {
+            json = aliyunSDK.downfile(driveId,fileid);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+//        String url = json.getJSONArray("items").getJSONObject(0).getStr("url");
+//        String fileid = json.getJSONArray("items").getJSONObject(0).getStr("file_id");
+//        //643eb1958b3188361c074914a52a17d79ec72c77
+//        Assert.notNull(url, "路径为空" + json);
+
+//        System.out.println("下载地址：       "+url);
 
     }
 }
