@@ -2,23 +2,12 @@ package yun520.xyz;
 
 import cn.hutool.json.JSON;
 import cn.hutool.json.JSONObject;
-import com.github.xiaoymin.swaggerbootstrapui.util.CommonUtils;
-import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PowerMockIgnore;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
-import org.powermock.modules.junit4.PowerMockRunnerDelegate;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
-import yun520.xyz.FileStoreApplication;
+import org.springframework.util.Assert;
 import yun520.xyz.service.impl.aliyun.AliyunSDK;
-import yun520.xyz.service.impl.aliyun.mapper.AliyunMapper;
 
 import javax.annotation.Resource;
 import java.text.ParseException;
@@ -44,7 +33,7 @@ public class CommonUtilsTest {
         boolean initaccount = aliyunSDK.initaccount(code, "1");
         if (initaccount) {
             JSONObject set = new JSONObject().set("driveId", "driveId");
-            set.set("filename", "22");
+            set.set("filename", "202304142334280598");
             try {
                 JSON json = aliyunSDK.searchFile(set);
             } catch (Exception e) {
@@ -53,17 +42,26 @@ public class CommonUtilsTest {
         }
     }
 
+    //文件索索
     @Test
     public void test2() throws ParseException {
+        //设备ID
         JSONObject set = new JSONObject().set("driveId", "8520066");
-        set.set("filename", "22");
-        JSON json = null;
+        //文件名
+        set.set("filename", "202304142336580407");
+        //父路径 ，这里是webcloud路径id  获得是通过搜索出来的
+        set.set("parent_file_id", "6426a851348c613eb43a4d05b2ab5f40ff045e8a");
+
+        JSONObject json = null;
         try {
             json = aliyunSDK.searchFile(set);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        System.out.println(json);
+        String url = json.getJSONArray("items").getJSONObject(0).getStr("url");
+        Assert.notNull(url, "路径为空" + json);
+
+        System.out.println("下载地址：       "+url);
 
     }
 }

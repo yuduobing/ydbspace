@@ -3,27 +3,17 @@ package yun520.xyz.service.impl.aliyun;
 import cn.hutool.core.date.DateUnit;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.http.HttpUtil;
-import cn.hutool.json.JSON;
 import cn.hutool.json.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.sun.org.apache.xml.internal.security.Init;
-import lombok.val;
-import org.apache.ibatis.annotations.Mapper;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
-import org.springframework.util.StringUtils;
-import sun.security.jca.GetInstance;
 import yun520.xyz.service.impl.aliyun.entity.Aliyun;
 import yun520.xyz.service.impl.aliyun.mapper.AliyunMapper;
 import yun520.xyz.util.DefaultHttpProxy;
 
-import javax.annotation.Resource;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 @Service
@@ -68,7 +58,7 @@ public class AliyunSDK {
             Aliyun aliyun = Aliyun.builder().accessToken(token.getStr("access_token")).refreshToken(token.getStr("refresh_token")).driveId(driveId).active("1").updatetimer(new Date()).timeout(token.getInt("expires_in")).userid(userid).build();
             //todo 热缓存，把driveId和access_token存到rendis
             //提前2分钟过期
-            aliyun.setTimeout(aliyun.getTimeout()*1000 - 2 * 60 * 1000);
+            expertime(aliyun);
             //存到数据库
             aliyunMapper.insert(aliyun);
 
@@ -79,6 +69,11 @@ public class AliyunSDK {
         }
         return true;
 
+    }
+    //过期时间策略
+    public  void expertime(Aliyun alidto_update){
+        //提前2分钟过期
+        alidto_update.setTimeout(alidto_update.getTimeout()*1000 - 2 * 60 * 1000);
     }
 
     //初始化方法，判断token是否过期并刷新
@@ -98,9 +93,12 @@ public class AliyunSDK {
         Date updatetimer = aliyun.getUpdatetimer();
         long between = DateUtil.between(updatetimer, new Date(), DateUnit.MS);
         if (between >= Long.valueOf(aliyun.getTimeout())) {
+            logger.info("刷新token"+aliyun);
             //token过期要刷新了
             JSONObject entries = reFreshAccess_token(aliyun.getRefreshToken());
+            //过期时间 entries.getInt("expires_in")
             Aliyun alidto_update = Aliyun.builder().accessToken(entries.getStr("access_token")).refreshToken(entries.getStr("refresh_token")).updatetimer(new Date()).timeout(entries.getInt("expires_in")).build();
+            expertime(alidto_update);
             QueryWrapper<Aliyun> queryWrapperfile = new QueryWrapper<Aliyun>();
             queryWrapperfile.eq(false, "driveId", driveId);
             if (aliyunMapper.update(alidto_update, queryWrapperfile) > 1) {
@@ -170,7 +168,7 @@ public class AliyunSDK {
     /*
    搜索文件  jsonObject包含文件名和driverid
     */
-    public JSON searchFile(JSONObject jsonObject) throws Exception {
+    public JSONObject searchFile(JSONObject jsonObject) throws Exception {
 
         String driveId = jsonObject.get("driveId").toString();
         init(driveId);
@@ -178,9 +176,10 @@ public class AliyunSDK {
         String url = baseUrl + "/adrive/v1.0/openFile/search";
         HashMap<String, String> bodyMap = new HashMap<>();
         bodyMap.put("drive_id", driveId);
-        bodyMap.put("parent_file_id", "root");
+        bodyMap.put("parent_file_id",  jsonObject.get("parent_file_id").toString());
         bodyMap.put("query", "name  match  '" + filename + "'");
         JSONObject entries = new JSONObject(bodyMap);
+        logger.info("开始搜索文件");
         DefaultHttpProxy defaultHttpProxy = new DefaultHttpProxy(headers.get(driveId), 30000, "utf-8");
         JSONObject post = defaultHttpProxy.post(url, entries);
         //这里有个很重要的accesstoken存储
