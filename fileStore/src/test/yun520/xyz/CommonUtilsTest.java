@@ -48,7 +48,7 @@ public class CommonUtilsTest {
         //设备ID
         JSONObject set = new JSONObject().set("driveId", "8520066");
         //文件名
-        set.set("filename", "202304142336580407");
+        set.set("filename", "04530317");
         //父路径 ，这里是webcloud路径id  获得是通过搜索出来的
         set.set("parent_file_id", "6426a851348c613eb43a4d05b2ab5f40ff045e8a");
 
@@ -59,6 +59,8 @@ public class CommonUtilsTest {
             e.printStackTrace();
         }
         String url = json.getJSONArray("items").getJSONObject(0).getStr("url");
+        String fileid = json.getJSONArray("items").getJSONObject(0).getStr("file_id");
+        //643eb1958b3188361c074914a52a17d79ec72c77
         Assert.notNull(url, "路径为空" + json);
 
         System.out.println("下载地址：       "+url);
