@@ -178,6 +178,10 @@ public class AliyunSDK {
             case "down":
                 key = key + type + jsonObject.getStr("file_id");
                 break;
+                //精确搜索
+            case "searchOneFile":
+                key = key + type + jsonObject.getStr("query")+ jsonObject.getStr("drive_id");
+                break;
             default:
                 throw new Exception("无key规则");
         }
@@ -242,7 +246,6 @@ public class AliyunSDK {
     public JSONObject searchFile(JSONObject jsonObject) throws Exception {
 
         String driveId = jsonObject.get("driveId").toString();
-        init(driveId);
         String filename = jsonObject.get("filename").toString();
         String url = baseUrl + "/adrive/v1.0/openFile/search";
         HashMap<String, String> bodyMap = new HashMap<>();
@@ -250,6 +253,11 @@ public class AliyunSDK {
         bodyMap.put("parent_file_id", jsonObject.get("parent_file_id").toString());
         bodyMap.put("query", "name  match  '" + filename + "'");
         JSONObject entries = new JSONObject(bodyMap);
+        JSONObject init = init(driveId, entries, "searchOneFile");
+        if (init.containsKey("url")) {
+            return init;
+        }
+
         logger.info("开始搜索文件");
         DefaultHttpProxy defaultHttpProxy = new DefaultHttpProxy(headers.get(driveId), 30000, "utf-8");
         JSONObject post = defaultHttpProxy.post(url, entries);
