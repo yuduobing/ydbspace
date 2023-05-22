@@ -2,12 +2,15 @@ package yun520.xyz.service.impl.aliyun;
 
 import cn.hutool.core.date.DateUnit;
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpUtil;
 import cn.hutool.json.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
+import yun520.xyz.service.RedisService;
 import yun520.xyz.service.impl.aliyun.entity.Aliyun;
 import yun520.xyz.service.impl.aliyun.mapper.AliyunMapper;
 import yun520.xyz.util.DefaultHttpProxy;
@@ -16,9 +19,10 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
+
 @Service
 public class AliyunSDK {
-//    https://open.aliyundrive.com/o/oauth/authorize?client_id=6a596f96a26544e7897f01ce321f0cd8&redirect_uri=https://alist.nn.ci/tool/aliyundrive/callback&scope=user:base,file:all:read,file:all:write&state=&response_type=code
+    //    https://open.aliyundrive.com/o/oauth/authorize?client_id=6a596f96a26544e7897f01ce321f0cd8&redirect_uri=https://alist.nn.ci/tool/aliyundrive/callback&scope=user:base,file:all:read,file:all:write&state=&response_type=code
     private static Logger logger = Logger.getLogger("AliyunSDK.class");
     //    1access_token 获取用户信息，并把用户信息保存到threadlocal
 //GET 域名 + /oauth/users/info
@@ -35,6 +39,8 @@ public class AliyunSDK {
     //存账号数据
     @Autowired
     AliyunMapper aliyunMapper;
+    @Autowired
+    RedisService redisService;
     /*
     获取授权吗
      */
@@ -53,7 +59,7 @@ public class AliyunSDK {
         try {
             JSONObject token = getAccess_token(codescan);
 //            JSONObject token = new JSONObject();
-            token.set("access_token","eyJraWQiOiJLcU8iLCJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMmRlMTA3M2I3MDM0N2MwYjk3ODcwNzU0ZDA3OTkzNiIsImF1ZCI6IjZhNTk2Zjk2YTI2NTQ0ZTc4OTdmMDFjZTMyMWYwY2Q4IiwiaXNzIjoiaHR0cHM6Ly9vcGVuLmFsaXl1bmRyaXZlLmNvbSIsImV4cCI6MTY4NDQ5NTIwMywiaWF0IjoxNjg0NDg3NDAzfQ.aM6QUNupAYAcua2ndQ7qXKnegNVJ0ipDU4UOL-gmGnE");
+            token.set("access_token", "eyJraWQiOiJLcU8iLCJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMmRlMTA3M2I3MDM0N2MwYjk3ODcwNzU0ZDA3OTkzNiIsImF1ZCI6IjZhNTk2Zjk2YTI2NTQ0ZTc4OTdmMDFjZTMyMWYwY2Q4IiwiaXNzIjoiaHR0cHM6Ly9vcGVuLmFsaXl1bmRyaXZlLmNvbSIsImV4cCI6MTY4NDQ5NTIwMywiaWF0IjoxNjg0NDg3NDAzfQ.aM6QUNupAYAcua2ndQ7qXKnegNVJ0ipDU4UOL-gmGnE");
             String driveId = getdriveId(token);
             Aliyun aliyun = Aliyun.builder().accessToken(token.getStr("access_token")).refreshToken(token.getStr("refresh_token")).driveId(driveId).active("1").updatetimer(new Date()).timeout(token.getInt("expires_in")).userid(userid).build();
             //todo 热缓存，把driveId和access_token存到rendis
@@ -63,17 +69,18 @@ public class AliyunSDK {
             aliyunMapper.insert(aliyun);
 
         } catch (Exception e) {
-            logger.severe("错误"+e.getMessage());
+            logger.severe("错误" + e.getMessage());
             System.out.println(e);
             return false;
         }
         return true;
 
     }
+
     //过期时间策略
-    public  void expertime(Aliyun alidto_update){
+    public void expertime(Aliyun alidto_update) {
         //提前2分钟过期
-        alidto_update.setTimeout(alidto_update.getTimeout()*1000 - 2 * 60 * 1000);
+        alidto_update.setTimeout(alidto_update.getTimeout() * 1000 - 2 * 60 * 1000);
     }
 
     //初始化方法，判断token是否过期并刷新
@@ -93,7 +100,7 @@ public class AliyunSDK {
         Date updatetimer = aliyun.getUpdatetimer();
         long between = DateUtil.between(updatetimer, new Date(), DateUnit.MS);
         if (between >= Long.valueOf(aliyun.getTimeout())) {
-            logger.info("刷新token"+aliyun);
+            logger.info("刷新token" + aliyun);
             //token过期要刷新了
             JSONObject entries = reFreshAccess_token(aliyun.getRefreshToken());
             //过期时间 entries.getInt("expires_in")
@@ -114,6 +121,70 @@ public class AliyunSDK {
 
     }
 
+    //初始化方法，判断token是否过期并刷新,更具不同策略热更新
+    //type，存redis的接口    jsonObject要传递的参数
+    public JSONObject init(String driveId, JSONObject jsonObject, String type) throws Exception {
+        JSONObject returnjson = new JSONObject();
+        //redis暂存一些结果
+        boolean openredis = true;
+        if (openredis) {
+            String keyrules = keyrules(type, jsonObject);
+            returnjson = redisService.getJSONObject(keyrules);
+            if (!StrUtil.isEmptyIfStr(returnjson)) {
+                return returnjson;
+            }
+
+        }
+
+        //一个设备id对应唯一一个账号
+        if (!aliaccount.containsKey(driveId)) {
+            //如果本地没有去数据库查
+            QueryWrapper<Aliyun> queryWrapperfile = new QueryWrapper<Aliyun>();
+            //true null拼接  false 不拼接
+            queryWrapperfile.eq(false, "driveId", driveId);
+            Aliyun userInfo = aliyunMapper.selectOne(queryWrapperfile);
+            aliaccount.put(userInfo.getDriveId(), userInfo);
+        }
+        //判断是否超时
+        Aliyun aliyun = aliaccount.get(driveId);
+        Assert.notNull(aliyun, "没有对应账号" + driveId);
+        Date updatetimer = aliyun.getUpdatetimer();
+        long between = DateUtil.between(updatetimer, new Date(), DateUnit.MS);
+        if (between >= Long.valueOf(aliyun.getTimeout())) {
+            logger.info("刷新token" + aliyun);
+            //token过期要刷新了
+            JSONObject entries = reFreshAccess_token(aliyun.getRefreshToken());
+            //过期时间 entries.getInt("expires_in")
+            Aliyun alidto_update = Aliyun.builder().accessToken(entries.getStr("access_token")).refreshToken(entries.getStr("refresh_token")).updatetimer(new Date()).timeout(entries.getInt("expires_in")).build();
+            expertime(alidto_update);
+            QueryWrapper<Aliyun> queryWrapperfile = new QueryWrapper<Aliyun>();
+            queryWrapperfile.eq(false, "driveId", driveId);
+            if (aliyunMapper.update(alidto_update, queryWrapperfile) > 1) {
+                //刷新一些本地数据
+                aliyun = aliaccount.get(driveId);
+                aliaccount.put(alidto_update.getDriveId(), aliyun);
+            }
+
+        }
+        HashMap<String, String> headerMap = new HashMap<>();
+        headerMap.put("Authorization", "Bearer " + aliyun.getAccessToken());
+        headers.put(aliyun.getDriveId(), headerMap);
+        return returnjson;
+    }
+
+    public String keyrules(String type, JSONObject jsonObject) throws Exception {
+        String key = "filestore:aliyun:";
+        switch (type) {
+            case "down":
+                key = key + type + jsonObject.getStr("file_id");
+                break;
+            default:
+                throw new Exception("无key规则");
+        }
+        return  key;
+
+    }
+
     //获取accesstoken
     public JSONObject getAccess_token(String codescan) throws Exception {
         //以下都是不变的
@@ -126,7 +197,7 @@ public class AliyunSDK {
         objectObjectHashMap.put("code", codescan);
         JSONObject entries = new JSONObject(objectObjectHashMap);
         String post = HttpUtil.post(url, entries.toString(), 30000);
-        Assert.notNull(new JSONObject(post).get("access_token"), "access_token为空" + post+codescan);
+        Assert.notNull(new JSONObject(post).get("access_token"), "access_token为空" + post + codescan);
         String access_token = new JSONObject(post).get("access_token").toString();
 //        headers.put("Authorization", "Bearer "+access_token);
         //这里有个很重要的accesstoken存储
@@ -176,7 +247,7 @@ public class AliyunSDK {
         String url = baseUrl + "/adrive/v1.0/openFile/search";
         HashMap<String, String> bodyMap = new HashMap<>();
         bodyMap.put("drive_id", driveId);
-        bodyMap.put("parent_file_id",  jsonObject.get("parent_file_id").toString());
+        bodyMap.put("parent_file_id", jsonObject.get("parent_file_id").toString());
         bodyMap.put("query", "name  match  '" + filename + "'");
         JSONObject entries = new JSONObject(bodyMap);
         logger.info("开始搜索文件");
@@ -185,23 +256,30 @@ public class AliyunSDK {
         //这里有个很重要的accesstoken存储
         return post;
     }
-/*
-下载文件 根据文件id获取下载链接
- */
-    public JSONObject downfile(String driveId,String fileid) throws Exception {
 
-
-        init(driveId);
+    /*
+    下载文件 根据文件id获取下载链接
+     */
+    public JSONObject downfile(String driveId, String fileid) throws Exception {
+        //过期时间 ，单位s
+        long timeout= 115200;
         JSONObject bodyMap = new JSONObject();
         String url = baseUrl + "/adrive/v1.0/openFile/getDownloadUrl";
         bodyMap.put("drive_id", driveId);
-        bodyMap.put("file_id",  fileid);
-       //最长32小时
+        bodyMap.put("file_id", fileid);
+        //最长32小时
         bodyMap.put("expire_sec", "115200");
+        JSONObject init = init(driveId, bodyMap, "down");
+        if (init.containsKey("url")) {
+            return init;
+        }
         JSONObject entries = new JSONObject(bodyMap);
         logger.info("开始搜索文件");
         DefaultHttpProxy defaultHttpProxy = new DefaultHttpProxy(headers.get(driveId), 30000, "utf-8");
         JSONObject post = defaultHttpProxy.post(url, entries);
+        //结果缓存
+        String key = keyrules("down", bodyMap);
+        redisService.set(key,post,timeout/60);
         //这里有个很重要的accesstoken存储
         return post;
     }

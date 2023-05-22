@@ -70,6 +70,7 @@ public class CommonUtilsTest {
     //文件下载
     @Test
     public void down() throws ParseException {
+        //todo redis热更新
 
         //个人信息里的driverid
         String driveId= "8520066";
@@ -80,7 +81,7 @@ public class CommonUtilsTest {
         } catch (Exception e) {
             e.printStackTrace();
         }
-//        String url = json.getJSONArray("items").getJSONObject(0).getStr("url");
+        String url = json.getJSONArray("items").getJSONObject(0).getStr("url");
 //        String fileid = json.getJSONArray("items").getJSONObject(0).getStr("file_id");
 //        //643eb1958b3188361c074914a52a17d79ec72c77
 //        Assert.notNull(url, "路径为空" + json);

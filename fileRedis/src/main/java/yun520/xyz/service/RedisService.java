@@ -1,5 +1,7 @@
 package yun520.xyz.service;
 
+import cn.hutool.json.JSONObject;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -7,7 +9,7 @@ import java.util.Set;
 public interface RedisService {
 
     /**
-     * 保存属性
+     * 保存属性  分钟
      */
     void set(String key, Object value, long time);
 
@@ -20,7 +22,7 @@ public interface RedisService {
      * 获取属性
      */
     Object get(String key);
-
+    JSONObject getJSONObject(String key);
     /**
      * 删除属性
      */

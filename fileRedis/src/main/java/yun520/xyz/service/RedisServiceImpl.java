@@ -1,5 +1,6 @@
 package yun520.xyz.service;
 
+import cn.hutool.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
@@ -27,6 +28,16 @@ public class RedisServiceImpl implements RedisService {
     @Override
     public Object get(String key) {
         return redisTemplate.opsForValue().get(key);
+    }
+    @Override
+    public JSONObject getJSONObject(String key) {
+        Object o = redisTemplate.opsForValue().get(key);
+        if (o==null){
+            return  null;
+        }
+        else{
+            return new JSONObject(o);
+        }
     }
 
     @Override
