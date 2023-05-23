@@ -89,4 +89,25 @@ public class CommonUtilsTest {
 //        System.out.println("下载地址：       "+url);
 
     }
+
+    //上传地址
+    @Test
+    public void geturl() throws ParseException {
+
+        //个人信息里的driverid
+        String driveId= "8520066";
+        String name="1231";
+        try {
+         String   url = aliyunSDK.getuploadUrl(driveId,name);
+            System.out.println(url);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+//        String fileid = json.getJSONArray("items").getJSONObject(0).getStr("file_id");
+//        //643eb1958b3188361c074914a52a17d79ec72c77
+//        Assert.notNull(url, "路径为空" + json);
+
+//        System.out.println("下载地址：       "+url);
+
+    }
 }

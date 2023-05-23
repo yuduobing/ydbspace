@@ -4,7 +4,6 @@ import cn.hutool.core.date.DateUnit;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpUtil;
-import cn.hutool.json.JSONNull;
 import cn.hutool.json.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import lombok.SneakyThrows;
@@ -16,6 +15,7 @@ import yun520.xyz.service.impl.aliyun.entity.Aliyun;
 import yun520.xyz.service.impl.aliyun.mapper.AliyunMapper;
 import yun520.xyz.util.DefaultHttpProxy;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -258,7 +258,12 @@ public class AliyunSDK {
         HashMap<String, String> bodyMap = new HashMap<>();
         bodyMap.put("drive_id", driveId);
         bodyMap.put("parent_file_id", jsonObject.get("parent_file_id").toString());
+
         bodyMap.put("query", "name  match  '" + filename + "'");
+
+        if (jsonObject.containsKey("type")){
+            bodyMap.put("query", "name  match  '" + filename +"' and   type ='" + jsonObject.get("type") + "'");
+        }
         JSONObject entries = new JSONObject(bodyMap);
         JSONObject init = init(driveId, entries, "searchOneFile");
         if (init!=null&&init.containsKey("total_count")) {
@@ -303,22 +308,89 @@ public class AliyunSDK {
         return post;
     }
     /*
-    获得上传地址
+    获得上传地址   name文件名
      */
-    public  String getuploadUrl(String driveId){
-        JSONObject bodyMap = new JSONObject();
+
+@SneakyThrows
+    public  String getuploadUrl(String driveId,String name){
+
+        //判读上传文件路径
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+        String day = sdf.format(new Date());
+        String path="webcloud"+  "/" +day.substring(0, 6) + "/" + day.substring(6, 8) ;
+        String parent_file_id = isFileExit(driveId, path, "ROOT");
+        //获得上传文件的参数
+        JSONObject json= CreatennewFile(driveId,parent_file_id,name,"file");
+
+        //获得上传文件地址
+//    String url = baseUrl + "/adrive/v1.0/openFile/getUploadUrl";
+//    JSONObject queryjson = new JSONObject();
+//    queryjson.set("file_id", json.get("file_id"));
+//    queryjson.set("upload_id",  json.get("upload_id"));
+//        DefaultHttpProxy defaultHttpProxy = new DefaultHttpProxy(headers.get(driveId), 30000, "utf-8");
+//        JSONObject post = defaultHttpProxy.post(url,queryjson);
+        Assert.notNull(json.getJSONArray("part_info_list"),"获得文件上传地址失败");
+        return  json.getJSONArray("part_info_list").getJSONObject(0).getStr("upload_url");
+    }
+
+
+    //新建文件或文件夹
+    @SneakyThrows
+    public  JSONObject CreatennewFile(String driveId,String parent_file_id,String name,String type){
         //文件创建
         String url = baseUrl + "/adrive/v1.0/openFile/create";
-        JSONObject bodyMap = new JSONObject();
-        bodyMap.put("drive_id", driveId);
-        //父目录
-        bodyMap.put("parent_file_id", fileid);
-        bodyMap.put("name", fileid);
+        JSONObject queryjson = new JSONObject();
 
-        //最长32小时
-        bodyMap.put("expire_sec", "115200");
+            init(driveId);
+        queryjson.set("drive_id", driveId);
+        queryjson.set("parent_file_id", parent_file_id);
+        queryjson.set("name", name);
+        queryjson.set("type", type);
+//        同名不创建
+        queryjson.set("check_name_mode", "refuse");
+
         DefaultHttpProxy defaultHttpProxy = new DefaultHttpProxy(headers.get(driveId), 30000, "utf-8");
-        JSONObject post = defaultHttpProxy.post(url);
+        JSONObject post = defaultHttpProxy.post(url,queryjson);
+        if (post==null){
+            logger.info("创建文件夹失败");
+        }
+        return post;
+
     }
+    //判断文件夹是否存在，不存在创建，存在返回文件夹id
+
+//    /webcloud/日期
+    public String isFileExit(String driveId,String path,String parent_file_id) throws Exception{
+        //sc:webcloud/日期
+        String[] finame = path.split("/");
+        for (int i = 0; i < finame.length; i++) {
+//            JSONObject init = init(driveId, bodyMap, "down");
+//            if (init.containsKey("url")) {
+//                return init;
+//            }
+            init(driveId);
+            //设备ID
+            JSONObject queryjson = new JSONObject().set("driveId", driveId);
+            //文件名
+            queryjson.set("filename", finame[i]);
+            //父路径
+            queryjson.set("parent_file_id", parent_file_id);
+            //查询条件文件夹
+            queryjson.set("type", "folder");
+            JSONObject   searchjson = searchFile(queryjson);
+            int url = searchjson.getJSONArray("items").size();
+            if (url<=0){
+                //创建文件夹
+                JSONObject jsonObject  = CreatennewFile(driveId, parent_file_id, finame[i], "folder");
+
+                parent_file_id = jsonObject.getStr("file_id");;
+                continue;
+            }
+            parent_file_id = searchjson.getJSONArray("items").getJSONObject(0).getStr("file_id");
+        }
+return   parent_file_id;
+
+    }
+
 
 }
