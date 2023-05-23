@@ -12,7 +12,8 @@ public interface RedisService {
      * 保存属性  分钟
      */
     void set(String key, Object value, long time);
-
+//    保存属性 分钟
+    void set(String key, String value, long time);
     /**
      * 保存属性
      */

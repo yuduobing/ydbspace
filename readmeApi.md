@@ -482,3 +482,52 @@ public interface ProductMapper {
 //@SpringBootTest(classes = { FileStoreApplication.class})
 @SpringBootTest
 @RunWith(SpringRunner.class)
+
+## 阿里云的公共数据redis缓存
+
+1发送交易之前去redis取看有没有，有就直接返回
+
+```
+//searchOneFile是主键策略
+JSONObject init = init(driveId, entries, "searchOneFile");
+if (init.containsKey("url")) {
+    return init;
+}
+
+    //redis暂存一些结果
+        boolean openredis = true;
+        if (openredis) {
+            String keyrules = keyrules(type, jsonObject);
+            returnjson = redisService.getJSONObject(keyrules);
+            if (!StrUtil.isEmptyIfStr(returnjson)) {
+                return returnjson;
+            }
+
+        }
+        //主键策略
+            public String keyrules(String type, JSONObject jsonObject) throws Exception {
+        String key = "filestore:aliyun:";
+        switch (type) {
+            case "down":
+                key = key + type + jsonObject.getStr("file_id");
+                break;
+                //精确搜索
+            case "searchOneFile":
+                key = key + type + jsonObject.getStr("query")+ jsonObject.getStr("drive_id");
+                break;
+            default:
+                throw new Exception("无key规则");
+        }
+        return  key;
+
+    }
+
+```
+
+2如果上面的没有找到，查找数据后，数据缓存
+
+```
+//结果缓存
+String key = keyrules("down", bodyMap);
+redisService.set(key,post,timeout/60);
+```

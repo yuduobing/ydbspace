@@ -19,10 +19,10 @@ import java.text.ParseException;
 ////@PrepareForTest({AliyunMapper.class,AliyunSDK.class})
 ////@SpringBootTest(classes = { AliyunMapper.class,AliyunSDK.class})
 //@SpringBootTest(classes = { FileStoreApplication.class})
-@SpringBootTest
+@SpringBootTest(classes = { FileStoreApplication.class})
 @RunWith(SpringRunner.class)
 public class CommonUtilsTest {
-    String code = "00519dad21644f6db891a1bac3bf59ec";
+    String code = "255a730d22524f789533ac69d582b18b";
 
     @Resource
     AliyunSDK aliyunSDK;
