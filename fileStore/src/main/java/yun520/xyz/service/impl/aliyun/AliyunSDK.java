@@ -3,6 +3,8 @@ package yun520.xyz.service.impl.aliyun;
 import cn.hutool.core.date.DateUnit;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.http.HttpRequest;
+import cn.hutool.http.HttpResponse;
 import cn.hutool.http.HttpUtil;
 import cn.hutool.json.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -15,6 +17,7 @@ import yun520.xyz.service.impl.aliyun.entity.Aliyun;
 import yun520.xyz.service.impl.aliyun.mapper.AliyunMapper;
 import yun520.xyz.util.DefaultHttpProxy;
 
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -101,7 +104,7 @@ public class AliyunSDK {
         Date updatetimer = aliyun.getUpdatetimer();
         long between = DateUtil.between(updatetimer, new Date(), DateUnit.MS);
         if (between >= Long.valueOf(aliyun.getTimeout())) {
-            logger.info("刷新token" + aliyun);
+            logger.info("刷新token开始,此时信息" + aliyun);
             //token过期要刷新了
             JSONObject entries = reFreshAccess_token(aliyun.getRefreshToken());
             //过期时间 entries.getInt("expires_in")
@@ -109,9 +112,11 @@ public class AliyunSDK {
             expertime(alidto_update);
             QueryWrapper<Aliyun> queryWrapperfile = new QueryWrapper<Aliyun>();
             queryWrapperfile.eq(false, "driveId", driveId);
+
             if (aliyunMapper.update(alidto_update, queryWrapperfile) > 1) {
-                //刷新一些本地数据
                 aliyun = aliaccount.get(driveId);
+                //刷新一些本地数据
+                logger.info("Token刷新成功" + aliyun);
                 aliaccount.put(alidto_update.getDriveId(), aliyun);
             }
 
@@ -259,11 +264,14 @@ public class AliyunSDK {
         bodyMap.put("drive_id", driveId);
         bodyMap.put("parent_file_id", jsonObject.get("parent_file_id").toString());
 
-        bodyMap.put("query", "name  match  '" + filename + "'");
+        bodyMap.put("query", "name  match  '" + filename+"'"+" ' and   parent_file_id ='" + jsonObject.get("parent_file_id") + "'");
 
         if (jsonObject.containsKey("type")){
-            bodyMap.put("query", "name  match  '" + filename +"' and   type ='" + jsonObject.get("type") + "'");
+            bodyMap.put("query", "name  match  '" + filename+"'"+" and   type ='" + jsonObject.get("type") + "'"+" and   parent_file_id ='" + jsonObject.get("parent_file_id") + "'");
+
         }
+
+
         JSONObject entries = new JSONObject(bodyMap);
         JSONObject init = init(driveId, entries, "searchOneFile");
         if (init!=null&&init.containsKey("total_count")) {
@@ -311,14 +319,15 @@ public class AliyunSDK {
     获得上传地址   name文件名
      */
 
-@SneakyThrows
+    @SneakyThrows
     public  String getuploadUrl(String driveId,String name){
 
         //判读上传文件路径
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
         String day = sdf.format(new Date());
         String path="webcloud"+  "/" +day.substring(0, 6) + "/" + day.substring(6, 8) ;
-        String parent_file_id = isFileExit(driveId, path, "ROOT");
+        //root根目录
+        String parent_file_id = isFileExit(driveId, path, "root");
         //获得上传文件的参数
         JSONObject json= CreatennewFile(driveId,parent_file_id,name,"file");
 
@@ -333,6 +342,15 @@ public class AliyunSDK {
         return  json.getJSONArray("part_info_list").getJSONObject(0).getStr("upload_url");
     }
 
+    @SneakyThrows
+    public void uplaodfile(String driveId,String name, InputStream inputStream ){
+
+            String url = getuploadUrl(driveId, name);
+
+        HttpResponse response = HttpRequest.post(url) // 创建POST请求
+                .form("file", "file.jpg", inputStream)// 添加文件到表单中
+                .execute();
+    }
 
     //新建文件或文件夹
     @SneakyThrows
@@ -378,8 +396,8 @@ public class AliyunSDK {
             //查询条件文件夹
             queryjson.set("type", "folder");
             JSONObject   searchjson = searchFile(queryjson);
-            int url = searchjson.getJSONArray("items").size();
-            if (url<=0){
+            int urlsize = searchjson.getJSONArray("items").size();
+            if (urlsize<=0){
                 //创建文件夹
                 JSONObject jsonObject  = CreatennewFile(driveId, parent_file_id, finame[i], "folder");
 
@@ -388,7 +406,7 @@ public class AliyunSDK {
             }
             parent_file_id = searchjson.getJSONArray("items").getJSONObject(0).getStr("file_id");
         }
-return   parent_file_id;
+           return   parent_file_id;
 
     }
 
