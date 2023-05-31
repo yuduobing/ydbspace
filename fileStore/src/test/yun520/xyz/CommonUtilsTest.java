@@ -96,7 +96,7 @@ public class CommonUtilsTest {
 
         //个人信息里的driverid
         String driveId= "8520066";
-        String name="1231";
+        String name="1908.log";
         try {
          String   url = aliyunSDK.getuploadUrl(driveId,name);
             System.out.println(url);

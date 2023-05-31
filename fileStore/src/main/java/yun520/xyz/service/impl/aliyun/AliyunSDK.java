@@ -39,6 +39,7 @@ public class AliyunSDK {
     private final DefaultHttpProxy client = null;
     //存放header
     public final Map<String, Map<String, String>> headers = new HashMap<>();
+    //存放所有账号信息
     public static final Map<String, Aliyun> aliaccount = new HashMap<>();
     //存账号数据
     @Autowired
@@ -87,16 +88,20 @@ public class AliyunSDK {
         alidto_update.setTimeout(alidto_update.getTimeout() * 1000 - 2 * 60 * 1000);
     }
 
+    public Aliyun getAcount(String driveId ){
+        QueryWrapper<Aliyun> queryWrapperfile = new QueryWrapper<Aliyun>();
+        //true null拼接  false 不拼接
+        queryWrapperfile.eq(false, "driveId", driveId);
+        Aliyun userInfo = aliyunMapper.selectOne(queryWrapperfile);
+        aliaccount.put(userInfo.getDriveId(), userInfo);
+        return  userInfo;
+    }
     //初始化方法，判断token是否过期并刷新
     public void init(String driveId) throws Exception {
         //一个设备id对应唯一一个账号
         if (!aliaccount.containsKey(driveId)) {
-            //如果本地没有去数据库查
-            QueryWrapper<Aliyun> queryWrapperfile = new QueryWrapper<Aliyun>();
-            //true null拼接  false 不拼接
-            queryWrapperfile.eq(false, "driveId", driveId);
-            Aliyun userInfo = aliyunMapper.selectOne(queryWrapperfile);
-            aliaccount.put(userInfo.getDriveId(), userInfo);
+            getAcount(driveId);
+
         }
         //判断是否超时
         Aliyun aliyun = aliaccount.get(driveId);
@@ -113,11 +118,9 @@ public class AliyunSDK {
             QueryWrapper<Aliyun> queryWrapperfile = new QueryWrapper<Aliyun>();
             queryWrapperfile.eq(false, "driveId", driveId);
 
-            if (aliyunMapper.update(alidto_update, queryWrapperfile) > 1) {
-                aliyun = aliaccount.get(driveId);
-                //刷新一些本地数据
-                logger.info("Token刷新成功" + aliyun);
-                aliaccount.put(alidto_update.getDriveId(), aliyun);
+            if (aliyunMapper.update(alidto_update, queryWrapperfile) >= 1) {
+
+                getAcount(driveId);
             }
 
         }
@@ -152,10 +155,7 @@ public class AliyunSDK {
             Aliyun userInfo = aliyunMapper.selectOne(queryWrapperfile);
             aliaccount.put(userInfo.getDriveId(), userInfo);
         }
-        //redis暂存一些结果结束
-
-
-
+        //-----redis暂存一些结果结束
 
         //判断是否超时
         Aliyun aliyun = aliaccount.get(driveId);
@@ -171,10 +171,9 @@ public class AliyunSDK {
             expertime(alidto_update);
             QueryWrapper<Aliyun> queryWrapperfile = new QueryWrapper<Aliyun>();
             queryWrapperfile.eq( "driveId", driveId);
-            if (aliyunMapper.update(alidto_update, queryWrapperfile) > 1) {
+            if (aliyunMapper.update(alidto_update, queryWrapperfile) >=1) {
                 //刷新一些本地数据
-                aliyun = aliaccount.get(driveId);
-                aliaccount.put(alidto_update.getDriveId(), aliyun);
+                getAcount(driveId);
             }
 
         }
@@ -365,7 +364,7 @@ public class AliyunSDK {
         queryjson.set("name", name);
         queryjson.set("type", type);
 //        同名不创建
-        queryjson.set("check_name_mode", "refuse");
+        queryjson.set("check_name_mode", "ignore");
 
         DefaultHttpProxy defaultHttpProxy = new DefaultHttpProxy(headers.get(driveId), 30000, "utf-8");
         JSONObject post = defaultHttpProxy.post(url,queryjson);
