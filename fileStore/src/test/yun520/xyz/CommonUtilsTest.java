@@ -1,5 +1,6 @@
 package yun520.xyz;
 
+import cn.hutool.http.HttpRequest;
 import cn.hutool.json.JSON;
 import cn.hutool.json.JSONObject;
 import org.junit.Test;
@@ -10,6 +11,10 @@ import org.springframework.util.Assert;
 import yun520.xyz.service.impl.aliyun.AliyunSDK;
 
 import javax.annotation.Resource;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.text.ParseException;
 
 //@RunWith(PowerMockRunner.class)
@@ -22,7 +27,7 @@ import java.text.ParseException;
 @SpringBootTest(classes = { FileStoreApplication.class})
 @RunWith(SpringRunner.class)
 public class CommonUtilsTest {
-    String code = "255a730d22524f789533ac69d582b18b";
+    String code = "dc73eceb8da541ba86e40efd425c42f8";
 
     @Resource
     AliyunSDK aliyunSDK;
@@ -91,15 +96,17 @@ public class CommonUtilsTest {
     }
 
     //上传地址
-    @Test
-    public void geturl() throws ParseException {
+//    @Test
+    public String  geturl() throws ParseException {
 
         //个人信息里的driverid
-        String driveId= "8520066";
+        String driveId= "526997152";
         String name="1908.log";
         try {
          String   url = aliyunSDK.getuploadUrl(driveId,name);
+
             System.out.println(url);
+            return url;
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -108,6 +115,32 @@ public class CommonUtilsTest {
 //        Assert.notNull(url, "路径为空" + json);
 
 //        System.out.println("下载地址：       "+url);
+        return "";
+    }
 
+    @Test
+    public void upload()  throws ParseException {
+        //shnagchaunwenjian
+        File file = new File("/Users/yuduobin/Desktop/Dsp2.0/20230428/1908.log");
+        byte[] data = readFileToByteArray(file);
+        String url="https://bj29-hz.cn-hangzhou.data.alicloudccp.com/3os9yDmv%2F526997152%2F6479b10f56af64c673e84023a03e8a9905a2a415%2F6479b10fb73efbf606d3460181a673f6f16dcd49?partNumber=1&security-token=CAIS%2BgF1q6Ft5B2yfSjIr5eDAdX1nqhp9vDfRHz5lnkjY%2BFt1qecpDz2IHFPeHJrBeAYt%2FoxmW1X5vwSlq5rR4QAXlDfNWbKDm%2B3qFHPWZHInuDox55m4cTXNAr%2BIhr%2F29CoEIedZdjBe%2FCrRknZnytou9XTfimjWFrXWv%2Fgy%2BQQDLItUxK%2FcCBNCfpPOwJms7V6D3bKMuu3OROY6Qi5TmgQ41Uh1jgjtPzkkpfFtkGF1GeXkLFF%2B97DRbG%2FdNRpMZtFVNO44fd7bKKp0lQLukMWr%2Fwq3PIdp2ma447NWQlLnzyCMvvJ9OVDFyN0aKEnH7J%2Bq%2FzxhTPrMnpkSlacGoABogANrGtk%2BmJGXbVpOioyb3CVyetuOkxRav%2FJkra5bjUoU0YoYnz6Q1JUZjSl2JpH%2FoaK8c31n%2BwsadZ7ItVE6JQDMReouBeGB16me50HQkYc%2BrO%2B13%2BzFfagYtYC8PMUFvEJtMRegRidLUifOrjQJXj2qHAFqMDpiAyY2AssimI%3D&uploadId=B9AE2ECDA9DD4C7B9561B8AC115B90D5&x-oss-access-key-id=STS.NT6JoAswHA24FZHryvonA9b7F&x-oss-expires=1685700384&x-oss-signature=%2FUzzY8Yud1%2BIzqEvOw0lY65seB2wbsHZk98mgc6padM%3D&x-oss-signature-version=OSS2";
+        HttpRequest put = HttpRequest.put(url).body(data);
+        put.execute()
+        System.out.println("1");
+
+    }
+    public static byte[] readFileToByteArray(File file) {
+        try (FileInputStream fis = new FileInputStream(file);
+             ByteArrayOutputStream bos = new ByteArrayOutputStream()) {
+            byte[] buffer = new byte[1024];
+            int len;
+            while ((len = fis.read(buffer)) != -1) {
+                bos.write(buffer, 0, len);
+            }
+            return bos.toByteArray();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }

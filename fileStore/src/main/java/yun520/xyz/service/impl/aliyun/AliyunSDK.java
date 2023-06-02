@@ -70,6 +70,7 @@ public class AliyunSDK {
             //todo 热缓存，把driveId和access_token存到rendis
             //提前2分钟过期
             expertime(aliyun);
+            //todo 添加还是更新
             //存到数据库
             aliyunMapper.insert(aliyun);
 
@@ -91,7 +92,7 @@ public class AliyunSDK {
     public Aliyun getAcount(String driveId ){
         QueryWrapper<Aliyun> queryWrapperfile = new QueryWrapper<Aliyun>();
         //true null拼接  false 不拼接
-        queryWrapperfile.eq(false, "driveId", driveId);
+        queryWrapperfile.eq( "driveId", driveId);
         Aliyun userInfo = aliyunMapper.selectOne(queryWrapperfile);
         aliaccount.put(userInfo.getDriveId(), userInfo);
         return  userInfo;
