@@ -86,6 +86,11 @@ public class FastDfsServiceimpl implements StoreService {
     }
 
     @Override
+    public String downloadUrl(String path) {
+        return null;
+    }
+
+    @Override
     public void delete(String filePath) {
         if (StringUtils.isNotBlank(filePath)) {
             storageClient.deleteFile(filePath);

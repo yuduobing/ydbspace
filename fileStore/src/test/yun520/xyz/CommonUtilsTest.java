@@ -49,11 +49,11 @@ public class CommonUtilsTest {
     @Test
     public void search() throws ParseException {
         //设备ID
-        JSONObject set = new JSONObject().set("driveId", "8520066");
+        JSONObject set = new JSONObject().set("driveId", "526997152");
         //文件名
-        set.set("filename", "04530317");
+        set.set("filename", "数据结构与算法分析_");
         //父路径 ，这里是webcloud路径id  获得是通过搜索出来的
-        set.set("parent_file_id", "6426a851348c613eb43a4d05b2ab5f40ff045e8a");
+        set.set("parent_file_id", "root");
 
         JSONObject json = null;
         try {
@@ -67,7 +67,7 @@ public class CommonUtilsTest {
         //643eb1958b3188361c074914a52a17d79ec72c77
         Assert.notNull(url, "路径为空" + json);
 
-        System.out.println("下载地址：       "+url);
+        System.out.println("预览地址"+url);
 
     }
     //文件下载
@@ -76,20 +76,20 @@ public class CommonUtilsTest {
         //todo redis热更新
 
         //个人信息里的driverid
-        String driveId= "8520066";
-        String fileid="643eb1958b3188361c074914a52a17d79ec72c77";
+        String driveId= "526997152";
+        String fileid="6476b41a45b3ff4ece204e4495b92c6158de51e3";
         JSONObject json = null;
         try {
             json = aliyunSDK.downfile(driveId,fileid);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        String url = json.getJSONArray("items").getJSONObject(0).getStr("url");
+        String url = json.getStr("url");
 //        String fileid = json.getJSONArray("items").getJSONObject(0).getStr("file_id");
 //        //643eb1958b3188361c074914a52a17d79ec72c77
 //        Assert.notNull(url, "路径为空" + json);
 
-//        System.out.println("下载地址：       "+url);
+        System.out.println("下载地址：       "+url);
 
     }
 

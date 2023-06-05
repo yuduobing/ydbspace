@@ -10,6 +10,7 @@ import cn.hutool.system.UserInfo;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.transaction.annotation.Transactional;
@@ -42,6 +43,11 @@ import java.util.*;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Logger;
+
+
+/*
+临时文件操作
+ */
 
 @RestController
 @Api(tags = "FileImageController", description = "文件上传")
@@ -84,20 +90,19 @@ public class FileImageController {
         String originalFilename = file.getOriginalFilename();
         String extension = originalFilename.substring(originalFilename.lastIndexOf(".") + 1);
 
-
-            result2++;
+        result2++;
         StoreService storeService = storeContext.getStoreService("0");
-        chunkpath = storeService.upload("group1",file.getInputStream(),file.getSize(), extension);
+        chunkpath = storeService.upload("group1", file.getInputStream(), file.getSize(), extension);
 
-            //填充切片表
-            Filechunk filechunk = Filechunk.builder().chunkmd5(fileparams.getIdentifier()).chunksize(fileparams.getChunkSize()).chunkpath(chunkpath).chunktotalnum(fileparams.getTotalChunks()).chunksnum(fileparams.getChunkNumber())
-                    .createTime(LocalDateTime.now()).build();
+        //填充切片表
+        Filechunk filechunk = Filechunk.builder().chunkmd5(fileparams.getIdentifier()).chunksize(fileparams.getChunkSize()).chunkpath(chunkpath).chunktotalnum(fileparams.getTotalChunks()).chunksnum(fileparams.getChunkNumber())
+                .createTime(LocalDateTime.now()).build();
 
-            result2 = filechunkMapper.insert(filechunk);
+        result2 = filechunkMapper.insert(filechunk);
 //        }
 
         //上传切片表
-       logger.info("插入成功" + result2);
+        logger.info("插入成功" + result2);
 
         HashMap<String, Object> objectObjectHashMap = new HashMap<>();
 
@@ -119,7 +124,7 @@ public class FileImageController {
         int result = filemapper.insert(file1); // 帮我们自动生成id
 
         //上传切片表
-       logger.info("文件上传成功id" + file1.getFid());
+        logger.info("文件上传成功id" + file1.getFid());
 
         HashMap<String, Object> objectObjectHashMap = new HashMap<>();
 
@@ -135,9 +140,8 @@ public class FileImageController {
     //todo 后续加个临时下载码存在redis ，330分过期
     public void downfile(FileWeb fileparams, HttpServletResponse response, HttpServletRequest request) throws Exception {
 
-
-       logger.info("filemapper地址" + filemapper.hashCode());
-       logger.info("*****开始时间*******" + DateUtil.now());
+        logger.info("filemapper地址" + filemapper.hashCode());
+        logger.info("*****开始时间*******" + DateUtil.now());
         //根据文件下md5载文件
         String filename = "";
         //往响应流中写入数据
@@ -172,7 +176,7 @@ public class FileImageController {
         //设置响应头中文件类型为pdf格式
         response.setContentType("application/" + userInfoList2.get(0).getFileType());
         OutputStream outputStream = new BufferedOutputStream(response.getOutputStream());
-        Assert.notEmpty(fileparams.getFiletype(),"文件类型不能为空");
+        Assert.notEmpty(fileparams.getFiletype(), "文件类型不能为空");
         StoreService storeService = storeContext.getStoreService(fileparams.getFiletype());
 
         //多线程下载等待线程
@@ -183,25 +187,24 @@ public class FileImageController {
             CountDownLatch countDownLatch = new CountDownLatch(userInfoList.get(0).getChunktotalnum());
             //创建下载线程池
             LinkedBlockingQueue<Runnable> linkedBlockingQueue = new LinkedBlockingQueue<>();
-            ExecutorService executorService=null;
-            if ("1".equals( fileparams.getFiletype())){
-                 executorService = new ThreadPoolExecutor(1, 1,
+            ExecutorService executorService = null;
+            if ("1".equals(fileparams.getFiletype())) {
+                executorService = new ThreadPoolExecutor(1, 1,
                         0L, TimeUnit.MILLISECONDS,
                         linkedBlockingQueue);
-            }
-            else {
-                 executorService = new ThreadPoolExecutor(3, 3,
+            } else {
+                executorService = new ThreadPoolExecutor(3, 3,
                         0L, TimeUnit.MILLISECONDS,
                         linkedBlockingQueue);
             }
             ExecutorService finalExecutorService = executorService;
             userInfoList.forEach(val -> {
-                finalExecutorService.execute(new DownThread(finalExecutorService, countDownLatch, automIterator, val, outputStream, storeService,linkedBlockingQueue));
+                finalExecutorService.execute(new DownThread(finalExecutorService, countDownLatch, automIterator, val, outputStream, storeService, linkedBlockingQueue));
 
             });
             countDownLatch.await();
 
-           logger.info("********任务结束时间*********" + DateUtil.now());
+            logger.info("********任务结束时间*********" + DateUtil.now());
             //读取指定路径下面的文件
 //        InputStream in = new FileInputStream(filepath);
 //
@@ -217,10 +220,118 @@ public class FileImageController {
 
         } catch (Exception e) {
             e.printStackTrace();
-           logger.info("此时发生了异常");
+            logger.info("此时发生了异常");
 
         } finally {
-           logger.info("结束流");
+            logger.info("结束流");
+            //强制将缓存区的数据进行输出
+            outputStream.flush();
+            //关流
+            outputStream.close();
+        }
+
+    }
+
+    /*
+    阿里云盘下载
+     */
+    @GetMapping("/download2")
+    @ApiOperation(value = " 阿里云盘下载｜ 阿里云盘下载")
+    //为防止刷
+    //todo 后续加个临时下载码存在redis ，330分过期
+    public void downfile2(FileWeb fileparams, HttpServletResponse response, HttpServletRequest request) throws Exception {
+        logger.info("filemapper地址" + filemapper.hashCode());
+        logger.info("*****开始时间*******" + DateUtil.now());
+        //根据文件下md5载文件
+        String filename = "";
+        //往响应流中写入数据
+//查文件名  重名怎么办 下载加上文件id
+        QueryWrapper<File> queryWrapperfile = new QueryWrapper<File>();
+        //true null拼接  false 不拼接
+        queryWrapperfile.eq(false, "filemd5", fileparams.getIdentifier()).or().eq("fid", fileparams.getFid());
+        List<File> userInfoList2 = filemapper.selectList(queryWrapperfile);
+//得到块
+        QueryWrapper<Filechunk> queryWrapper = new QueryWrapper<Filechunk>();
+        queryWrapper.eq("chunkmd5", userInfoList2.get(0).getFilemd5()).orderByAsc("chunksnum");
+        List<Filechunk> userInfoList = filechunkMapper.selectList(queryWrapper);
+
+        Assert.notEmpty(fileparams.getFileSaveType(), "文件类型getFileSaveType不能为空");
+
+        //如果是阿里云盘返回下载链接
+
+        StoreService storeService = storeContext.getStoreService(fileparams.getFileSaveType());
+        response.setHeader("Content-Disposition", "attachment; filename=" + URLEncoder.encode(userInfoList2.get(0).getFileName(), "utf-8"));
+        //阿里云下载分片100m一片，过大的文件利用blob下载会失败
+        if (fileparams.getFileSaveType().equals("AliYunOpen") && userInfoList.size() == 1) {
+            String url = storeService.downloadUrl(userInfoList.get(0).getChunkpath());
+            logger.info("阿里云下载" + url);
+            response.setStatus(HttpServletResponse.SC_FOUND); // 设置响应状态码为302
+            response.setHeader("Location", url); // 设置Location响应头，指定重定向的URL
+            response.setHeader("type", "blob"); //是否blob下载
+            response.setHeader("Access-Control-Allow-Origin", "http://localhost:8083");
+
+return;
+        }
+
+        // 这步很重要，需要在给前端返回的请求头中添加Content-Disposition字段，否则前端会取不到Content-Disposition的信息
+        response.setHeader("Access-Control-Expose-Headers", "Content-Disposition");
+
+
+        //设置响应头中文件的为在页面直接显示，以及设置文件名
+        //resp.setHeader("Content-Disposition","inline; filename=" + fileName);
+        //设置响应头的编码格式为UTF-8
+        response.setCharacterEncoding("UTF-8");
+        //设置响应头中文件类型为pdf格式
+        response.setContentType("application/" + userInfoList2.get(0).getFileType());
+        OutputStream outputStream = new BufferedOutputStream(response.getOutputStream());
+
+        //多线程下载等待线程
+        try {
+            //线程等待计算正在写入第几片
+            AtomicInteger automIterator = new AtomicInteger(1);
+            //线程等待所有线程执行完成
+            CountDownLatch countDownLatch = new CountDownLatch(userInfoList.get(0).getChunktotalnum());
+            //创建下载线程池
+            LinkedBlockingQueue<Runnable> linkedBlockingQueue = new LinkedBlockingQueue<>();
+            ExecutorService executorService = null;
+            //0是临时存储1是永久存储
+            if ("1".equals(fileparams.getFileSaveType())) {
+                executorService = new ThreadPoolExecutor(1, 1,
+                        0L, TimeUnit.MILLISECONDS,
+                        linkedBlockingQueue);
+            } else {
+                executorService = new ThreadPoolExecutor(3, 3,
+                        0L, TimeUnit.MILLISECONDS,
+                        linkedBlockingQueue);
+            }
+            ExecutorService finalExecutorService = executorService;
+            //todo 这里切片数为1时下载返回重定向
+            userInfoList.forEach(val -> {
+                finalExecutorService.execute(new DownThread(finalExecutorService, countDownLatch, automIterator, val, outputStream, storeService, linkedBlockingQueue));
+
+            });
+            countDownLatch.await();
+
+            logger.info("********任务结束时间*********" + DateUtil.now());
+            //读取指定路径下面的文件
+//        InputStream in = new FileInputStream(filepath);
+//
+//        //创建存放文件内容的数组
+//        byte[] buff = new byte[1024];
+//        //所读取的内容使用n来接收
+//        int n;
+//        //当没有读取完时,继续读取,循环
+//        while ((n = in.read(buff)) != -1) {
+//            //将字节数组的数据全部写入到输出流中
+//            outputStream.write(buff, 0, n);
+//        }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.info("此时发生了异常");
+
+        } finally {
+            logger.info("结束流");
             //强制将缓存区的数据进行输出
             outputStream.flush();
             //关流

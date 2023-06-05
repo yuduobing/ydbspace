@@ -14,11 +14,6 @@ spring:
     password: ydbspace
     # 连接超时时间
     timeout: 10000ms
-eureka:
-  instance:
-    instance-id: fileRedis
-  client:
-    service-url:
-      defaultZone: http://127.0.0.1:10086/eureka
+
 
 

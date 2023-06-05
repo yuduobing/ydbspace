@@ -28,6 +28,13 @@ public interface StoreService {
     public  byte[]  download(String path);
 
     /**
+     * 阿里云盘返回下载链接
+     * @param path
+     * @return
+     */
+    public  String downloadUrl(String path);
+
+    /**
      * 删除
      * @param path
      */

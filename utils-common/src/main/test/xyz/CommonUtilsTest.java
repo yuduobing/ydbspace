@@ -1,4 +1,4 @@
-package java;
+package xyz;
 
 import com.github.xiaoymin.swaggerbootstrapui.util.CommonUtils;
 import org.junit.Assert;

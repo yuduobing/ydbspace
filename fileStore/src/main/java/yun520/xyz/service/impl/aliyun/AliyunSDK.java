@@ -142,9 +142,9 @@ public class AliyunSDK {
         boolean openredis = true;
         if (openredis) {
             String keyrules = keyrules(type, jsonObject);
-            returnjson = redisService.getJSONObject(keyrules);
-            if (!StrUtil.isEmptyIfStr(returnjson)) {
-                return returnjson;
+            //redis有就直接返回
+            if (!StrUtil.isEmptyIfStr(redisService.getJSONObject(keyrules))) {
+                return redisService.getJSONObject(keyrules);
             }
 
         }
@@ -154,7 +154,7 @@ public class AliyunSDK {
             //如果本地没有去数据库查
             QueryWrapper<Aliyun> queryWrapperfile = new QueryWrapper<Aliyun>();
             //true null拼接  false 不拼接
-            queryWrapperfile.eq(false, "driveId", driveId);
+            queryWrapperfile.eq( "driveId", driveId);
             Aliyun userInfo = aliyunMapper.selectOne(queryWrapperfile);
             aliaccount.put(userInfo.getDriveId(), userInfo);
         }
@@ -255,7 +255,7 @@ public class AliyunSDK {
     }
 
     /*
-   搜索文件  jsonObject包含文件名和driverid ，有缓存的只能搜索特定文件id
+   搜索文件 缓存返回结果不可实时
     */
     public JSONObject searchFile(JSONObject jsonObject) throws Exception {
 
@@ -265,9 +265,10 @@ public class AliyunSDK {
         HashMap<String, String> bodyMap = new HashMap<>();
         bodyMap.put("drive_id", driveId);
         bodyMap.put("parent_file_id", jsonObject.get("parent_file_id").toString());
+     //直接匹配上级目录
+        bodyMap.put("query", "name  match  '" + filename + "'" );
 
-        bodyMap.put("query", "name  match  '" + filename + "'" + " ' and   parent_file_id ='" + jsonObject.get("parent_file_id") + "'");
-
+        //这里parent_file_id还用作上级目录
         if (jsonObject.containsKey("type")) {
             bodyMap.put("query", "name  match  '" + filename + "'" + " and   type ='" + jsonObject.get("type") + "'" + " and   parent_file_id ='" + jsonObject.get("parent_file_id") + "'");
 
@@ -276,6 +277,7 @@ public class AliyunSDK {
         JSONObject entries = new JSONObject(bodyMap);
         JSONObject init = init(driveId, entries, "searchOneFile");
         if (init != null && init.containsKey("total_count")) {
+            logger.info("缓存返回"+init);
             return init;
         }
         logger.info("开始搜索文件");
@@ -299,7 +301,7 @@ public class AliyunSDK {
         bodyMap.put("drive_id", driveId);
         bodyMap.put("parent_file_id", jsonObject.get("parent_file_id").toString());
 
-        bodyMap.put("query", "name  match  '" + filename + "'" + " ' and   parent_file_id ='" + jsonObject.get("parent_file_id") + "'");
+        bodyMap.put("query", "name  match  '" + filename + "'" + "  and   parent_file_id ='" + jsonObject.get("parent_file_id") + "'");
 
         if (jsonObject.containsKey("type")) {
             bodyMap.put("query", "name  match  '" + filename + "'" + " and   type ='" + jsonObject.get("type") + "'" + " and   parent_file_id ='" + jsonObject.get("parent_file_id") + "'");
@@ -332,17 +334,18 @@ public class AliyunSDK {
         bodyMap.put("file_id", fileid);
         //最长32小时
         bodyMap.put("expire_sec", "115200");
-        JSONObject init = init(driveId, bodyMap, "down");
-        if (init.containsKey("url")) {
-            return init;
+        JSONObject initurl = init(driveId, bodyMap, "down");
+        if (initurl.containsKey("url")) {
+            logger.info("下载缓存"+initurl);
+            return initurl;
         }
         JSONObject entries = new JSONObject(bodyMap);
-        logger.info("开始搜索文件");
+        logger.info("开始下载");
         DefaultHttpProxy defaultHttpProxy = new DefaultHttpProxy(headers.get(driveId), 30000, "utf-8");
         JSONObject post = defaultHttpProxy.post(url, entries);
         //结果缓存
         String key = keyrules("down", bodyMap);
-        redisService.set(key, post, timeout / 60);
+        redisService.set(key, post.toJSONString(0), timeout / 60);
         //这里有个很重要的accesstoken存储
         return post;
     }
@@ -374,7 +377,7 @@ public class AliyunSDK {
     }
 
     @SneakyThrows
-    public void uplaodfile(String driveId, String name, InputStream inputStream) {
+    public JSONObject uplaodfile(String driveId, String name, InputStream inputStream) {
         JSONObject entries = getuploadUrl(driveId, name);
         Assert.notNull(entries.containsKey("part_info_list"), "获取上传文件地址失败" + entries);
         //1获取url
@@ -410,6 +413,7 @@ public class AliyunSDK {
         JSONObject post = defaultHttpProxy.post(urlcompolete, queryjson);
         //返回文件ID file_id
         logger.info("上传文件3完成"+post);
+        return  post;
 
     }
 

@@ -37,5 +37,7 @@ public class FileWeb extends ContextRequest {
     public List<String> deleteList;
     //是否是文件夹
     public Integer isDir;
+    //保存策略  0是临时1是永久 ali webdav  fastnfs
+    public String fileSaveType;
 
 }

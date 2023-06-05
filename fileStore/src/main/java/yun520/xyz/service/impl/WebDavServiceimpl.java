@@ -96,6 +96,11 @@ public class WebDavServiceimpl implements StoreService {
 
     }
 
+    @Override
+    public String downloadUrl(String path) {
+        return null;
+    }
+
     @SneakyThrows
     @Override
     public void delete(String filePath) {

@@ -31,6 +31,9 @@ public class StoreContext {
             case "WebDav":
                 storeService = springContentUtils.getBean("WebDavService");
                 break;
+            case "AliYunOpen":
+                storeService = springContentUtils.getBean("AliYunService");
+                break;
         }
 
         Assert.notNull(storeService,"storeService为空");
