@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.multipart.MultipartFile;
@@ -61,7 +62,7 @@ import java.util.logging.Logger;
 @Api(tags = "UserfileController", description = "用户文件管理")
 public class UserfileController extends  BaseController {
     private static Logger logger = Logger.getLogger("UserfileController.class");
-
+    private final String celue="AliYunOpen";
 
 
     @Autowired
@@ -115,6 +116,7 @@ public class UserfileController extends  BaseController {
     @ApiOperation(value = "上传文件")
     @Transactional
     public synchronized Result uplaodChunk(MultipartFile file, FileWeb fileparams) throws Exception {
+        Assert.notNull(fileparams.getFileSaveType(),"filesavtype必传");
 
         iUserService.upload(file, fileparams);
 
@@ -137,10 +139,11 @@ public class UserfileController extends  BaseController {
         Long userid = getUserid(fileparams.getUserId());
 
         //上传文件表
-        File file1 = File.builder().fileName(fileparams.getFilename()).fileType(fileparams.getFilename().substring(fileparams.getFilename().length() - 3)).fileSize(fileparams.getTotalSize()).fileSaveType("1").filemd5(fileparams.getIdentifier()
+        File file1 = File.builder().fileName(fileparams.getFilename()).fileType(fileparams.getFilename().substring(fileparams.getFilename().length() - 3)).fileSize(fileparams.getTotalSize()).fileSaveType(celue).filemd5(fileparams.getIdentifier()
         ).createTime(LocalDateTime.now()).build();
         //填充文件表
         int result = filemapper.insert(file1); // 帮我们自动生成id
+
 
         //上传文件目录表
         Userfile userfile = Userfile.builder().userId(userid).isDir(0).filePath(fileparams.getFilePath()).fileName(fileparams.getFilename()).fileId(file1.getFid().toString()).extendName(fileparams.getFilename().substring(fileparams.getFilename().length() - 3)).deleteFlag(0).build();
@@ -150,7 +153,7 @@ public class UserfileController extends  BaseController {
             HashMap<String, Object> objectObjectHashMap = new HashMap<>();
 
             objectObjectHashMap.put("fid", file1.getFid());
-
+            objectObjectHashMap.put("fileSaveType", celue);
             return ResultUtils.success(objectObjectHashMap);
         }
 

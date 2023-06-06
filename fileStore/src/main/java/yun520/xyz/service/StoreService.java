@@ -6,11 +6,11 @@ import java.io.OutputStream;
 public interface StoreService {
     /**
      * 上传
-     * @param group
+     * @param group devricid阿里云设备id
      * @param bytes
      * @param fileName
      */
-    public String upload(String groupName, InputStream inputStream, long fileSize, String fileExtName);
+    public String upload(String devricid, InputStream inputStream, long fileSize, String fileExtName);
 
     public String upload(byte[] bytes,  long fileSize, String extension);
     /**

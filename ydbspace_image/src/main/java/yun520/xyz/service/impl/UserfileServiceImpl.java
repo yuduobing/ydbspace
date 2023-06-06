@@ -48,7 +48,8 @@ public class UserfileServiceImpl extends ServiceImpl<UserfileMapper, Userfile> i
     FilechunkMapper filechunkMapper;
     @Autowired
     UserfileMapper userFileMapper;
-
+    //设备id
+    public String driveId= "526997152";
     //    查询文件目录
     @Override
     public IPage<FileListVo> getFileList(Long userId, String filePath, Long currentPage, Long pageCount) {
@@ -100,11 +101,13 @@ public class UserfileServiceImpl extends ServiceImpl<UserfileMapper, Userfile> i
         String extension = originalFilename.substring(originalFilename.lastIndexOf(".") + 1);
         String chunkpath = null;
         try {
-            StoreService storeService = storeContext.getStoreService("1");
-            chunkpath = storeService.upload("group1", file.getInputStream(), file.getSize(), String.valueOf(extension+ RandomUtil.randomString(3)));
+            StoreService storeService = storeContext.getStoreService(fileparams.getFileSaveType());
+            //dervice id
+            chunkpath = storeService.upload(driveId, file.getInputStream(), file.getSize(), String.valueOf(originalFilename+ RandomUtil.randomString(3)));
         } catch (IOException e) {
             e.printStackTrace();
         }
+        System.out.println("插入成功"+chunkpath);
         fileparams.setChunkpath(chunkpath);
         //执行责任链
         Bootstrap bootstrap = new Bootstrap();

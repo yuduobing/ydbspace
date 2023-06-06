@@ -26,7 +26,7 @@ public class Userfile implements Serializable {
     private static final long serialVersionUID = 1L;
 
 
-    @TableId("userFileId")
+    @TableId(type= IdType.AUTO)
     private int userFileId;
 
     @ApiModelProperty("删除批次号")

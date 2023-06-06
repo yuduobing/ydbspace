@@ -25,7 +25,7 @@ public class AliYunServiceimpl implements StoreService {
         JSONObject uplaodfile = aliyunSDK.uplaodfile(deviceid, fileExtName, inputStream);
 
 
-        return  uplaodfile.getStr("url");
+        return  deviceid+"+"+uplaodfile.getStr("file_id");
     }
 
     @Override
