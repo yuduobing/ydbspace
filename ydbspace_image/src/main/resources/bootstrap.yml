@@ -15,11 +15,19 @@ spring:
     password: Tan19970925!
     driver-class-name: com.mysql.jdbc.Driver
 eureka:
-  instance:
-    instance-id: webService
   client:
     service-url:
       defaultZone: http://1.116.162.163:10086/eureka
+        #    添加元数据
+  #  使用指定的IP地址来注册
+  instance:
+    instance-id: webService
+#    prefer-ip-address=true: true
+#    ip-address: 1.116.162.163
+    #    添加元数据
+    metadata-map:
+      env: dev
+
 #outath验证地址
 oauth2-server-url: http://1.116.162.163:10088
 ---
