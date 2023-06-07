@@ -25,7 +25,7 @@ spring:
     # Redis服务器连接密码（默认为空）
     password: ydbspace
     # 连接超时时间
-    timeout: 2000ms
+    timeout: 30000ms
 logging:
   level:
     com.xn2001: debug

@@ -537,7 +537,9 @@ redisService.set(key,post,timeout/60);
 ## 问题噢
 ### org.springframework.data.redis.RedisConnectionFailureException: Unable to connect to Redis; nested exception is io.lettuce.core.RedisConnectionException: Unable to connect to 1.116.162.163:6379
 redis超时
-
+redis:
+ # 连接超时时间
+    timeout: 10000ms
 上传文件每次去搜索创建文件夹太慢了
 
 
