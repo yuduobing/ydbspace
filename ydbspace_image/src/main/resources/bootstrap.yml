@@ -1,0 +1,41 @@
+
+spring:
+  profiles:
+    active: dev
+  mvc:
+    async:
+      request-timeout: 30000
+#dev环境配置
+---
+spring:
+  profiles: dev
+  datasource:
+    url: jdbc:mysql://1.116.162.163:3306/webcloud?useSSL=false
+    username: codimd
+    password: Tan19970925!
+    driver-class-name: com.mysql.jdbc.Driver
+eureka:
+  instance:
+    instance-id: webService
+  client:
+    service-url:
+      defaultZone: http://1.116.162.163:10086/eureka
+#outath验证地址
+oauth2-server-url: http://1.116.162.163:10088
+---
+spring:
+  profiles: prod
+  datasource:
+    url: jdbc:mysql://1.116.162.163:3306/webcloud?useSSL=false
+    username: codimd
+    password: Tan19970925!
+    driver-class-name: com.mysql.jdbc.Driver
+eureka:
+  instance:
+    instance-id: webService
+  client:
+    service-url:
+      defaultZone: http://127.0.0.1:10086/eureka
+
+oauth2-server-url: http://127.0.0.1:10088
+---

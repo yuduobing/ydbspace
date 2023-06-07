@@ -1,6 +1,12 @@
 springfox:
   documentation:
       enabled: false  #关闭swagger
+eureka:
+  instance:
+    instance-id: 自测
+  client:
+    service-url:
+      defaultZone: http://127.0.0.1:10086/eureka
 server:
   port: 5300
 spring:
@@ -38,12 +44,6 @@ logging:
     com.xn2001: debug
   pattern:
     dateformat: MM-dd HH:mm:ss:SSS
-eureka:
-  instance:
-    instance-id: 自测
-  client:
-    service-url:
-      defaultZone: http://127.0.0.1:10086/eureka
 fdfs:
   connect-timeout: 30000
   so-timeout: 30000
@@ -52,11 +52,7 @@ fdfs:
     max-total: 800   # 连接池最大数量
     max-total-per-key: 200  # 单个tracker最大连接数
     max-wait-millis: 5000 # 连接耗尽最大等待时间 毫秒
-mybatis-plus:
-  mapper-locations: classpath*:xml/*.xml
-  configuration:
-    #数据库驼峰命名转换
-    map-underscore-to-camel-case: false
+
 #调用rabbitmq
 ydb:
   rabbitmq:

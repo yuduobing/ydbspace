@@ -1,6 +1,7 @@
 package yun520.xyz.entity;
 
 import java.io.Serializable;
+import java.util.Date;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
@@ -27,7 +28,7 @@ public class Userfile implements Serializable {
 
 
     @TableId(type= IdType.AUTO)
-    private int userFileId;
+    private Integer userFileId;
 
     @ApiModelProperty("删除批次号")
     private String deleteBatchNum;
@@ -54,7 +55,7 @@ public class Userfile implements Serializable {
     private Integer isDir;
 
     @ApiModelProperty("修改时间")
-    private String uploadTime;
+    private Date uploadTime;
 
     @ApiModelProperty("用户id")
     private Long userId;

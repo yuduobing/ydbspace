@@ -531,3 +531,17 @@ if (init.containsKey("url")) {
 String key = keyrules("down", bodyMap);
 redisService.set(key,post,timeout/60);
 ```
+
+
+
+## 问题噢
+### org.springframework.data.redis.RedisConnectionFailureException: Unable to connect to Redis; nested exception is io.lettuce.core.RedisConnectionException: Unable to connect to 1.116.162.163:6379
+redis超时
+
+上传文件每次去搜索创建文件夹太慢了
+
+
+插入成功不成功返回null
+
+设置主键类型为int，初始化为0，插入相同数据报错
+  修改：改为interger

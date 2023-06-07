@@ -42,6 +42,7 @@ import java.io.BufferedOutputStream;
 import java.io.OutputStream;
 import java.net.URLEncoder;
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -87,9 +88,6 @@ public class UserfileController extends  BaseController {
             @Parameter(description = "当前页", required = true) long currentPage,
             @Parameter(description = "页面数量", required = true) long pageCount) {
 
-        Object principal2 = SecurityContextHolder.getContext().getAuthentication();
-//        loginService.getUserInformation("22");
-        Long userid = getUserid();
         //       Assert.log principal=null
         IPage<FileListVo> fileList = iUserService.getFileList(getUserid(), filePath, currentPage, pageCount);
         Map<String, Object> map = new HashMap<>();
@@ -146,7 +144,8 @@ public class UserfileController extends  BaseController {
 
 
         //上传文件目录表
-        Userfile userfile = Userfile.builder().userId(userid).isDir(0).filePath(fileparams.getFilePath()).fileName(fileparams.getFilename()).fileId(file1.getFid().toString()).extendName(fileparams.getFilename().substring(fileparams.getFilename().length() - 3)).deleteFlag(0).build();
+        Userfile userfile = Userfile.builder().userId(userid).isDir(0).filePath(fileparams.getFilePath()).fileName(fileparams.getFilename()).fileId(file1.getFid().toString())
+                .extendName(fileparams.getFilename().substring(fileparams.getFilename().length() - 3)).deleteFlag(0).uploadTime(new Date()).build();
 
         int insert = userfileMapper.insert(userfile);
         if (result > 0 && insert > 0) {

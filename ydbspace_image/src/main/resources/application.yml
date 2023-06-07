@@ -1,7 +1,5 @@
 #公共配置可覆盖
 spring:
- profiles:
-  active: dev
  mvc:
   async:
    request-timeout: 60000
@@ -27,7 +25,6 @@ server:
 # accessTokenUri：OAuth2授权服务器的令牌端点URL。
 # userAuthorizationUri：OAuth2授权服务器的授权端点URL。
 # scope：OAuth2客户端请求的范围。
-oauth2-server-url: http://localhost:10088
 security:
  oauth2: #与oauth2-server对应的配置
   client:
@@ -45,4 +42,11 @@ security:
 resource:
  jwt:
   key-uri: ${oauth2-server-url}/oauth/token_key
+mybatis-plus:
+ mapper-locations: classpath*:xml/*.xml
+ configuration:
+  #数据库驼峰命名转换
+  map-underscore-to-camel-case: false
+#    日志手收集
+
 
