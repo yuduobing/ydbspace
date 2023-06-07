@@ -33,6 +33,9 @@ eureka:
   instance:
     prefer-ip-address=true: true
     ip-address: 1.116.162.163
+#    添加元数据
+    metadata-map:
+      env: prod
     #    # 如果x秒内，依然没有收到续约请求，判定服务过期,默认90s
     lease-expiration-duration-in-seconds: 5
 #    # 每隔x秒钟，向服务中心发送一条续约指令,默认30s
