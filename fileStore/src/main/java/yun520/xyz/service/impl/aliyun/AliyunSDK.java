@@ -123,7 +123,8 @@ public class AliyunSDK {
 
             if (aliyunMapper.update(alidto_update, queryWrapperfile) >= 1) {
 
-                getAcount(driveId);
+                aliyun = getAcount(driveId);
+
             }
 
         }
@@ -176,7 +177,7 @@ public class AliyunSDK {
             queryWrapperfile.eq("driveId", driveId);
             if (aliyunMapper.update(alidto_update, queryWrapperfile) >= 1) {
                 //刷新一些本地数据
-                getAcount(driveId);
+                aliyun= getAcount(driveId);
             }
 
         }
