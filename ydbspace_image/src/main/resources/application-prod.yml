@@ -39,6 +39,13 @@ spring:
     password: ydbspace
     # 连接超时时间
     timeout: 5000ms
+    jedis:
+      pool:
+        max-active: 500
+        #    //定义了连接池中最大空闲连接数，也就是连接池中最多允许存在的空闲连接数。
+        max-idle: 30
+        max-wait: 10000
+        min-idle: 5
 logging:
   level:
     com.xn2001: debug

@@ -540,6 +540,10 @@ redis超时
 redis:
  # 连接超时时间
     timeout: 10000ms
+redis.clients.jedis.exceptions.JedisConnectionException: Could not get a resource from the pool
+
+
+
 上传文件每次去搜索创建文件夹太慢了
 
 

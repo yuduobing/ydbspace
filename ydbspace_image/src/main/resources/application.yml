@@ -4,13 +4,8 @@ spring:
   async:
    request-timeout: 60000
 #   redis链接池配置
- redis:
-  jedis:
-   pool:
-    max-active: 8
-    max-idle: 8
-    max-wait: -1ms
-    min-idle: 0
+redis:
+
 
 #security配置
 server:
