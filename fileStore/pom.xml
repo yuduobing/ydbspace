@@ -66,6 +66,14 @@
     <build>
         <finalName>${project.artifactId}</finalName>
         <plugins>
+            <!--跳过测试-->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <skipTests>true</skipTests>
+                </configuration>
+            </plugin>
             <!--运行插件 -->
             <plugin>
                 <groupId>org.springframework.boot</groupId>
@@ -74,31 +82,14 @@
                     <execution></execution>
                 </executions>
                 <configuration>
+
                     <classifier>
                         exec
                     </classifier>
                 </configuration>
             </plugin>
         </plugins>
-        <pluginManagement>
-            <plugins>
-                <!--跳过测试-->
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-surefire-plugin</artifactId>
-                    <configuration>
-                        <skipTests>true</skipTests>
-                    </configuration>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-failsafe-plugin</artifactId>
-                    <configuration>
-                        <skipTests>true</skipTests>
-                    </configuration>
-                </plugin>
-            </plugins>
-        </pluginManagement>
+
     </build>
 
 </project>

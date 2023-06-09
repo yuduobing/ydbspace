@@ -541,8 +541,18 @@ redis:
  # 连接超时时间
     timeout: 10000ms
 redis.clients.jedis.exceptions.JedisConnectionException: Could not get a resource from the pool
-
-
+        jedis:
+        pool:
+        max-active: 500
+        #    //定义了连接池中最大空闲连接数，也就是连接池中最多允许存在的空闲连接数。
+        max-idle: 30
+        max-wait: 10000
+        min-idle: 5
+## tomcat打包问题
+java.lang.NoClassDefFoundError: org/apache/catalina/core/ApplicationContext$DispatchData
+at org.apache.catalina.core.ApplicationContext.getRequestDispatcher(ApplicationContext.java:453)
+at org.apache.catalina.core.ApplicationContextFacade.getRequestDispatcher(ApplicationContextFacade.java:227)
+at org.apache.cat
 
 上传文件每次去搜索创建文件夹太慢了
 
