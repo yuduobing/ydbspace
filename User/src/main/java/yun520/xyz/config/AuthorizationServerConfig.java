@@ -81,8 +81,9 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
         clients.inMemory()
                 .withClient("admin")
                 .secret(passwordEncoder.encode("admin123456"))
-                .accessTokenValiditySeconds(3600)
-                .refreshTokenValiditySeconds(864000)
+//                单位s
+                .accessTokenValiditySeconds(360000)
+                .refreshTokenValiditySeconds(8640000)
                 .redirectUris("http://www.baidu.com")
 //                .redirectUris("http://localhost:9501/login") //单点登录时配置
 //                .autoApprove(true) //自动授权配置
