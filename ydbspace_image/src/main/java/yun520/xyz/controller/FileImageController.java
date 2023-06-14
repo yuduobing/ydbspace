@@ -47,6 +47,8 @@ import java.util.logging.Logger;
 @Api(tags = "FileImageController", description = "文件上传")
 @Scope(value = "prototype")
 public class FileImageController {
+    //第一次查询时候返回存储格式
+    private final String celue="AliYunOpen";
     private static Logger logger = Logger.getLogger("FileImageController.class");
     @Autowired
     StoreContext storeContext;
@@ -85,7 +87,8 @@ public class FileImageController {
         String extension = originalFilename.substring(originalFilename.lastIndexOf(".") + 1);
 
         result2++;
-        StoreService storeService = storeContext.getStoreService("0");
+        StoreService storeService = storeContext.getStoreService(fileparams.getFileSaveType());
+        //阿里云盘临时文件储存
         chunkpath = storeService.upload("group1", file.getInputStream(), file.getSize(), extension);
 
         //填充切片表
@@ -343,7 +346,7 @@ return;
 
         sharelinks.setSharetime(LocalDateTime.now());
         sharelinks.setPassworld(RandomUtil.randomString(3));
-        //这里后续通过redis自增1
+        //这里后续通过redis自增1  userid+
         sharelinks.setDownweb(RandomUtil.randomString(3));
         Sharelinks.builder().sharetime(LocalDateTime.now());
 

@@ -65,11 +65,11 @@ public class UserfileController extends  BaseController {
     private static Logger logger = Logger.getLogger("UserfileController.class");
     private final String celue="AliYunOpen";
 
-
-    @Autowired
-    FileMapper filemapper;
     @Autowired
     SharelinksMapper sharelinksmapper;
+    @Autowired
+    FileMapper filemapper;
+
 
     @Autowired
     UserfileMapper userfileMapper;
