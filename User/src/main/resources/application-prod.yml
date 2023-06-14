@@ -1,0 +1,49 @@
+server:
+  port: 10088
+spring:
+  application:
+    name: ydbspaceUser
+  datasource:
+    url: jdbc:mysql://1.116.162.163:3306/webcloud?useSSL=false
+    username: codimd
+    password: Tan19970925!
+    driver-class-name: com.mysql.jdbc.Driver
+  redis:
+    # Redis服务器地址
+    host: r-bp1mv2opy408hqyl18pd.redis.rds.aliyuncs.com
+    # Redis数据库索引（默认为0）
+    database: 7
+    # Redis服务器连接端口
+    port: 6379
+    # Redis服务器连接密码（默认为空）
+    password: Aa1997925+
+    # 连接超时时间
+    timeout: 5000ms
+    jedis:
+      pool:
+        max-active: 500
+        #    //定义了连接池中最大空闲连接数，也就是连接池中最多允许存在的空闲连接数。
+        max-idle: 30
+        max-wait: 10000
+        min-idle: 5
+
+logging:
+  level:
+    com.xn2001: debug
+  pattern:
+    dateformat: MM-dd HH:mm:ss:SSS
+eureka:
+  client:
+    service-url:
+      defaultZone: http://127.0.0.1:10086/eureka
+  #  使用指定的IP地址来注册
+  instance:
+    prefer-ip-address: true
+    ip-address: 1.116.162.163
+    #    添加元数据
+    metadata-map:
+      env: prod
+    #    # 如果x秒内，依然没有收到续约请求，判定服务过期,默认90s
+    lease-expiration-duration-in-seconds: 5
+    #    # 每隔x秒钟，向服务中心发送一条续约指令,默认30s
+    lease-renewal-interval-in-seconds: 2
