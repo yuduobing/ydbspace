@@ -9,6 +9,11 @@ spring:
 ---
 spring:
   profiles: dev
+  multipart:
+    #      单个数据大小  todo超过不报错
+    maxFileSize: 100MB
+    #      总数据大小
+    maxRequestSize: 100MB
   datasource:
     url: jdbc:mysql://1.116.162.163:3306/webcloud?useSSL=false
     username: codimd
@@ -33,6 +38,12 @@ oauth2-server-url: http://1.116.162.163:10088
 ---
 spring:
   profiles: prod
+  servlet:
+    multipart:
+#      单个数据大小
+      maxFileSize: 2048MB
+#      总数据大小
+      maxRequestSize: 2048MB
   datasource:
     url: jdbc:mysql://1.116.162.163:3306/webcloud?useSSL=false
     username: codimd
