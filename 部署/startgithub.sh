@@ -16,6 +16,7 @@ jarname[0]=eurekaservice.jar
 jarname[1]=ydbspace_image.jar
 jarname[2]=fileMq-exec.jar
 jarname[3]=User.jar
+jarname[4]=springAdminService.jar
 
 cd $DEPLOY_PATH
 pwd
@@ -45,11 +46,11 @@ for ((i = 0; i < ${#jarname[@]}; i++)); do
 
 	jarname[1]=ydbspace_image.jar
 	if [ "$APP_NAME" == "ydbspace_image.jar" ]; then
-		nohup java -jar -Xms64M -Xmx1024M -XX:MetaspaceSize=64M -XX:MaxMetaspaceSize=1024M $DEPLOY_PATH/$APP_NAME --spring.profiles.active=prod >$APP_NAME.log &
+		nohup java -jar -Xms64M -Xmx512M -XX:MetaspaceSize=64M -XX:MaxMetaspaceSize=512M $DEPLOY_PATH/$APP_NAME --spring.profiles.active=prod >$APP_NAME.log &
 
 	else
 		#   指定生产环境包，必须用绝对路径
-		nohup java -jar -Xms64M -Xmx128M -XX:MetaspaceSize=64M -XX:MaxMetaspaceSize=128M $DEPLOY_PATH/$APP_NAME --spring.profiles.active=prod >$APP_NAME.log &
+		nohup java -jar -Xms64M -Xmx648M -XX:MetaspaceSize=64M -XX:MaxMetaspaceSize=64M $DEPLOY_PATH/$APP_NAME --spring.profiles.active=prod >$APP_NAME.log &
 	fi
 	#   等待程序执行
 

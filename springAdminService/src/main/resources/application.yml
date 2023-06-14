@@ -1,0 +1,12 @@
+server:
+  port: 5400
+
+spring:
+  application:
+    ## 注册服务名
+    name: admin-order
+
+#management:
+#  endpoint:
+#    health:
+#      show-details: always

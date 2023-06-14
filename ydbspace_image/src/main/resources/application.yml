@@ -44,3 +44,14 @@ mybatis-plus:
 #    日志手收集
 
 
+  ## spring boot admin
+management:
+ endpoint:
+  health:
+   show-details: always
+ endpoints:
+  enabled-by-default: true
+  web:
+   base-path: /actuator
+   exposure:
+    include: '*'

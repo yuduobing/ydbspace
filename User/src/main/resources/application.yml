@@ -1,6 +1,24 @@
 spring:
+  ## spring boot admin
+  boot:
+    admin:
+      client:
+        url: http://127.0.0.1:5400
+        instance:
+          prefer-ip: true # 使用ip注册进来
   profiles:
     active: dev
   mvc:
     async:
       request-timeout: 30000
+  ## spring boot admin
+management:
+  endpoint:
+    health:
+      show-details: always
+  endpoints:
+    enabled-by-default: true
+    web:
+      base-path: /actuator
+      exposure:
+        include: '*'

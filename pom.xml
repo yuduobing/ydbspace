@@ -24,6 +24,7 @@
         <module>fileRedis</module>
         <module>elasticsearch</module>
         <module>genCode</module>
+        <module>springAdminService</module>
     </modules>
 
     <properties>

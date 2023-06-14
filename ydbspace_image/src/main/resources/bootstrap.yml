@@ -9,6 +9,13 @@ spring:
 ---
 spring:
   profiles: dev
+    ## spring boot admin
+  boot:
+    admin:
+      client:
+        url: http://127.0.0.1:5400
+        instance:
+          prefer-ip: true # 使用ip注册进来
   multipart:
     #      单个数据大小  todo超过不报错
     maxFileSize: 100MB
@@ -33,17 +40,24 @@ eureka:
     metadata-map:
       env: dev
 
+
 #outath验证地址
 oauth2-server-url: http://1.116.162.163:10088
 ---
 spring:
   profiles: prod
+  boot:
+    admin:
+      client:
+        url: http://127.0.0.1:5400
+        instance:
+          prefer-ip: true # 使用ip注册进来
   servlet:
     multipart:
 #      单个数据大小
-      maxFileSize: 2048MB
+      maxFileSize: 1024MB
 #      总数据大小
-      maxRequestSize: 2048MB
+      maxRequestSize: 1024MB
   datasource:
     url: jdbc:mysql://1.116.162.163:3306/webcloud?useSSL=false
     username: codimd

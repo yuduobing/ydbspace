@@ -3,10 +3,6 @@ server:
 
 spring:
   #  设置文件上传大小
-  servlet:
-    multipart:
-      max-file-size: 100MB
-      max-request-size: 100MB
   application:
     name: ydbspaceimage
   rabbitmq:
