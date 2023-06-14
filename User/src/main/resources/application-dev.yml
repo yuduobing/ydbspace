@@ -28,15 +28,15 @@ logging:
 eureka:
   client:
     service-url:
-      defaultZone: http://127.0.0.1:10086/eureka
+      defaultZone: http://1.116.162.163:10086/eureka
   #  使用指定的IP地址来注册
-  instance:
-    prefer-ip-address: true
-    ip-address: 1.116.162.163
-    #    添加元数据
-    metadata-map:
-      env: prod
-    #    # 如果x秒内，依然没有收到续约请求，判定服务过期,默认90s
-    lease-expiration-duration-in-seconds: 5
-    #    # 每隔x秒钟，向服务中心发送一条续约指令,默认30s
-    lease-renewal-interval-in-seconds: 2
+#  instance:
+#    prefer-ip-address: true
+#    ip-address: 1.116.162.163
+#    #    添加元数据
+#    metadata-map:
+#      env: prod
+#    #    # 如果x秒内，依然没有收到续约请求，判定服务过期,默认90s
+#    lease-expiration-duration-in-seconds: 5
+#    #    # 每隔x秒钟，向服务中心发送一条续约指令,默认30s
+#    lease-renewal-interval-in-seconds: 2

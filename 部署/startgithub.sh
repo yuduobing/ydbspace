@@ -45,8 +45,11 @@ for ((i = 0; i < ${#jarname[@]}; i++)); do
 	echo "启动jar包：  java -jar -Xms64M -Xmx128M -XX:MetaspaceSize=64M -XX:MaxMetaspaceSize=128M  $APP_NAME --spring.profiles.active=prod >$APP_NAME.log & "
 
 	jarname[1]=ydbspace_image.jar
+	#MaxMetaspaceSize元空间  Xmx堆内存
 	if [ "$APP_NAME" == "ydbspace_image.jar" ]; then
 		nohup java -jar -Xms64M -Xmx512M -XX:MetaspaceSize=64M -XX:MaxMetaspaceSize=512M $DEPLOY_PATH/$APP_NAME --spring.profiles.active=prod >$APP_NAME.log &
+	if [ "$APP_NAME" == "eurekaservice.jar" ]; then
+		nohup java -jar -Xms64M -Xmx256M -XX:MetaspaceSize=64M -XX:MaxMetaspaceSize=256M $DEPLOY_PATH/$APP_NAME --spring.profiles.active=prod >$APP_NAME.log &
 
 	else
 		#   指定生产环境包，必须用绝对路径
