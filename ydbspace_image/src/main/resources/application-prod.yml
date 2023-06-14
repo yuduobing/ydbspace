@@ -30,13 +30,13 @@ spring:
     virtual-host: /
   redis:
     # Redis服务器地址
-    host: 1.116.162.163
+    host: r-bp1mv2opy408hqyl18pd.redis.rds.aliyuncs.com
     # Redis数据库索引（默认为0）
     database: 7
     # Redis服务器连接端口
     port: 6379
     # Redis服务器连接密码（默认为空）
-    password: ydbspace
+    password: Aa1997925+
     # 连接超时时间
     timeout: 5000ms
     jedis:
