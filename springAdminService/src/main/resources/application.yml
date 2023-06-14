@@ -4,7 +4,7 @@ server:
 spring:
   application:
     ## 注册服务名
-    name: admin-order
+    name: springAdminService
 
 #management:
 #  endpoint:

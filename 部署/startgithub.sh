@@ -12,11 +12,11 @@ DEPLOY_PATH=/docker/ydbspace_github
 mkdir -p $DEPLOY_PATH
 #todo2   jar包名字
 jarname=()
-jarname[0]=eurekaservice.jar
-jarname[1]=ydbspace_image.jar
+jarname[0]=springAdminService.jar
+jarname[1]=eurekaservice.jar
 jarname[2]=fileMq-exec.jar
 jarname[3]=User.jar
-jarname[4]=springAdminService.jar
+jarname[4]=ydbspace_image.jar
 
 cd $DEPLOY_PATH
 pwd
@@ -50,7 +50,7 @@ for ((i = 0; i < ${#jarname[@]}; i++)); do
 
 	else
 		#   指定生产环境包，必须用绝对路径
-		nohup java -jar -Xms64M -Xmx648M -XX:MetaspaceSize=64M -XX:MaxMetaspaceSize=64M $DEPLOY_PATH/$APP_NAME --spring.profiles.active=prod >$APP_NAME.log &
+		nohup java -jar -Xms64M -Xmx80M -XX:MetaspaceSize=64M -XX:MaxMetaspaceSize=80M $DEPLOY_PATH/$APP_NAME --spring.profiles.active=prod >$APP_NAME.log &
 	fi
 	#   等待程序执行
 
