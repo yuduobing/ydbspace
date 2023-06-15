@@ -48,7 +48,7 @@ for ((i = 0; i < ${#jarname[@]}; i++)); do
 	#MaxMetaspaceSize元空间  Xmx堆内存
 	if [ "$APP_NAME" == "ydbspace_image.jar" ]; then
 		nohup java -jar -Xms64M -Xmx512M -XX:MetaspaceSize=64M -XX:MaxMetaspaceSize=512M $DEPLOY_PATH/$APP_NAME --spring.profiles.active=prod >$APP_NAME.log &
-	if [ "$APP_NAME" == "eurekaservice.jar" ]; then
+	elif [ "$APP_NAME" == "eurekaservice.jar" ]; then
 		nohup java -jar -Xms64M -Xmx256M -XX:MetaspaceSize=64M -XX:MaxMetaspaceSize=256M $DEPLOY_PATH/$APP_NAME --spring.profiles.active=prod >$APP_NAME.log &
 
 	else

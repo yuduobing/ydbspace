@@ -2,7 +2,7 @@ server:
   port: 10088
 spring:
   application:
-    name: ydbspaceUser
+    name: ydbspaceUser2
   datasource:
     url: jdbc:mysql://1.116.162.163:3306/webcloud?useSSL=false
     username: codimd
