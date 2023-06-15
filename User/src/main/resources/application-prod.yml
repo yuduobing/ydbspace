@@ -18,7 +18,7 @@ spring:
     # Redis服务器连接密码（默认为空）
     password: Aa1997925+
     # 连接超时时间
-    timeout: 5000ms
+    timeout: 3000ms
     jedis:
       pool:
         max-active: 500
@@ -44,6 +44,6 @@ eureka:
 #    metadata-map:
 #      env: prod
     #    # 如果x秒内，依然没有收到续约请求，判定服务过期,默认90s
-    lease-expiration-duration-in-seconds: 60
+    lease-expiration-duration-in-seconds: 30
     #    # 每隔x秒钟，向服务中心发送一条续约指令,默认30s
     lease-renewal-interval-in-seconds: 5

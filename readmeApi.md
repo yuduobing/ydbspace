@@ -561,3 +561,7 @@ at org.apache.cat
 
 设置主键类型为int，初始化为0，插入相同数据报错
   修改：改为interger
+
+#启动报错
+Failed to start bean 'webServerStartStop'; nested exception is org.springframework.boot.web.server.WebServerException: Unable to start embedded Tomcat server
+大概率内存不足

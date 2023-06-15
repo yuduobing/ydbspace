@@ -53,7 +53,7 @@ for ((i = 0; i < ${#jarname[@]}; i++)); do
 
 	else
 		#   指定生产环境包，必须用绝对路径
-		nohup java -jar -Xms64M -Xmx80M -XX:MetaspaceSize=64M -XX:MaxMetaspaceSize=80M $DEPLOY_PATH/$APP_NAME --spring.profiles.active=prod >$APP_NAME.log &
+		nohup java -jar -Xms64M -Xmx125M -XX:MetaspaceSize=64M -XX:MaxMetaspaceSize=125M $DEPLOY_PATH/$APP_NAME --spring.profiles.active=prod >$APP_NAME.log &
 	fi
 	#   等待程序执行
 
