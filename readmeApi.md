@@ -548,6 +548,10 @@ redis.clients.jedis.exceptions.JedisConnectionException: Could not get a resourc
         max-idle: 30
         max-wait: 10000
         min-idle: 5
+  设置了也没用
+做毕设的时候，使用到Lettuce连接redis，一段时间后不操作，再去操作redis，会报连接超时错误，在其重连后又可使用。
+
+原因是：Lettuce 自适应拓扑刷新（Adaptive updates）与定时拓扑刷新（Periodic updates） 是默认关闭的导致问题的出现
 ## tomcat打包问题
 java.lang.NoClassDefFoundError: org/apache/catalina/core/ApplicationContext$DispatchData
 at org.apache.catalina.core.ApplicationContext.getRequestDispatcher(ApplicationContext.java:453)

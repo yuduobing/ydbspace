@@ -35,6 +35,12 @@ spring:
     # 连接超时时间
     timeout: 6000
     lettcure:
+      cluster:
+        refresh:
+#          2.3版本以上才有效果开启拓扑刷新
+          adaptive: true
+#          Lettuce 会每隔 60 秒检查一次集群状态，如果发现集群状态有变化，就会执行拓扑刷新操作
+          period: 60s
       pool:
         max-active: 500
         #    //定义了连接池中最大空闲连接数，也就是连接池中最多允许存在的空闲连接数。
