@@ -1,76 +1,34 @@
-pipeline {
-  agent any
-  stages {
-    stage('Confirm environment variables') {
-      steps {
-        sh "echo 'Deploying to server ${secrets.REMOTE_IP} directory: ${DEPLOY_PATH} executing script: ${DEPLOY_SHNAME}'"
-      }
+// Git credentials ID
+def git_auth = "1e271c92-164d-4a9c-8ea7-a38c8ba1741d"
+// Git URL
+def git_url = "https://gitee.com/kekesam/spring-docker-demo.git"
+
+node {
+    environment {
+    //todo1 部署到服务器目录
+    DEPLOY_PATH = "/docker/ydbspace_github"
+    //todo2 执行shell脚本名称
+    DEPLOY_SHNAME = "startgithub.sh"
     }
-
-    stage('Fetch latest code') {
-      steps {
-        checkout scm
-      }
-    }
-
-    stage('Set JDK') {
-      steps {
-        script {
-          def mvnSettings = new XmlSlurper().parseText('''<?xml version="1.0" encoding="UTF-8"?>
-<settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
-xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0
-http://maven.apache.org/xsd/settings-1.0.0.xsd">
-<servers>
-<server>
-<id>github</id>
-<username>${env.GITHUB_ACTOR}</username>
-<password>${env.GITHUB_TOKEN}</password>
-</server>
-</servers>
-</settings>
-''')
-          withMaven(globalMavenSettingsConfig: 'github-maven-settings', mavenSettingsConfig: mvnSettings) {
-            //Set the JDK version
-            sh 'java -version'
-            tool 'java-1.8'
-            sh 'java -version'
-          }
-        }
-
-      }
-    }
-
-    stage('Package the project') {
-      steps {
-        sh 'mvn -B clean package -Dmaven.test.skip=true'
-      }
-    }
-
-    stage('Create directory') {
-      steps {
-        sh "sshpass -p ${secrets.REMOTE_PASSWD} ssh -o StrictHostKeyChecking=no root@${secrets.REMOTE_IP} 'mkdir -p ${DEPLOY_PATH}'"
-      }
-    }
-
-    stage('Upload JAR files and startup script to the server') {
-      steps {
-        sh "sshpass -p ${secrets.REMOTE_PASSWD} scp -r -o StrictHostKeyChecking=no ./ydbspace_image/target/*  ./User/target/*  ./eurekaservice/target/*  ./fileMq/target/*  ./springAdminService/target/* ./部署/${DEPLOY_SHNAME} root@${secrets.REMOTE_IP}:${DEPLOY_PATH}"
-      }
-    }
-
-    stage('Start the project') {
-      steps {
-        sh "sshpass -p ${secrets.REMOTE_PASSWD} ssh -o StrictHostKeyChecking=no root@${secrets.REMOTE_IP} 'chmod 777 ${DEPLOY_PATH}/* && ${DEPLOY_PATH}/${DEPLOY_SHNAME} start'"
-      }
-    }
-
+  stage('Fetch code') {
+    checkout([$class: 'GitSCM', branches: [[name: "*/${branch}"]], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: "${git_auth}", url: "${git_url}"]]])
   }
-  environment {
-    DEPLOY_PATH = '/docker/ydbspace_github'
-    DEPLOY_SHNAME = 'startgithub.sh'
+
+  stage('Compile and install common entity bean') {
+    sh "mvn clean install -Dmaven.test.skip=true"
   }
-  triggers {
-    cron('H H * * 0')
+
+  stage('项目打包') {
+    sh "mvn -B clean package -Dmaven.test.skip=true"
+  }
+ stage('创建文件夹') {
+    sh "mkdir -p ${DEPLOY_PATH}"
+  }
+   stage('上传项目') {
+      sh "cp -r  ./ydbspace_image/target/*  ./User/target/*  ./eurekaservice/target/*  ./fileMq/target/*  ./springAdminService/target/* ./部署/${DEPLOY_SHNAME}  ${DEPLOY_PATH} "
+    }
+  stage('启动项目') {
+ sh "chmod 777 ${DEPLOY_PATH}/*  &&  ${DEPLOY_PATH}/${DEPLOY_SHNAME} start"
+
   }
 }
