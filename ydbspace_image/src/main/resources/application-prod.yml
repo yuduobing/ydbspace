@@ -29,7 +29,7 @@ spring:
     # Redis数据库索引（默认为0）
     database: 7
     # Redis服务器连接端口
-    port: 6379
+    port: 6311
     # Redis服务器连接密码（默认为空）
     password: Aa1997925+
     # 连接超时时间
