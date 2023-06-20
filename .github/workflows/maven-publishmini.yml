@@ -1,0 +1,53 @@
+# This workflow will build a package using Maven and then publish it to GitHub packages when a release is created
+# For more information see: https://github.com/actions/setup-java/blob/main/docs/advanced-usage.md#apache-maven-with-a-settings-path
+
+name: 精简部署纸部署iamge和uaser
+#设置触发条件
+on:
+  push:
+    branches:
+      - master
+  # 手动触发部署
+  workflow_dispatch:
+env:
+  #todo1    部署到服务器目录
+  DEPLOY_PATH: /docker/ydbspace_github
+  # todo2   执行shell脚本名称
+  DEPLOY_SHNAME: startgithub.sh
+#执行任务
+jobs:
+  build:
+    #执行环境
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: 确认环境变量
+        #        && shpass -p ${{secrets.REMOTE_PASSWD}} ssh -o StrictHostKeyChecking=no root@${{secrets.REMOTE_IP}} " mkdir ${DEPLOY_SHNAME}"
+        run: echo '部署到服务器'${{secrets.REMOTE_IP}}'目录：'${DEPLOY_PATH}'执行脚本：'${DEPLOY_SHNAME}
+      - name: 拉取最新的代码
+        uses: actions/checkout@v3
+      - name: 设置jdk
+        uses: actions/setup-java@v3
+        with:
+          java-version: '8'
+          distribution: 'temurin'
+          server-id: github
+          settings-path: ${{ github.workspace }}
+      - name: 项目打包
+        run: mvn -B clean package -Dmaven.test.skip=true
+        # - name: 删除旧的jar包以及运行脚本
+        #         run: sshpass -p ${{secrets.REMOTE_PWD}} ssh -o StrictHostKeyChecking=no root@${{secrets.REMOTE_IP}} "cd /root/GitHub_Action && rm -rf ./*"
+      - name: 创建文件夹
+        run: sshpass -p ${{secrets.REMOTE_PASSWD}} ssh -o StrictHostKeyChecking=no root@${{secrets.REMOTE_IP}} "  mkdir -p ${DEPLOY_PATH}  "
+      - name: 上传jar包和启动脚本到服务器中
+        #todo3        部署那些jar包及拷贝运行shell ，不能写到具体的jar包应为还有依赖导入
+#       run: sshpass -p ${{secrets.REMOTE_PASSWD}} scp -r -o StrictHostKeyChecking=no ./ydbspace_image/target/* ./eurekaservice/target/* ./fileMq/target/* ./User/target/* ./springAdminService/target/*  ./部署/${DEPLOY_SHNAME}  root@${{secrets.REMOTE_IP}}:${DEPLOY_PATH}
+        run: sshpass -p ${{secrets.REMOTE_PASSWD}} scp -r -o StrictHostKeyChecking=no ./ydbspace_image/target/*  ./User/target/*    ./部署/${DEPLOY_SHNAME}  root@${{secrets.REMOTE_IP}}:${DEPLOY_PATH}
+      - name: 启动项目
+        run: sshpass -p ${{secrets.REMOTE_PASSWD}} ssh -o StrictHostKeyChecking=no root@${{secrets.REMOTE_IP}} "  chmod 777 ${DEPLOY_PATH}/*  &&  ${DEPLOY_PATH}/${DEPLOY_SHNAME} start"
+#不能使用注意文件夹权限问题
+#  chmod +x ${DEPLOY_SHNAME}
+#git代理
+#  git config --global http.proxy socks5://127.0.0.1:7890
