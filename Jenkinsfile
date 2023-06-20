@@ -2,32 +2,32 @@ pipeline {
   agent any
 
   environment {
-    //todo1 部署到服务器目录
+    //todo1: Deployment directory on the server
     DEPLOY_PATH = "/docker/ydbspace_github"
-    //todo2 执行shell脚本名称
+    //todo2: Shell script to execute
     DEPLOY_SHNAME = "startgithub.sh"
   }
 
   triggers {
-    //设置触发条件
+    //Set the trigger condition
     cron('H H * * 0')
   }
 
   stages {
 
-    stage('确认环境变量') {
+    stage('Confirm environment variables') {
       steps {
-        sh "echo '部署到服务器${secrets.REMOTE_IP}目录：${DEPLOY_PATH}执行脚本：${DEPLOY_SHNAME}'"
+        sh "echo 'Deploying to server ${secrets.REMOTE_IP} directory: ${DEPLOY_PATH} executing script: ${DEPLOY_SHNAME}'"
       }
     }
 
-    stage('拉取最新的代码') {
+    stage('Fetch latest code') {
       steps {
         checkout scm
       }
     }
 
-    stage('设置JDK') {
+    stage('Set JDK') {
       steps {
         script {
           def mvnSettings = new XmlSlurper().parseText('''<?xml version="1.0" encoding="UTF-8"?>
@@ -45,7 +45,7 @@ pipeline {
             </settings>
           ''')
           withMaven(globalMavenSettingsConfig: 'github-maven-settings', mavenSettingsConfig: mvnSettings) {
-            //设置JDK
+            //Set the JDK version
             sh 'java -version'
             tool 'java-1.8'
             sh 'java -version'
@@ -54,41 +54,32 @@ pipeline {
       }
     }
 
-    stage('项目打包') {
+    stage('Package the project') {
       steps {
-        //项目打包
+        //Package the project
         sh 'mvn -B clean package -Dmaven.test.skip=true'
       }
     }
 
-    stage('创建文件夹') {
+    stage('Create directory') {
       steps {
-        //创建远程文件夹
+        //Create a remote directory
         sh "sshpass -p ${secrets.REMOTE_PASSWD} ssh -o StrictHostKeyChecking=no root@${secrets.REMOTE_IP} 'mkdir -p ${DEPLOY_PATH}'"
       }
     }
 
-    stage('上传jar包和启动脚本到服务器中') {
+    stage('Upload JAR files and startup script to the server') {
       steps {
-        //todo3 部署哪些jar包及拷贝运行shell ，不能写到具体的jar包应为还有依赖导入
-        //部署那些jar包及拷贝运行shell ，不能写到具体的jar包应为还有依赖导入
+        //todo3: Deploy which JAR files and copy the startup shell script. Cannot specify specific JAR files as they have dependencies.
         sh "sshpass -p ${secrets.REMOTE_PASSWD} scp -r -o StrictHostKeyChecking=no ./ydbspace_image/target/*  ./User/target/*  ./eurekaservice/target/*  ./fileMq/target/*  ./springAdminService/target/* ./部署/${DEPLOY_SHNAME} root@${secrets.REMOTE_IP}:${DEPLOY_PATH}"
       }
     }
 
-    stage('启动项目') {
+    stage('Start the project') {
       steps {
-        //启动项目
+        //Start the project
         sh "sshpass -p ${secrets.REMOTE_PASSWD} ssh -o StrictHostKeyChecking=no root@${secrets.REMOTE_IP} 'chmod 777 ${DEPLOY_PATH}/* && ${DEPLOY_PATH}/${DEPLOY_SHNAME} start'"
       }
     }
   }
 }
-// 在将 GitHub Actions 工作流转换为 Jenkinsfile 时，我做了以下更改：
-//
-// 删除了 "on" 部分，因为在 Jenkins 中设置触发条件的方式不同于 GitHub Actions。
-// 删除了 "permissions" 部分，因为这不适用于 Jenkins。
-// 将步骤中的命令从 GitHub Actions 的格式转换为 Jenkins 的格式，并使用 Jenkins 提供的 sh 步骤执行 Shell 命令。
-// 将脚本中的环境变量从 ${{secrets.REMOTE_PASSWD}} 和 ${{secrets.REMOTE_IP}} 转换为 Jenkins 的凭据，以保护敏感信息。
-// 将 sshpass 命令的使用从 GitHub Actions 转换为 Jenkins。在 Jenkins 中，您需要在节点上安装 sshpass，并在 Jenkins 环境变量中添加 sshpass 命令的路径。
-// 将 Maven 设置和执行步骤转换为 Jenkins。
