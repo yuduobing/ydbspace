@@ -2,14 +2,10 @@
 def git_auth = "1e271c92-164d-4a9c-8ea7-a38c8ba1741d"
 // Git URL
 def git_url = "https://gitee.com/kekesam/spring-docker-demo.git"
-
+def DEPLOY_PATH = "/docker/ydbspace_github"
+def DEPLOY_SHNAME = "/docker/ydbspace_github"
 node {
-    environment {
-    //todo1 部署到服务器目录
-    DEPLOY_PATH = "/docker/ydbspace_github"
-    //todo2 执行shell脚本名称
-    DEPLOY_SHNAME = "startgithub.sh"
-    }
+
   stage('Fetch code') {
     checkout([$class: 'GitSCM', branches: [[name: "*/${branch}"]], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: "${git_auth}", url: "${git_url}"]]])
   }
