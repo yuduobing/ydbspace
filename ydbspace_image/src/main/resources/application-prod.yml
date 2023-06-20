@@ -29,7 +29,7 @@ spring:
     # Redis数据库索引（默认为0）
     database: 7
     # Redis服务器连接端口
-    port: 6311
+    port: 6379
     # Redis服务器连接密码（默认为空）
     password: Aa1997925+
     # 连接超时时间
@@ -75,7 +75,7 @@ gomyck:
   redis:
     host: 127.0.0.1
     password: xxxxx
-    port: 6379
+    port: 6311
   fastdfs: #fastdfs上传配置
     chunk-size: 5 #分块大小, 上传文件分块的大小 单位: MB
     download-chunk-size: 100  #分块下载大小  单位: byte
