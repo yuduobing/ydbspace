@@ -3,7 +3,7 @@
 # 设置jar包位置
 DEPLOY_PATH=/home/ydbspce
 mkdir -p "${DEPLOY_PATH}"
-
+mkdir -p "${DEPLOY_PATH}/logs"
 # jar包名字
 jar_name=(
   "springAdminService.jar"
