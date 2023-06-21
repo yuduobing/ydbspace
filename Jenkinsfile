@@ -4,7 +4,7 @@ def git_auth = "1e271c92-164d-4a9c-8ea7-a38c8ba1741d"
 def git_url = "https://gitee.com/ydb6/wp.git"
 //部署目录
 def DEPLOY_PATH = "/home/ydbspce"
-def DEPLOY_SHNAME = "startgithub.sh"
+def DEPLOY_SHNAME = "start_jenkins.sh"
 //脚本蜜女
 node {
 
