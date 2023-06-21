@@ -16,7 +16,8 @@ jar_name=(
 cd "${DEPLOY_PATH}"
 pwd
 echo "jenkinsjar包开始执行啦。噜啦啦噜啦啦"
-
+# 启用错误检查功能
+set -e
 for ((i = 0; i < ${#jar_name[@]}; i++)); do
 	# ${#jar_name[@]}获取数组长度用于循环
 
@@ -50,7 +51,9 @@ for ((i = 0; i < ${#jar_name[@]}; i++)); do
 	   echo "启动jar包：  java -jar -Xms1g -Xmx1g -XX:MetaspaceSize=64M  -XX:MaxMetaspaceSize=512M ${java_opts}  ${DEPLOY_PATH}/${APP_NAME} --spring.profiles.active=prod > ./logs/${APP_NAME}.log & "
 
 		nohup java -jar -Xms512M -Xmx512M -XX:MetaspaceSize=64M  -XX:MaxMetaspaceSize=512M  ${java_opts} "${DEPLOY_PATH}/${APP_NAME}" --spring.profiles.active=unraid > "./logs/${APP_NAME}.log" &
-
+   pid2=$!
+#     最后一个程序等待执行
+     wait $pid2
 	elif [ "${APP_NAME}" == "eurekaservice.jar" ]; then
 	  echo "启动jar包：  java -jar -Xms64M -Xmx256M -XX:MetaspaceSize=64M -XX:MaxMetaspaceSize=256M  ${DEPLOY_PATH}/${APP_NAME} --spring.profiles.active=prod > ./logs/${APP_NAME}.log & "
 
@@ -61,7 +64,7 @@ for ((i = 0; i < ${#jar_name[@]}; i++)); do
 		# 指定生产环境包，必须用绝对路径
 		nohup java -jar -Xms128M -Xmx128M -XX:MetaspaceSize=64M -XX:MaxMetaspaceSize=128M "${DEPLOY_PATH}/${APP_NAME}" --spring.profiles.active=prod > "./logs/${APP_NAME}.log" &
 	fi
-wait
+
 	# 等待程序执行
 	echo "${APP_NAME}执行结束***------------------------***"
 
