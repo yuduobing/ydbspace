@@ -56,7 +56,7 @@ for ((i = 0; i < ${#jarname[@]}; i++)); do
 		nohup java -jar -Xms64M -Xmx125M -XX:MetaspaceSize=64M -XX:MaxMetaspaceSize=125M $DEPLOY_PATH/$APP_NAME --spring.profiles.active=prod >./logs/$APP_NAME.log &
 	fi
 	#   等待程序执行
-
+wait
 	echo "${APP_NAME}执行结束***------------------------***"
 done
 #问题记录

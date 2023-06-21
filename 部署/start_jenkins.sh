@@ -61,9 +61,10 @@ for ((i = 0; i < ${#jar_name[@]}; i++)); do
 		# 指定生产环境包，必须用绝对路径
 		nohup java -jar -Xms128M -Xmx128M -XX:MetaspaceSize=64M -XX:MaxMetaspaceSize=128M "${DEPLOY_PATH}/${APP_NAME}" --spring.profiles.active=prod > "./logs/${APP_NAME}.log" &
 	fi
-	sleep 3
+wait
 	# 等待程序执行
 	echo "${APP_NAME}执行结束***------------------------***"
+
 done
 
 # 问题记录
