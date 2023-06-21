@@ -75,7 +75,9 @@ oauth2-server-url: http://127.0.0.1:10088
 ---
 spring:
   profiles: unraid
-  name: image_unraid
+  #  设置文件上传大小
+  application:
+    name: ydbspaceimage2
   boot:
     admin:
       client:
