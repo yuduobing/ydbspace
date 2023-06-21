@@ -20,7 +20,7 @@ jarname[4]=ydbspace_image.jar
 
 cd $DEPLOY_PATH
 pwd
-echo "jar包开始执行啦。噜啦啦噜啦啦"
+echo "jenkinsjar包开始执行啦。噜啦啦噜啦啦"
 for ((i = 0; i < ${#jarname[@]}; i++)); do
 	#${#jarname[@]}获取数组长度用于循环
 
@@ -53,7 +53,7 @@ for ((i = 0; i < ${#jarname[@]}; i++)); do
 
 	else
 		#   指定生产环境包，必须用绝对路径
-		nohup java -jar -Xms64M -Xmx125M -XX:MetaspaceSize=64M -XX:MaxMetaspaceSize=125M $DEPLOY_PATH/$APP_NAME --spring.profiles.active=prod >$APP_NAME.log &
+		nohup java -jar -Xms64M -Xmx128M -XX:MetaspaceSize=64M -XX:MaxMetaspaceSize=128M $DEPLOY_PATH/$APP_NAME --spring.profiles.active=prod >$APP_NAME.log &
 	fi
 	#   等待程序执行
 
