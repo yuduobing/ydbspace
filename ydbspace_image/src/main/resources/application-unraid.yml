@@ -1,9 +1,6 @@
 springfox:
   documentation:
     enabled: false  #关闭swagger
-
-server:
-  port: 5300
 spring:
   datasource:
     url: jdbc:mysql://1.116.162.163:3306/webcloud?useSSL=false

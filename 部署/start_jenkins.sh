@@ -39,22 +39,27 @@ for ((i = 0; i < ${#jar_name[@]}; i++)); do
 	# Xmx — 堆内存最大值
 	# MetaspaceSize — 永久内存初始大小
 	# MaxMetaspaceSize — 永久内存最大值
-
+	#-XX:+NewRatio=4是Java虚拟机的一个参数，用于设置新生代和老年代的比例。具体来说，这个参数表示新生代内存与老年代内存的比例为1:4，也就是新生代占整个堆内存的1/5，老年代占整个堆内存的4/5。
+#-XX:+UseParNewGC: 启用并行垃圾回收器 ParNew GC。
+#-XX:NewRatio=4: 新生代和老年代的比率为 1:4。
+#-XX:SurvivorRatio=8: Eden 空间和 Survivor 空间的比率为 8:1。
+#-XX:ParallelGCThreads=12: 并行垃圾回收线程数为 12。
+  java_opts="  -XX:+UseParNewGC  -XX:NewRatio=4 -XX:SurvivorRatio=8   -XX:ParallelGCThreads=12"
 	# MaxMetaspaceSize元空间  Xmx堆内存
 	if [ "${APP_NAME}" == "ydbspace_image.jar" ]; then
-	   echo "启动jar包：  java -jar -Xms128M -Xmx512M -XX:MetaspaceSize=128M -XX:MaxMetaspaceSize=512M  ${DEPLOY_PATH}/${APP_NAME} --spring.profiles.active=prod > ./logs/${APP_NAME}.log & "
+	   echo "启动jar包：  java -jar -Xms1g -Xmx1g -XX:MetaspaceSize=64M  -XX:MaxMetaspaceSize=512M ${DEPLOY_PATH}/${APP_NAME} --spring.profiles.active=prod > ./logs/${APP_NAME}.log & "
 
-		nohup java -jar -Xms128M -Xmx512M -XX:MetaspaceSize=128M -XX:MaxMetaspaceSize=512M "${DEPLOY_PATH}/${APP_NAME}" --spring.profiles.active=unraid > "./logs/${APP_NAME}.log" &
+		nohup java -jar -Xms1g -Xmx1g -XX:MetaspaceSize=64M  -XX:MaxMetaspaceSize=512M  ${java_opts} "${DEPLOY_PATH}/${APP_NAME}" --spring.profiles.active=unraid > "./logs/${APP_NAME}.log" &
 
 	elif [ "${APP_NAME}" == "eurekaservice.jar" ]; then
 	  echo "启动jar包：  java -jar -Xms64M -Xmx256M -XX:MetaspaceSize=64M -XX:MaxMetaspaceSize=256M  ${DEPLOY_PATH}/${APP_NAME} --spring.profiles.active=prod > ./logs/${APP_NAME}.log & "
 
-		nohup java -jar -Xms64M -Xmx256M -XX:MetaspaceSize=64M -XX:MaxMetaspaceSize=256M "${DEPLOY_PATH}/${APP_NAME}" --spring.profiles.active=unraid > "./logs/${APP_NAME}.log" &
+		nohup java -jar -Xms256M -Xmx256M -XX:MetaspaceSize=64M -XX:MaxMetaspaceSize=256M "${DEPLOY_PATH}/${APP_NAME}" --spring.profiles.active=unraid > "./logs/${APP_NAME}.log" &
 	else
 	  echo "启动jar包：  java -jar -Xms64M -Xmx128M -XX:MetaspaceSize=64M -XX:MaxMetaspaceSize=128M  ${DEPLOY_PATH}/${APP_NAME} --spring.profiles.active=prod > ./logs/${APP_NAME}.log & "
 
 		# 指定生产环境包，必须用绝对路径
-		nohup java -jar -Xms64M -Xmx128M -XX:MetaspaceSize=64M -XX:MaxMetaspaceSize=128M "${DEPLOY_PATH}/${APP_NAME}" --spring.profiles.active=prod > "./logs/${APP_NAME}.log" &
+		nohup java -jar -Xms128M -Xmx128M -XX:MetaspaceSize=64M -XX:MaxMetaspaceSize=128M "${DEPLOY_PATH}/${APP_NAME}" --spring.profiles.active=prod > "./logs/${APP_NAME}.log" &
 	fi
 	sleep 3
 	# 等待程序执行
