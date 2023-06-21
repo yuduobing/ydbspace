@@ -1,17 +1,10 @@
 springfox:
   documentation:
     enabled: false  #关闭swagger
-eureka:
-  instance:
-    instance-id: 自测
-  client:
-    service-url:
-      defaultZone: http://1.116.162.163:10086/eureka
+
 server:
   port: 5300
 spring:
-  application:
-    name: ydbspaceimage
   datasource:
     url: jdbc:mysql://1.116.162.163:3306/webcloud?useSSL=false
     username: codimd

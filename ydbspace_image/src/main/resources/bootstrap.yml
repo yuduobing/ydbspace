@@ -1,4 +1,4 @@
-
+#bootstartp比applicaiton优先级高，但是同名会被application覆盖
 spring:
   profiles:
     active: dev
