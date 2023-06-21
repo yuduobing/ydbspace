@@ -72,7 +72,6 @@ eureka:
 
 oauth2-server-url: http://127.0.0.1:10088
 ---
----
 spring:
   profiles: unraid
   #  设置文件上传大小
@@ -100,7 +99,7 @@ eureka:
     instance-id: webService
   client:
     service-url:
-      defaultZone: http://1.116.162.163:3306/eureka
+      defaultZone: http://1.116.162.163:10086/eureka
 
 oauth2-server-url: http://1.116.162.163:10088
 ---
