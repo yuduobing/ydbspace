@@ -569,3 +569,14 @@ at org.apache.cat
 #启动报错
 Failed to start bean 'webServerStartStop'; nested exception is org.springframework.boot.web.server.WebServerException: Unable to start embedded Tomcat server
 大概率内存不足
+
+#垃圾后手
+ava提供了多种垃圾回收器，每种垃圾回收器都有其优点和缺点。以下是Java中常用的垃圾回收器的简要介绍：
+
+Serial垃圾回收器：Serial垃圾回收器是最古老的垃圾回收器，它是串行垃圾回收器，只使用一个线程进行垃圾回收。Serial垃圾回收器适用于小型或单线程应用程序，因为它的暂停时间较长，会影响应用程序的响应时间。
+
+Parallel垃圾回收器：Parallel垃圾回收器是并行垃圾回收器，它使用多个线程并行进行垃圾回收。Parallel垃圾回收器适用于多核处理器上的大型应用程序，因为它可以显著提高垃圾回收的吞吐量。但是，Parallel垃圾回收器的暂停时间也较长，可能会影响应用程序的响应时间。
+
+CMS垃圾回收器：CMS垃圾回收器是并发垃圾回收器，它使用多个线程并发进行垃圾回收。CMS垃圾回收器适用于需要快速响应请求的应用程序，因为它的暂停时间很短。但是，CMS垃圾回收器的吞吐量相对较低。
+
+G1垃圾回收器：G1垃圾回收器是分代垃圾回收器，它将堆分为多个区域，并根据需要对这些区域进行垃圾回收。G1垃圾回收器适用于需要快速响应请求和高吞吐量的大型应用程序，因为它可以有效地控制暂停时间，并提高垃圾回收的吞吐量。

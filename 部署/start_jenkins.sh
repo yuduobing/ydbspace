@@ -44,12 +44,12 @@ for ((i = 0; i < ${#jar_name[@]}; i++)); do
 #-XX:NewRatio=4: 新生代和老年代的比率为 1:4。
 #-XX:SurvivorRatio=8: Eden 空间和 Survivor 空间的比率为 8:1。
 #-XX:ParallelGCThreads=12: 并行垃圾回收线程数为 12。
-  java_opts="  -XX:+UseParNewGC  -XX:NewRatio=4 -XX:SurvivorRatio=8   -XX:ParallelGCThreads=12"
+  java_opts="-XX:+UseG1GC  -XX:NewRatio=4 -XX:SurvivorRatio=8   -XX:ParallelGCThreads=12"
 	# MaxMetaspaceSize元空间  Xmx堆内存
 	if [ "${APP_NAME}" == "ydbspace_image.jar" ]; then
-	   echo "启动jar包：  java -jar -Xms1g -Xmx1g -XX:MetaspaceSize=64M  -XX:MaxMetaspaceSize=512M ${DEPLOY_PATH}/${APP_NAME} --spring.profiles.active=prod > ./logs/${APP_NAME}.log & "
+	   echo "启动jar包：  java -jar -Xms1g -Xmx1g -XX:MetaspaceSize=64M  -XX:MaxMetaspaceSize=512M ${java_opts}  ${DEPLOY_PATH}/${APP_NAME} --spring.profiles.active=prod > ./logs/${APP_NAME}.log & "
 
-		nohup java -jar -Xms1g -Xmx1g -XX:MetaspaceSize=64M  -XX:MaxMetaspaceSize=512M  ${java_opts} "${DEPLOY_PATH}/${APP_NAME}" --spring.profiles.active=unraid > "./logs/${APP_NAME}.log" &
+		nohup java -jar -Xms512M -Xmx512M -XX:MetaspaceSize=64M  -XX:MaxMetaspaceSize=512M  ${java_opts} "${DEPLOY_PATH}/${APP_NAME}" --spring.profiles.active=unraid > "./logs/${APP_NAME}.log" &
 
 	elif [ "${APP_NAME}" == "eurekaservice.jar" ]; then
 	  echo "启动jar包：  java -jar -Xms64M -Xmx256M -XX:MetaspaceSize=64M -XX:MaxMetaspaceSize=256M  ${DEPLOY_PATH}/${APP_NAME} --spring.profiles.active=prod > ./logs/${APP_NAME}.log & "

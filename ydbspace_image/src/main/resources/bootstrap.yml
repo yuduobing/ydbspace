@@ -76,7 +76,7 @@ server:
   port: 10020
 spring:
   profiles: unraid
-  #  设置文件上传大小
+  #eureka名字
   application:
     name: ydbspaceimage
   boot:
@@ -99,11 +99,7 @@ spring:
 eureka:
   instance:
     prefer-ip-address: true
-      ip-address: 1.116.162.163
-        # 如果x秒内，依然没有收到续约请求，判定服务过期,默认90s
-      lease-expiration-duration-in-seconds: 30
-       # 每隔x秒钟，向服务中心发送一条续约指令,默认30s
-      lease-renewal-interval-in-seconds: 5
+    ip-address: 1.116.162.163
   client:
     service-url:
       defaultZone: http://1.116.162.163:10086/eureka
