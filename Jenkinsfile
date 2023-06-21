@@ -1,7 +1,7 @@
 // Git credentials ID
 def git_auth = "1e271c92-164d-4a9c-8ea7-a38c8ba1741d"
 // Git URL
-def git_url = "http://github.com/yuduobing/ydbspace.git"
+def git_url = "https://gitee.com/ydb6/wp.git"
 def DEPLOY_PATH = "/docker/ydbspace_github"
 def DEPLOY_SHNAME = "/docker/ydbspace_github"
 node {
