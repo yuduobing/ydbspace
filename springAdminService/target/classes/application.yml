@@ -1,0 +1,12 @@
+server:
+  port: 5400
+
+spring:
+  application:
+    ## 注册服务名
+    name: springAdminService
+
+#management:
+#  endpoint:
+#    health:
+#      show-details: always

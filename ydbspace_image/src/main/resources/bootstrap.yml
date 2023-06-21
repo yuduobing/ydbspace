@@ -72,3 +72,33 @@ eureka:
 
 oauth2-server-url: http://127.0.0.1:10088
 ---
+---
+spring:
+  profiles: unraid
+  name: image_unraid
+  boot:
+    admin:
+      client:
+        url: http://1.116.162.163:5400
+        instance:
+          prefer-ip: true # 使用ip注册进来
+  servlet:
+    multipart:
+      #      单个数据大小
+      maxFileSize: 1024MB
+      #      总数据大小
+      maxRequestSize: 1024MB
+  datasource:
+    url: jdbc:mysql://1.116.162.163:3306/webcloud?useSSL=false
+    username: codimd
+    password: Tan19970925!
+    driver-class-name: com.mysql.jdbc.Driver
+eureka:
+  instance:
+    instance-id: webService
+  client:
+    service-url:
+      defaultZone: http://1.116.162.163:3306/eureka
+
+oauth2-server-url: http://1.116.162.163:10088
+---
