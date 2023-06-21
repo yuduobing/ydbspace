@@ -76,7 +76,7 @@ spring:
   profiles: unraid
   #  设置文件上传大小
   application:
-    name: ydbspaceimage2
+    name: ydbspaceimage
   boot:
     admin:
       client:
