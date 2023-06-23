@@ -51,6 +51,8 @@ public class FileImageController {
     //第一次查询时候返回存储格式
     @Value("${user.sharefiletype:AliYunOpen")
     private final String sharefiletype="AliYunOpen";
+    @Value("${user.devicdeid:526997152")
+    private final String devicdeid="526997152";
     private static Logger logger = Logger.getLogger("FileImageController.class");
     @Autowired
     StoreContext storeContext;
@@ -89,7 +91,7 @@ public class FileImageController {
         result2++;
         StoreService storeService = storeContext.getStoreService(fileparams.getFileSaveType());
         //阿里云盘临时文件储存
-        chunkpath = storeService.upload("526997152", file.getInputStream(), file.getSize(), extension);
+        chunkpath = storeService.upload(devicdeid, file.getInputStream(), file.getSize(), extension);
 
         //填充切片表
         Filechunk filechunk = Filechunk.builder().chunkmd5(fileparams.getIdentifier()).chunksize(fileparams.getChunkSize()).chunkpath(chunkpath).chunktotalnum(fileparams.getTotalChunks()).chunksnum(fileparams.getChunkNumber())

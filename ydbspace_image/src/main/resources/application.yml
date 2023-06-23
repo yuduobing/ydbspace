@@ -10,6 +10,7 @@ user:
  wpfiletype: AliYunOpen
 # 临时网盘配置策略
  sharefiletype: AliYunOpen
+ devicdeid: 526997152
 
 #security配置
 server:
