@@ -89,7 +89,7 @@ public class FileImageController {
         result2++;
         StoreService storeService = storeContext.getStoreService(fileparams.getFileSaveType());
         //阿里云盘临时文件储存
-        chunkpath = storeService.upload("group1", file.getInputStream(), file.getSize(), extension);
+        chunkpath = storeService.upload("526997152", file.getInputStream(), file.getSize(), extension);
 
         //填充切片表
         Filechunk filechunk = Filechunk.builder().chunkmd5(fileparams.getIdentifier()).chunksize(fileparams.getChunkSize()).chunkpath(chunkpath).chunktotalnum(fileparams.getTotalChunks()).chunksnum(fileparams.getChunkNumber())
