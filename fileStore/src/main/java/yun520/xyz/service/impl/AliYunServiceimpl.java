@@ -7,8 +7,6 @@ import yun520.xyz.service.StoreService;
 import yun520.xyz.service.impl.aliyun.AliyunSDK;
 
 import javax.annotation.Resource;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.InputStream;
 
 @Component("AliYunService")
@@ -61,6 +59,14 @@ public class AliYunServiceimpl implements StoreService {
 
     @Override
     public void delete(String path) {
+        //个人信息里的driverid
+        String[] split = path.split("\\+");
+        Boolean result = false;
+        try {
+            result = aliyunSDK.delete(split[0],split[1]);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
     }
 }

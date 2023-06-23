@@ -2,11 +2,14 @@
 name: 全量发布
 #设置触发条件
 on:
+  push:
+    branches:
+      - github
   # 手动触发部署
   workflow_dispatch:
 env:
   #todo1    部署到服务器目录
-  DEPLOY_PATH: /docker/ydbspace_github
+  DEPLOY_PATH: /home/ydbspce
   # todo2   执行shell脚本名称
   DEPLOY_SHNAME: startgithub.sh
 #执行任务

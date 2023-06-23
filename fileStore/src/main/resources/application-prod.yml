@@ -44,14 +44,7 @@ eureka:
   client:
     service-url:
       defaultZone: http://127.0.0.1:10086/eureka
-fdfs:
-  connect-timeout: 30000
-  so-timeout: 30000
-  tracker-list: 1.116.162.163:22122
-  pool:
-    max-total: 800   # 连接池最大数量
-    max-total-per-key: 200  # 单个tracker最大连接数
-    max-wait-millis: 5000 # 连接耗尽最大等待时间 毫秒
+
 mybatis-plus:
   mapper-locations: classpath*:xml/*.xml
   configuration:
@@ -64,19 +57,18 @@ ydb:
     emailQueue: deletequeue
     fanout: true
 #    fastdfs
-gomyck:
-  config:
-    redis: false #是否使用redis存储文件上传信息以及上传锁
-  redis:
-    host: 127.0.0.1
-    password: xxxxx
-    port: 6379
-  fastdfs: #fastdfs上传配置
-    chunk-size: 5 #分块大小, 上传文件分块的大小 单位: MB
-    download-chunk-size: 100  #分块下载大小  单位: byte
-    group-id: group1 #fastdfs的组, 文件会被存到这个组下
-    file-server-protocol: http #远程文件服务连接协议
-    file-server-url: 1.116.162.163 #远程文件服务连接地址
+#  注意这个trackerList：如果是集群tracker的话以逗号分隔开就行
+fdfs:
+  connect-timeout: 600
+  so-timeout: 1500
+  trackerList: 服务器tracker的ip:22122
+  thumb-image:
+    width: 150
+    height: 150
+  pool:
+    max-total: 200
+
+
 #日志系统
   logstash:
     host: 1.116.162.163

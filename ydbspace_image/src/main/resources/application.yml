@@ -4,7 +4,12 @@ spring:
   async:
    request-timeout: 60000
 
-
+##自己的配置
+user:
+# 个人网盘配置策略
+ wpfiletype: AliYunOpen
+# 临时网盘配置策略
+ sharefiletype: AliYunOpen
 
 #security配置
 server:

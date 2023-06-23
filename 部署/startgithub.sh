@@ -7,16 +7,19 @@
 #或者
 #
 #echo ${VAR}
-##todo1 设置jar包位置
-DEPLOY_PATH=/docker/ydbspace_github
-mkdir -p $DEPLOY_PATH
-#todo2   jar包名字
-jarname=()
-jarname[0]=springAdminService.jar
-jarname[1]=eurekaservice.jar
-jarname[2]=fileMq-exec.jar
-jarname[3]=User.jar
-jarname[4]=ydbspace_image.jar
+# 设置jar包位置
+DEPLOY_PATH=/home/ydbspce
+mkdir -p "${DEPLOY_PATH}"
+mkdir -p "${DEPLOY_PATH}/logs"
+# jar包名字
+jar_name=(
+  "springAdminService.jar"
+  "eurekaservice.jar"
+  "fileMq-exec.jar"
+  "User.jar"
+  "ydbspace_image.jar"
+)
+
 
 cd $DEPLOY_PATH
 pwd

@@ -8,6 +8,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -48,7 +49,8 @@ import java.util.logging.Logger;
 @Scope(value = "prototype")
 public class FileImageController {
     //第一次查询时候返回存储格式
-    private final String celue="AliYunOpen";
+    @Value("${user.sharefiletype:AliYunOpen")
+    private final String sharefiletype="AliYunOpen";
     private static Logger logger = Logger.getLogger("FileImageController.class");
     @Autowired
     StoreContext storeContext;
@@ -76,8 +78,6 @@ public class FileImageController {
     @ApiOperation(value = "上传文件")
     @Transactional
     public synchronized Result uplaodChunk(MultipartFile file, FileWeb fileparams) throws Exception {
-        String filename = file.getOriginalFilename();
-
 //          文件名不可有中文
         String chunkpath = "";
         int result2 = 0;
@@ -115,7 +115,7 @@ public class FileImageController {
     public Result uplaodChunkGET(FileWeb fileparams) throws Exception {
 
         //上传文件表
-        File file1 = File.builder().fileName(fileparams.getFilename()).fileType(fileparams.getFilename().substring(fileparams.getFilename().length() - 3)).fileSize(fileparams.getTotalSize()).fileSaveType("0").filemd5(fileparams.getIdentifier()
+        File file1 = File.builder().fileName(fileparams.getFilename()).fileType(fileparams.getFilename().substring(fileparams.getFilename().length() - 3)).fileSize(fileparams.getTotalSize()).fileSaveType(sharefiletype).filemd5(fileparams.getIdentifier()
         ).createTime(LocalDateTime.now()).build();
         //填充文件表
         int result = filemapper.insert(file1); // 帮我们自动生成id
@@ -126,6 +126,7 @@ public class FileImageController {
         HashMap<String, Object> objectObjectHashMap = new HashMap<>();
 
         objectObjectHashMap.put("fid", file1.getFid());
+        objectObjectHashMap.put("fid", sharefiletype);
 
         return ResultUtils.success(objectObjectHashMap);
 
