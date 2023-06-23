@@ -51,9 +51,9 @@ for ((i = 0; i < ${#jar_name[@]}; i++)); do
 	   echo "启动jar包：  java -jar -Xms1g -Xmx1g -XX:MetaspaceSize=64M  -XX:MaxMetaspaceSize=512M ${java_opts}  ${DEPLOY_PATH}/${APP_NAME} --spring.profiles.active=prod > ./logs/${APP_NAME}.log & "
 
 		nohup java -jar -Xms512M -Xmx512M -XX:MetaspaceSize=64M  -XX:MaxMetaspaceSize=512M  ${java_opts} "${DEPLOY_PATH}/${APP_NAME}" --spring.profiles.active=unraid > "./logs/${APP_NAME}.log" &
-   pid2=$!
+
 #     最后一个程序等待执行
-     wait $pid2
+    	sleep 30
 	elif [ "${APP_NAME}" == "eurekaservice.jar" ]; then
 	  echo "启动jar包：  java -jar -Xms64M -Xmx256M -XX:MetaspaceSize=64M -XX:MaxMetaspaceSize=256M  ${DEPLOY_PATH}/${APP_NAME} --spring.profiles.active=prod > ./logs/${APP_NAME}.log & "
 
