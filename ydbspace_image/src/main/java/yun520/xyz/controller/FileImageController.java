@@ -126,7 +126,7 @@ public class FileImageController {
         HashMap<String, Object> objectObjectHashMap = new HashMap<>();
 
         objectObjectHashMap.put("fid", file1.getFid());
-        objectObjectHashMap.put("fid", sharefiletype);
+        objectObjectHashMap.put("fileSaveType", sharefiletype);
 
         return ResultUtils.success(objectObjectHashMap);
 
