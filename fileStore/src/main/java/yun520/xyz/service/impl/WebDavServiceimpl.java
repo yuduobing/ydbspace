@@ -2,11 +2,9 @@ package yun520.xyz.service.impl;
 
 import com.github.sardine.Sardine;
 import com.github.sardine.SardineFactory;
-import com.github.tobato.fastdfs.service.FastFileStorageClient;
 import lombok.SneakyThrows;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -25,8 +23,7 @@ public class WebDavServiceimpl implements StoreService {
     private static Logger logger = Logger.getLogger("WebDavServiceimpl.class");
     //  //文件名不可有中文
     Sardine sardine = SardineFactory.begin("admin", "MNR52kWq");
-    @Autowired
-    private FastFileStorageClient storageClient;
+
 
     //上传有group
     //文件扩展名

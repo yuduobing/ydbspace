@@ -17,7 +17,7 @@ import yun520.xyz.util.SpringContentUtils;
 //启动定时任务
 @EnableScheduling
 @Import(SpringContentUtils.class)
-public class ImageApplication {
+public class  ImageApplication {
     public static void main(String[] args) {
         SpringApplication.run(ImageApplication.class, args);
     }
