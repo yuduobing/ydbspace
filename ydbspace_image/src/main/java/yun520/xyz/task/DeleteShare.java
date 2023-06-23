@@ -3,16 +3,17 @@ package yun520.xyz.task;
 import cn.hutool.core.date.DateUnit;
 import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import yun520.xyz.context.StoreContext;
 import yun520.xyz.entity.File;
 import yun520.xyz.entity.Filechunk;
 import yun520.xyz.entity.Sharelinks;
 import yun520.xyz.mapper.FileMapper;
 import yun520.xyz.mapper.FilechunkMapper;
 import yun520.xyz.mapper.SharelinksMapper;
+import yun520.xyz.service.StoreService;
 import yun520.xyz.service.impl.FastDfsServiceimpl;
 import yun520.xyz.service.impl.MqServiceImpl;
 
@@ -38,6 +39,8 @@ public class DeleteShare {
     FilechunkMapper filechunkMapper;
     @Autowired
     FastDfsServiceimpl fastdfs;
+    @Autowired
+    StoreContext storeContext;
 
     @Scheduled(cron = "0 35 1 * * ?")
 //    @Scheduled(fixedRate = 2000)
@@ -61,6 +64,7 @@ public class DeleteShare {
             List<File> userInfoList2 = filemapper.selectList(queryWrapperfile);
             //遍历删除还是要确定其他永久文件md5是否存在
             userInfoList2.forEach(val -> {
+                StoreService storeService = storeContext.getStoreService(val.getFileSaveType());
                 boolean safedelte = isSafedelte(val.getFilemd5());
                 //切片是否可以安全删除
                 if (safedelte) {
@@ -72,7 +76,8 @@ public class DeleteShare {
                     List<Filechunk> userInfoListchunk = filechunkMapper.selectList(queryWrapperfilechunk);
                     userInfoListchunk.forEach(valchunk -> {
                         try {
-                            fastdfs.delete(valchunk.getChunkpath());
+
+                            storeService.delete(valchunk.getChunkpath());
                         } catch (Exception e) {
                             System.out.println("异常了" + e);
                         }

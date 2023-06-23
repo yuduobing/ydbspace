@@ -5,7 +5,6 @@ import com.github.tobato.fastdfs.proto.storage.DownloadByteArray;
 import com.github.tobato.fastdfs.service.FastFileStorageClient;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import yun520.xyz.service.StoreService;
 
@@ -14,11 +13,11 @@ import java.util.logging.Logger;
 
 //fastdfs 实现类
 @Component("FastDfsService")
-@Scope(value = "prototype")
 public class FastDfsServiceimpl implements StoreService {
     private static Logger logger = Logger.getLogger("StoreService.class");
     @Autowired
     private FastFileStorageClient storageClient;
+
     //fastdfs非集群默认有group
     final static String group = "group1";
 

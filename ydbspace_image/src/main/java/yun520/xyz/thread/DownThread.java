@@ -1,14 +1,10 @@
 package yun520.xyz.thread;
 
 import cn.hutool.core.date.DateUtil;
-import kotlin.jvm.Throws;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+
 import yun520.xyz.entity.Filechunk;
 import yun520.xyz.service.StoreService;
-import yun520.xyz.service.impl.FastDfsServiceimpl;
 
-import java.io.IOException;
 import java.io.OutputStream;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
