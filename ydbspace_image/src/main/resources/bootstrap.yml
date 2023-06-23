@@ -1,4 +1,4 @@
-
+#bootstartp比applicaiton优先级高，但是同名会被application覆盖
 spring:
   profiles:
     active: dev
@@ -71,4 +71,38 @@ eureka:
       defaultZone: http://127.0.0.1:10086/eureka
 
 oauth2-server-url: http://127.0.0.1:10088
+---
+server:
+  port: 10020
+spring:
+  profiles: unraid
+  #eureka名字
+  application:
+    name: ydbspaceimage
+  boot:
+    admin:
+      client:
+        url: http://1.116.162.163:5400
+        instance:
+          prefer-ip: true # 使用ip注册进来
+  servlet:
+    multipart:
+      #      单个数据大小
+      maxFileSize: 1024MB
+      #      总数据大小
+      maxRequestSize: 1024MB
+  datasource:
+    url: jdbc:mysql://1.116.162.163:3306/webcloud?useSSL=false
+    username: codimd
+    password: Tan19970925!
+    driver-class-name: com.mysql.jdbc.Driver
+eureka:
+  instance:
+    prefer-ip-address: true
+    ip-address: 1.116.162.163
+  client:
+    service-url:
+      defaultZone: http://1.116.162.163:10086/eureka
+
+oauth2-server-url: http://1.116.162.163:10088
 ---

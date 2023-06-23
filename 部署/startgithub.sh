@@ -7,16 +7,19 @@
 #或者
 #
 #echo ${VAR}
-##todo1 设置jar包位置
-DEPLOY_PATH=/docker/ydbspace_github
-mkdir -p $DEPLOY_PATH
-#todo2   jar包名字
-jarname=()
-jarname[0]=springAdminService.jar
-jarname[1]=eurekaservice.jar
-jarname[2]=fileMq-exec.jar
-jarname[3]=User.jar
-jarname[4]=ydbspace_image.jar
+# 设置jar包位置
+DEPLOY_PATH=/home/ydbspce
+mkdir -p "${DEPLOY_PATH}"
+mkdir -p "${DEPLOY_PATH}/logs"
+# jar包名字
+jar_name=(
+  "springAdminService.jar"
+  "eurekaservice.jar"
+  "fileMq-exec.jar"
+  "User.jar"
+  "ydbspace_image.jar"
+)
+
 
 cd $DEPLOY_PATH
 pwd
@@ -44,19 +47,19 @@ for ((i = 0; i < ${#jarname[@]}; i++)); do
 	#  MaxMetaspaceSize — 永久内存最大值
 	echo "启动jar包：  java -jar -Xms64M -Xmx128M -XX:MetaspaceSize=64M -XX:MaxMetaspaceSize=128M  $APP_NAME --spring.profiles.active=prod >$APP_NAME.log & "
 
-	jarname[1]=ydbspace_image.jar
+
 	#MaxMetaspaceSize元空间  Xmx堆内存
 	if [ "$APP_NAME" == "ydbspace_image.jar" ]; then
-		nohup java -jar -Xms64M -Xmx512M -XX:MetaspaceSize=64M -XX:MaxMetaspaceSize=512M $DEPLOY_PATH/$APP_NAME --spring.profiles.active=prod >$APP_NAME.log &
+		nohup java -jar -Xms64M -Xmx512M -XX:MetaspaceSize=64M -XX:MaxMetaspaceSize=512M $DEPLOY_PATH/$APP_NAME --spring.profiles.active=prod >./logs/$APP_NAME.log &
 	elif [ "$APP_NAME" == "eurekaservice.jar" ]; then
-		nohup java -jar -Xms64M -Xmx256M -XX:MetaspaceSize=64M -XX:MaxMetaspaceSize=256M $DEPLOY_PATH/$APP_NAME --spring.profiles.active=prod >$APP_NAME.log &
+		nohup java -jar -Xms64M -Xmx256M -XX:MetaspaceSize=64M -XX:MaxMetaspaceSize=256M $DEPLOY_PATH/$APP_NAME --spring.profiles.active=prod >./logs/$APP_NAME.log &
 
 	else
 		#   指定生产环境包，必须用绝对路径
-		nohup java -jar -Xms64M -Xmx125M -XX:MetaspaceSize=64M -XX:MaxMetaspaceSize=125M $DEPLOY_PATH/$APP_NAME --spring.profiles.active=prod >$APP_NAME.log &
+		nohup java -jar -Xms64M -Xmx125M -XX:MetaspaceSize=64M -XX:MaxMetaspaceSize=125M $DEPLOY_PATH/$APP_NAME --spring.profiles.active=prod >./logs/$APP_NAME.log &
 	fi
 	#   等待程序执行
-
+wait
 	echo "${APP_NAME}执行结束***------------------------***"
 done
 #问题记录
