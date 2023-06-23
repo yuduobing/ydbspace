@@ -48,7 +48,7 @@ for ((i = 0; i < ${#jar_name[@]}; i++)); do
   java_opts="-XX:+UseG1GC  -XX:NewRatio=4 -XX:SurvivorRatio=8   -XX:ParallelGCThreads=12"
 	# MaxMetaspaceSize元空间  Xmx堆内存
 	if [ "${APP_NAME}" == "ydbspace_image.jar" ]; then
-	   echo "启动jar包：  java -jar -Xms1g -Xmx1g -XX:MetaspaceSize=64M  -XX:MaxMetaspaceSize=512M ${java_opts}  ${DEPLOY_PATH}/${APP_NAME} --spring.profiles.active=prod > ./logs/${APP_NAME}.log & "
+	   echo "启动jar包：  java -jar -Xms1g -Xmx1g -XX:MetaspaceSize=64M  -XX:MaxMetaspaceSize=512M ${java_opts}  ${DEPLOY_PATH}/${APP_NAME} --spring.profiles.active=unraid > ./logs/${APP_NAME}.log & "
 
 		nohup java -jar -Xms512M -Xmx512M -XX:MetaspaceSize=64M  -XX:MaxMetaspaceSize=512M  ${java_opts} "${DEPLOY_PATH}/${APP_NAME}" --spring.profiles.active=unraid > "./logs/${APP_NAME}.log" &
 

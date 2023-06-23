@@ -1,12 +1,7 @@
 springfox:
   documentation:
       enabled: false  #关闭swagger
-eureka:
-  instance:
-    instance-id: 自测
-  client:
-    service-url:
-      defaultZone: http://127.0.0.1:10086/eureka
+
 server:
   port: 5300
 spring:
