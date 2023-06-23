@@ -4,9 +4,9 @@
 name: 增量更新user｜image
 #设置触发条件
 on:
-  push:
-    branches:
-      - master
+#  push:
+#    branches:
+#      - master
   # 手动触发部署
   workflow_dispatch:
 env:
