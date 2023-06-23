@@ -2,9 +2,6 @@ package yun520.xyz.service.impl;
 
 import com.github.sardine.Sardine;
 import com.github.sardine.SardineFactory;
-import com.github.tobato.fastdfs.domain.fdfs.MetaData;
-import com.github.tobato.fastdfs.domain.fdfs.StorePath;
-import com.github.tobato.fastdfs.domain.proto.storage.DownloadByteArray;
 import com.github.tobato.fastdfs.service.FastFileStorageClient;
 import lombok.SneakyThrows;
 import org.apache.commons.io.IOUtils;
@@ -15,12 +12,9 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import yun520.xyz.service.StoreService;
 
-import java.io.*;
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.logging.Logger;
 
 //fastdfs 实现类
