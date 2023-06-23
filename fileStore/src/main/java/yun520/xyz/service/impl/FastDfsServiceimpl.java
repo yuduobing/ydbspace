@@ -1,23 +1,15 @@
 package yun520.xyz.service.impl;
 
-
-import com.github.tobato.fastdfs.domain.fdfs.MetaData;
-import com.github.tobato.fastdfs.domain.fdfs.StorePath;
-import com.github.tobato.fastdfs.domain.proto.storage.DownloadByteArray;
-import com.github.tobato.fastdfs.domain.proto.storage.DownloadFileStream;
+import com.github.tobato.fastdfs.domain.StorePath;
+import com.github.tobato.fastdfs.proto.storage.DownloadByteArray;
 import com.github.tobato.fastdfs.service.FastFileStorageClient;
-
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import yun520.xyz.service.StoreService;
 
-import java.io.*;
-import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Set;
+import java.io.InputStream;
 import java.util.logging.Logger;
 
 //fastdfs 实现类

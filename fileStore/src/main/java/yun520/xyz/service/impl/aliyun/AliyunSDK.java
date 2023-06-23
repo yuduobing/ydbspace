@@ -474,6 +474,28 @@ public class AliyunSDK {
         }
         return parent_file_id;
 
+
+    }
+
+
+    public Boolean delete(String driveId, String fileid) throws Exception {
+        //过期时间 ，单位s
+        long timeout = 115200;
+        JSONObject bodyMap = new JSONObject();
+        String url = baseUrl + "/adrive/v1.0/openFile/delete";
+        bodyMap.put("drive_id", driveId);
+        bodyMap.put("file_id", fileid);
+
+        init(driveId);
+
+
+        logger.info("开始删除");
+        DefaultHttpProxy defaultHttpProxy = new DefaultHttpProxy(headers.get(driveId), 30000, "utf-8");
+        JSONObject post = defaultHttpProxy.post(url, bodyMap);
+        logger.info("删除成功");
+        Assert.notNull(post, "删除失败" );
+        //这里有个很重要的accesstoken存储
+        return true;
     }
 
 }

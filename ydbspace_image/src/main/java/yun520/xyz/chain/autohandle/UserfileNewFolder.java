@@ -1,9 +1,9 @@
 package yun520.xyz.chain.autohandle;
 
-import com.gomyck.util.spring.SpringContextUtil;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import yun520.xyz.chain.core.*;
+import yun520.xyz.chain.core.ContextRequest;
+import yun520.xyz.chain.core.ContextResponse;
+import yun520.xyz.chain.core.HandlerInitializer;
+import yun520.xyz.chain.core.Pipeline;
 import yun520.xyz.chain.handle.uploadhand;
 import yun520.xyz.util.SpringContentUtils;
 

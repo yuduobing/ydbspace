@@ -1,29 +1,19 @@
 package yun520.xyz.controller;
 
-import cn.hutool.core.date.DateUtil;
-import cn.hutool.json.JSONObject;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.v3.oas.annotations.Parameter;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.multipart.MultipartFile;
-import yun520.xyz.context.StoreContext;
 import yun520.xyz.entity.File;
 import yun520.xyz.entity.FileWeb;
-import yun520.xyz.entity.Filechunk;
 import yun520.xyz.entity.Userfile;
 import yun520.xyz.mapper.FileMapper;
-import yun520.xyz.mapper.FilechunkMapper;
 import yun520.xyz.mapper.SharelinksMapper;
 import yun520.xyz.mapper.UserfileMapper;
 import yun520.xyz.result.RestResult;
@@ -31,23 +21,12 @@ import yun520.xyz.result.Result;
 import yun520.xyz.result.ResultUtils;
 import yun520.xyz.service.IUserfileService;
 import yun520.xyz.service.LoginService;
-import yun520.xyz.service.StoreService;
-import yun520.xyz.service.impl.FastDfsServiceimpl;
-import yun520.xyz.thread.DownThread;
 import yun520.xyz.vo.file.FileListVo;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.BufferedOutputStream;
-import java.io.OutputStream;
-import java.net.URLEncoder;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.concurrent.*;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Logger;
 
 /**
@@ -63,7 +42,8 @@ import java.util.logging.Logger;
 @Api(tags = "UserfileController", description = "用户文件管理")
 public class UserfileController extends  BaseController {
     private static Logger logger = Logger.getLogger("UserfileController.class");
-    private final String celue="AliYunOpen";
+    @Value("${user.wpfiletype:AliYunOpen")
+    private final String wpfiletype="AliYunOpen";
 
     @Autowired
     SharelinksMapper sharelinksmapper;
@@ -137,7 +117,7 @@ public class UserfileController extends  BaseController {
         Long userid = getUserid(fileparams.getUserId());
 
         //上传文件表
-        File file1 = File.builder().fileName(fileparams.getFilename()).fileType(fileparams.getFilename().substring(fileparams.getFilename().length() - 3)).fileSize(fileparams.getTotalSize()).fileSaveType(celue).filemd5(fileparams.getIdentifier()
+        File file1 = File.builder().fileName(fileparams.getFilename()).fileType(fileparams.getFilename().substring(fileparams.getFilename().length() - 3)).fileSize(fileparams.getTotalSize()).fileSaveType(wpfiletype).filemd5(fileparams.getIdentifier()
         ).createTime(LocalDateTime.now()).build();
         //填充文件表
         int result = filemapper.insert(file1); // 帮我们自动生成id
@@ -152,7 +132,7 @@ public class UserfileController extends  BaseController {
             HashMap<String, Object> objectObjectHashMap = new HashMap<>();
 
             objectObjectHashMap.put("fid", file1.getFid());
-            objectObjectHashMap.put("fileSaveType", celue);
+            objectObjectHashMap.put("fileSaveType", wpfiletype);
             return ResultUtils.success(objectObjectHashMap);
         }
 
